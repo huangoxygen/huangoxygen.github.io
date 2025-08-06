@@ -26,16 +26,16 @@
 <meta property="og:site_name" content="oxygen&#39;s blog">
 <meta property="og:description" content="· 1、修复DOS头打开DIE发现不能识别出文件类型，是DOS头受损，需要手动修复。打开010 Editor，果然文件头是错的。 DOS格式是什么呢？ DOS头（IMAGE_DOS_HEADER）的大小为40H（64字节） DOS头的基本结构如下： struct _IMAGE_DOS_HEADER { 0x00 WORD e_magic; * &#x2F;&#x2F;5A 4D MZ标记，用来判断">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="e:/blog/source/img/whuctf-boss/36322ECA74C24FC8D3E7AF73A1B487F0.png">
-<meta property="og:image" content="e:\blog\source\img\whuctf-boss\A10A90AB4C374F2980DEA98CA95D4730.png">
-<meta property="og:image" content="e:\blog\source\img\whuctf-boss\F9620C4A6E4432EED1022A954DE6F2EE.png">
-<meta property="og:image" content="e:\blog\source\img\whuctf-boss\1A7C512D7D0C7A8024BEFCCF88AD3B1A.png">
-<meta property="og:image" content="e:\blog\source\img\whuctf-boss\3576F0F83CF1AFC4DA77F2C86ECA24FE.png">
+<meta property="og:image" content="http://example.com/img/whuctf-boss/36322ECA74C24FC8D3E7AF73A1B487F0.png">
+<meta property="og:image" content="http://example.com/img/whuctf-boss/A10A90AB4C374F2980DEA98CA95D4730.png">
+<meta property="og:image" content="http://example.com/img/whuctf-boss/F9620C4A6E4432EED1022A954DE6F2EE.png">
+<meta property="og:image" content="http://example.com/img/whuctf-boss/1A7C512D7D0C7A8024BEFCCF88AD3B1A.png">
+<meta property="og:image" content="http://example.com/img/whuctf-boss/3576F0F83CF1AFC4DA77F2C86ECA24FE.png">
 <meta property="article:published_time" content="2025-08-06T00:32:56.000Z">
-<meta property="article:modified_time" content="2025-08-06T01:59:05.499Z">
+<meta property="article:modified_time" content="2025-08-06T02:11:05.386Z">
 <meta property="article:author" content="oxygen">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="e:/blog/source/img/whuctf-boss/36322ECA74C24FC8D3E7AF73A1B487F0.png">
+<meta name="twitter:image" content="http://example.com/img/whuctf-boss/36322ECA74C24FC8D3E7AF73A1B487F0.png">
   
   
   
@@ -323,21 +323,21 @@
 <p><code>e_magic</code>：在DOS头开始的位置，大小为2字节，存储的内容一般为<code>5A 4D</code>，也就是’MZ’的十六进制，’MZ’是MS-DOS的创建者之一Mark Zbikowski名字的缩写，通常用来判断文件是否为可执行文件。</p>
 <p><code>e_lfanew</code>：在DOS头结束的位置，大小为4字节，是PE头相对于文件的偏移，用于定位PE文件头的位置。</p>
 <p>故把mz改为大写，再把0x3c处00改为E8。</p>
-<p><img src="E:/blog/source/img/whuctf-boss/36322ECA74C24FC8D3E7AF73A1B487F0.png" srcset="/img/loading.gif" lazyload alt="修改之后的结果"></p>
+<p><img src="/img/whuctf-boss/36322ECA74C24FC8D3E7AF73A1B487F0.png" srcset="/img/loading.gif" lazyload alt="修改之后的结果"></p>
 <p>修改之后就可以看到文件类型了，是upx加壳后的程序。</p>
-<p><img src="E:\blog\source\img\whuctf-boss\A10A90AB4C374F2980DEA98CA95D4730.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/whuctf-boss/A10A90AB4C374F2980DEA98CA95D4730.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="2、UPX脱壳"><a href="#2、UPX脱壳" class="headerlink" title="2、UPX脱壳"></a>2、UPX脱壳</h3><p>用自动脱壳工具发现upx的头也被篡改，不能直接脱壳，所以我们有两种方式来完成脱壳：修复upx标志以自动脱壳，或者手动脱壳。</p>
 <h4 id="（1）自动脱壳"><a href="#（1）自动脱壳" class="headerlink" title="（1）自动脱壳"></a>（1）自动脱壳</h4><p>在PE头后面的data段之后，我们就找到了section table，这部分每隔40字节就有一个upx，然后最后面版本号也需要一个upx，全部补齐后，我们就可以使用自动脱壳的脚本来做了。</p>
 <h4 id="（2）手动脱壳（用x64dbg）"><a href="#（2）手动脱壳（用x64dbg）" class="headerlink" title="（2）手动脱壳（用x64dbg）"></a>（2）手动脱壳（用x64dbg）</h4><p>注意，目前新版的upx都已经不是以pushad和popad作为标志了，网上找到的大部分手动脱壳的教程有些过时了已经。</p>
 <p>所以，我们能找到的依据是什么呢？</p>
 <p>虽然pushad和popad已经没了，但是原理还是不变的，也就是在解压缩开始时压栈，在解压缩结束时弹出这部分栈。</p>
-<p><img src="E:\blog\source\img\whuctf-boss\F9620C4A6E4432EED1022A954DE6F2EE.png" srcset="/img/loading.gif" lazyload alt="这是入口"></p>
+<p><img src="/img/whuctf-boss/F9620C4A6E4432EED1022A954DE6F2EE.png" srcset="/img/loading.gif" lazyload alt="这是入口"></p>
 <p>在入口处设置硬件断点，寻找到出口。</p>
-<p><img src="E:\blog\source\img\whuctf-boss\1A7C512D7D0C7A8024BEFCCF88AD3B1A.png" srcset="/img/loading.gif" lazyload alt="这是出口"></p>
+<p><img src="/img/whuctf-boss/1A7C512D7D0C7A8024BEFCCF88AD3B1A.png" srcset="/img/loading.gif" lazyload alt="这是出口"></p>
 <p>在jmp后dump下来，就是脱壳后的程序了。</p>
 <h3 id="3、IDA分析–tls回传函数"><a href="#3、IDA分析–tls回传函数" class="headerlink" title="3、IDA分析–tls回传函数"></a>3、IDA分析–tls回传函数</h3><p>TLS回调函数常用于反调试，主要是利用了<strong>TLS回调函数的调用要先于EP代码的执行</strong>。</p>
 <p>翻阅函数列表，发现有一个函数名为TlsCallback_0</p>
-<p><img src="E:\blog\source\img\whuctf-boss\3576F0F83CF1AFC4DA77F2C86ECA24FE.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/whuctf-boss/3576F0F83CF1AFC4DA77F2C86ECA24FE.png" srcset="/img/loading.gif" lazyload></p>
 <p>这就是那个tls回调函数，因此密钥实际上不是显示的那个’Reverse engineering is very hard and interesting’，而是经过处理后的</p>
 <p>‘Reverse engineering is very easy and interesting’。</p>
 <p>另外就是分析加密函数逻辑了，ai分析发现是魔改版的blowfish加密</p>
