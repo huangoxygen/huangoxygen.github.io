@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>whuctf新生练习赛-re-wp</title>
+    <link href="/2025/08/08/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/"/>
+    <url>/2025/08/08/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/</url>
+    
+    <content type="html"><![CDATA[<p>·</p><h2 id="guess-number"><a href="#guess-number" class="headerlink" title="guess number"></a>guess number</h2><p>在Linux系统里面运行即可，注意这个程序是32位的，而我们直接下载的Linux虚拟机&#x2F;wsl多数是64位的，需要再安装32位的支持包（直接问ai即可）</p><h2 id="ezbase"><a href="#ezbase" class="headerlink" title="ezbase"></a>ezbase</h2><p>这道题作为ida的入门，其实本意是在考察汇编语言（这题由于用的并不自己写的加密函数而是直接调用扩展的库函数，IDA反汇编结果有点过于难看了），关于汇编语言，这里推荐去看b站视频即可简单入门，看懂就行，刚开始没必要和c语言要求相同，还是主要学c语言先。</p><p>当然，由于用的函数不是自己写的，也就没有魔改，其实直接丢给ai（把反汇编的代码导出或者直接用截图问即可）也就能告诉你加密方式，这也就是传说中的“deepseek一把梭”（）</p><h2 id="asm-and-rc4"><a href="#asm-and-rc4" class="headerlink" title="asm_and_rc4"></a>asm_and_rc4</h2><p><del>（这题和上一题都出自同一人之手，不得不吐槽一下：h2q是真的喜欢汇编语言）</del></p><p>同样是汇编语言阅读，感觉比上一题还简单点，rc4也是很经典的加密方式了，可以去了解一下加密方式</p><h2 id="login"><a href="#login" class="headerlink" title="login"></a>login</h2><p>直接看得到函数名为main_main的函数，打开，丢给ai分析，发现加密逻辑是密文&#x3D;（明文+114514）%65537，在ida里面看到的是被优化为了位运算的版本，直接用zi即可复原（当然也可以直接用ida弄出来的那个位运算，其实是一样的）</p><p>然后就是去找密文位置，在<code>unk_4FBCA0</code>位置处，注意，ida里面默认是小端存储（eg.0x1234存储为34 12），需要注意这一点</p><p>附上go源代码，方便对照</p><p><img src="/img/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/00F861B22DEE3AD71EF7A54F44237065.png"></p><h2 id="原神，启动？"><a href="#原神，启动？" class="headerlink" title="原神，启动？"></a>原神，启动？</h2><p>apk题目，直接放进JEB，能看到加密逻辑</p><p><img src="/img/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/D7F24C1E1921967893786C62B537D004.png" alt="主函数"></p><p>其实里面直接就有解密函数，如下，我们可以直接复制下来，没有java编译器的可以放在线编译器里面跑</p><p><img src="/img/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/7AB03163CE0A838CE959CF0EABCB36F0.png"></p><p>得到flag</p><h2 id="ez-rust"><a href="#ez-rust" class="headerlink" title="ez_rust"></a>ez_rust</h2><p>rust也是re不得不品的一环，当然新生赛自然有新生的解法：猜（）</p><p>直接shift+f12发现一个很明显的flag：</p><p><img src="/img/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/319CA3DA8DB223E21B4A4F62D743D059.png"></p><p>这个样子绝对是凯撒密码了，结束</p><p>当然我不希望这么解，下面是正常的解法：</p><p>搜索一下<code>unk_14001F700</code>，发现使用这个变量的函数：</p><p><img src="/img/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/A5F7A8973C3A38F51BF16B1FB5E90462.png"></p><p>在这里分析逻辑，建议还是用汇编语言来看，感觉反编译太不适合rust了</p><p><img src="/img/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/D1554FF35756B001043065727E1DA307.png" alt="核心逻辑"></p><p><img src="/img/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/6F43FA05FC925B4B2BAB6180B21D2E0F.png" alt="关键函数"></p><p>所以是凯撒加密</p><h2 id="喝杯花茶"><a href="#喝杯花茶" class="headerlink" title="喝杯花茶"></a>喝杯花茶</h2><p>茶–tea加密算法（因为是新生赛所以也是没有魔改，实际上可以直接不去除花指令猜出来）</p><p>花–tea_encrypt_block加入了花指令</p><p><img src="/img/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/6EFD6C3CA9F3CF0A1CE57BB03E720E01.png"></p><p>花指令：jz和jnz以及后面的那个立即数，直接nop掉就可以进行反汇编了</p><h2 id="BOSS"><a href="#BOSS" class="headerlink" title="BOSS"></a>BOSS</h2><p>（见前一篇博客）</p><h2 id="wave1-总结"><a href="#wave1-总结" class="headerlink" title="wave1 总结"></a>wave1 总结</h2><p>推荐各位再深入研究的知识点：汇编语言阅读，各种加密算法，花指令…</p><p>作为新生练习赛的第一波，基本都是没有魔改的经典加密算法（除了boss），所以蛮多都是可以直接猜出来的，整体上起一个帮助各位熟悉各个知识点的作用（我们也属实没想到这届新生大佬们这么强，简直不给劳登们活路呜呜呜）</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>whuctf新生练习赛-re-boss-wp</title>
     <link href="/2025/08/06/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-boss-wp/"/>
     <url>/2025/08/06/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-boss-wp/</url>
