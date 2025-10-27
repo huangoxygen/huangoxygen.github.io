@@ -1,0 +1,730 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="oxygen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="增量更新的流数据聚类 A. 通用 Density-Grid 流水线（对应典型网格法） B. CEDGM（基于密度网格 + 核心微簇 + 宏簇相交） C. DenStream（指数衰减 + 核心&#x2F;潜在&#x2F;离群 微簇） D. HPStream（投影&#x2F;子空间聚类 + 衰减簇摘要） E. EDSSC（高维演化数据流的动态稀疏子空间聚类） F. 流数据聚类总结   A) 通用 D">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习-增量更新的流数据聚类">
+<meta property="og:url" content="http://example.com/2025/10/27/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0%E7%9A%84%E6%B5%81%E6%95%B0%E6%8D%AE%E8%81%9A%E7%B1%BB/index.html">
+<meta property="og:site_name" content="oxygen&#39;s blog">
+<meta property="og:description" content="增量更新的流数据聚类 A. 通用 Density-Grid 流水线（对应典型网格法） B. CEDGM（基于密度网格 + 核心微簇 + 宏簇相交） C. DenStream（指数衰减 + 核心&#x2F;潜在&#x2F;离群 微簇） D. HPStream（投影&#x2F;子空间聚类 + 衰减簇摘要） E. EDSSC（高维演化数据流的动态稀疏子空间聚类） F. 流数据聚类总结   A) 通用 D">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-27T13:05:09.000Z">
+<meta property="article:modified_time" content="2025-10-27T13:05:29.054Z">
+<meta property="article:author" content="oxygen">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>机器学习-增量更新的流数据聚类 - oxygen&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>huangoxygen</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="机器学习-增量更新的流数据聚类"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-10-27 21:05" pubdate>
+          2025年10月27日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          30 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">机器学习-增量更新的流数据聚类</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="增量更新的流数据聚类"><a href="#增量更新的流数据聚类" class="headerlink" title="增量更新的流数据聚类"></a>增量更新的流数据聚类</h1><ul>
+<li><a href="#a">A. 通用 Density-Grid 流水线（对应典型网格法）</a></li>
+<li><a href="#b">B. CEDGM（基于密度网格 + 核心微簇 + 宏簇相交）</a></li>
+<li><a href="#c">C. DenStream（指数衰减 + 核心&#x2F;潜在&#x2F;离群 微簇）</a></li>
+<li><a href="#d">D. HPStream（投影&#x2F;子空间聚类 + 衰减簇摘要）</a></li>
+<li><a href="#e">E. EDSSC（高维演化数据流的动态稀疏子空间聚类）</a></li>
+<li><a href="#f">F. 流数据聚类总结</a></li>
+</ul>
+<hr>
+<h2 id="A-通用-Density-Grid-流水线（对应综述中的典型网格法）"><a href="#A-通用-Density-Grid-流水线（对应综述中的典型网格法）" class="headerlink" title="A) 通用 Density-Grid 流水线（对应综述中的典型网格法）"></a><a id="a"></a>A) 通用 Density-Grid 流水线（对应综述中的典型网格法）</h2><h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><pre><code class=" mermaid">flowchart TD
+    S[&quot;新样本 x_t 到达&quot;] --&gt; N[&quot;归一化&quot;]
+    N --&gt; Q[&quot;量化到网格单元&quot;]
+    Q --&gt; U[&quot;更新格子密度（含时间衰减）&quot;]
+    U --&gt; T&#123;&quot;密度是否超过阈值？&quot;&#125;
+    T -- &quot;是&quot; --&gt; C1[&quot;标记为核心格&quot;]
+    T -- &quot;否&quot;  --&gt; C2[&quot;标记为稀疏/噪声候选&quot;]
+    C1 --&gt; A[&quot;连接相邻核心格&quot;]
+    C2 --&gt; A
+    A --&gt; CC[&quot;提取连通分量 → 聚类ID&quot;]
+    CC --&gt; O[&quot;输出 x_t 的聚类结果&quot;]
+</code></pre>
+
+
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> defaultdict, deque<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">GridStreamClustering</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    通用 Density-Grid 聚类（在线）：</span><br><span class="hljs-string">    - 等宽网格量化；</span><br><span class="hljs-string">    - 指数衰减密度；</span><br><span class="hljs-string">    - 核心格与邻接连通分量形成簇；</span><br><span class="hljs-string">    - 到达即刻返回该点的簇ID（若为噪声则返回 -1）。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, bounds, cell_size, lambda_decay=<span class="hljs-number">0.01</span>, core_threshold=<span class="hljs-number">3.0</span>,</span><br><span class="hljs-params">                 neighbor_conn=<span class="hljs-number">1</span></span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        bounds: (d, 2) 每维(min,max)；cell_size: 每维网格边长(标量或向量)</span><br><span class="hljs-string">        lambda_decay: 衰减系数；core_threshold: 判定核心格的密度阈值</span><br><span class="hljs-string">        neighbor_conn: 邻接半径（曼哈顿距离&lt;=1 表示6/8邻接）</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-variable language_">self</span>.bounds = np.asarray(bounds)<br>        <span class="hljs-variable language_">self</span>.d = <span class="hljs-variable language_">self</span>.bounds.shape[<span class="hljs-number">0</span>]<br>        <span class="hljs-variable language_">self</span>.size = np.asarray(cell_size) <span class="hljs-keyword">if</span> np.ndim(cell_size) <span class="hljs-keyword">else</span> np.full(<span class="hljs-variable language_">self</span>.d, cell_size)<br>        <span class="hljs-variable language_">self</span>.decay = lambda_decay<br>        <span class="hljs-variable language_">self</span>.th = core_threshold<br>        <span class="hljs-variable language_">self</span>.conn = neighbor_conn<br>        <span class="hljs-comment"># 网格仓库：key=tuple(index), val=&#123;&quot;density&quot;:float, &quot;time&quot;:last_update&#125;</span><br>        <span class="hljs-variable language_">self</span>.cells = &#123;&#125;<br>        <span class="hljs-variable language_">self</span>.t = <span class="hljs-number">0</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_coord_to_cell</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-comment"># 将 x 量化为网格索引</span><br>        idx = np.floor((x - <span class="hljs-variable language_">self</span>.bounds[:, <span class="hljs-number">0</span>]) / <span class="hljs-variable language_">self</span>.size).astype(<span class="hljs-built_in">int</span>)<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">tuple</span>(idx)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_decay_to_now</span>(<span class="hljs-params">self, cell</span>):<br>        <span class="hljs-comment"># 对指定格子做时间衰减</span><br>        last_t = cell.get(<span class="hljs-string">&quot;time&quot;</span>, <span class="hljs-variable language_">self</span>.t)<br>        dt = <span class="hljs-variable language_">self</span>.t - last_t<br>        <span class="hljs-keyword">if</span> dt &gt; <span class="hljs-number">0</span>:<br>            cell[<span class="hljs-string">&quot;density&quot;</span>] *= np.exp(-<span class="hljs-variable language_">self</span>.decay * dt)<br>            cell[<span class="hljs-string">&quot;time&quot;</span>] = <span class="hljs-variable language_">self</span>.t<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_neighbors</span>(<span class="hljs-params">self, g</span>):<br>        <span class="hljs-comment"># 生成邻接网格索引（曼哈顿&lt;=conn）</span><br>        d = <span class="hljs-variable language_">self</span>.d<br>        base = np.array(g)<br>        <span class="hljs-keyword">for</span> offset <span class="hljs-keyword">in</span> np.ndindex(*([<span class="hljs-number">2</span>*<span class="hljs-variable language_">self</span>.conn+<span class="hljs-number">1</span>]*d)):<br>            off = np.array(offset) - <span class="hljs-variable language_">self</span>.conn<br>            <span class="hljs-keyword">if</span> np.<span class="hljs-built_in">abs</span>(off).<span class="hljs-built_in">sum</span>() &lt;= <span class="hljs-variable language_">self</span>.conn:<br>                <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> np.<span class="hljs-built_in">all</span>(off == <span class="hljs-number">0</span>):<br>                    <span class="hljs-keyword">yield</span> <span class="hljs-built_in">tuple</span>(base + off)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_cell</span>(<span class="hljs-params">self, g</span>):<br>        c = <span class="hljs-variable language_">self</span>.cells.get(g)<br>        <span class="hljs-keyword">if</span> c <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            c = &#123;<span class="hljs-string">&quot;density&quot;</span>: <span class="hljs-number">0.0</span>, <span class="hljs-string">&quot;time&quot;</span>: <span class="hljs-variable language_">self</span>.t&#125;<br>            <span class="hljs-variable language_">self</span>.cells[g] = c<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-variable language_">self</span>._decay_to_now(c)<br>        <span class="hljs-keyword">return</span> c<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">partial_fit_predict</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;在线处理单点并返回聚类ID（-1 表示暂为噪声）。&quot;&quot;&quot;</span><br>        <span class="hljs-variable language_">self</span>.t += <span class="hljs-number">1</span><br>        x = np.asarray(x)<br>        g = <span class="hljs-variable language_">self</span>._coord_to_cell(x)<br>        c = <span class="hljs-variable language_">self</span>._cell(g)<br>        c[<span class="hljs-string">&quot;density&quot;</span>] += <span class="hljs-number">1.0</span>  <span class="hljs-comment"># 简单计数 + 衰减视为密度</span><br><br>        <span class="hljs-comment"># 判定核心格集合</span><br>        core = <span class="hljs-built_in">set</span>()<br>        <span class="hljs-keyword">for</span> key, cell <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.cells.items():<br>            <span class="hljs-variable language_">self</span>._decay_to_now(cell)<br>            <span class="hljs-keyword">if</span> cell[<span class="hljs-string">&quot;density&quot;</span>] &gt;= <span class="hljs-variable language_">self</span>.th:<br>                core.add(key)<br><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> core:<br>            <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span><br><br>        <span class="hljs-comment"># 在核心格子子图上做连通分量；可缓存以提速（此处演示写法）</span><br>        <span class="hljs-comment"># BFS 连通</span><br>        visited = <span class="hljs-built_in">set</span>()<br>        comp_id = &#123;&#125;<br>        cid = <span class="hljs-number">0</span><br>        <span class="hljs-keyword">for</span> node <span class="hljs-keyword">in</span> core:<br>            <span class="hljs-keyword">if</span> node <span class="hljs-keyword">in</span> visited:<br>                <span class="hljs-keyword">continue</span><br>            cid += <span class="hljs-number">1</span><br>            q = deque([node])<br>            visited.add(node)<br>            comp_id[node] = cid<br>            <span class="hljs-keyword">while</span> q:<br>                u = q.popleft()<br>                <span class="hljs-keyword">for</span> v <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>._neighbors(u):<br>                    <span class="hljs-keyword">if</span> v <span class="hljs-keyword">in</span> core <span class="hljs-keyword">and</span> v <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> visited:<br>                        visited.add(v)<br>                        comp_id[v] = cid<br>                        q.append(v)<br><br>        <span class="hljs-comment"># 将当前点所在格子的连通分量作为聚类ID</span><br>        <span class="hljs-keyword">return</span> comp_id.get(g, -<span class="hljs-number">1</span>)<br><br><span class="hljs-comment"># 实现备注：</span><br><span class="hljs-comment"># 1) 生产中会对 core 图连通做缓存 + 增量更新；</span><br><span class="hljs-comment"># 2) density 可用“到达率/核密度估计/加权核”替代；</span><br><span class="hljs-comment"># 3) 也可加入空格修剪策略，周期性清理 density 很小的格。</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="B-CEDGM（密度网格-核心微簇-宏簇相交）"><a href="#B-CEDGM（密度网格-核心微簇-宏簇相交）" class="headerlink" title="B) CEDGM（密度网格 + 核心微簇 + 宏簇相交）"></a><a id="b"></a>B) CEDGM（密度网格 + 核心微簇 + 宏簇相交）</h2><h3 id="流程图-1"><a href="#流程图-1" class="headerlink" title="流程图"></a>流程图</h3><pre><code class=" mermaid">flowchart TD
+    X[&quot;点 x_t 到达&quot;] --&gt; Q[&quot;量化到网格&quot;]
+    Q --&gt; G[&quot;更新网格密度 / 异常缓冲&quot;]
+    G --&gt; J&#123;&quot;是否落入某微簇的核区或壳层？&quot;&#125;
+    J -- &quot;核区&quot; --&gt; U1[&quot;更新该微簇中心/计数/半径&quot;]
+    J -- &quot;壳层&quot; --&gt; U2[&quot;吸纳并检查是否变核心&quot;]
+    J -- &quot;否&quot;   --&gt; O1[&quot;作为异常候选或新建微簇&quot;]
+    U1 --&gt; H[&quot;检查微簇之间相交&quot;]
+    U2 --&gt; H
+    O1 --&gt; H
+    H --&gt; M[&quot;构建微簇相交图&quot;]
+    M --&gt; C[&quot;连通分量 → 宏簇&quot;]
+    C --&gt; Y[&quot;输出所属宏簇ID&quot;]
+</code></pre>
+
+
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> defaultdict, deque<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">CEDGM</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    CEDGM 轻量实现：</span><br><span class="hljs-string">    - 网格做粗粒度压缩 + 异常缓存；</span><br><span class="hljs-string">    - CMC (Core Micro-Cluster) 维护中心、半径 r0、计数；</span><br><span class="hljs-string">    - 核区 r&lt;=r0/2，壳层 r0/2&lt;r&lt;=r0；</span><br><span class="hljs-string">    - 两 CMC 若“核-壳相交”则连边，连通分量作为宏簇。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, bounds, cell_size, lambda_decay=<span class="hljs-number">0.01</span>, core_th=<span class="hljs-number">5</span>,</span><br><span class="hljs-params">                 init_radius=<span class="hljs-number">0.5</span>, max_outlier_age=<span class="hljs-number">200</span></span>):<br>        <span class="hljs-variable language_">self</span>.bounds = np.asarray(bounds)<br>        <span class="hljs-variable language_">self</span>.size = np.asarray(cell_size) <span class="hljs-keyword">if</span> np.ndim(cell_size) <span class="hljs-keyword">else</span> np.full(<span class="hljs-variable language_">self</span>.bounds.shape[<span class="hljs-number">0</span>], cell_size)<br>        <span class="hljs-variable language_">self</span>.decay = lambda_decay<br>        <span class="hljs-variable language_">self</span>.core_th = core_th<br>        <span class="hljs-variable language_">self</span>.init_r = init_radius<br>        <span class="hljs-variable language_">self</span>.max_age = max_outlier_age<br>        <span class="hljs-variable language_">self</span>.t = <span class="hljs-number">0</span><br>        <span class="hljs-comment"># 网格密度仓库</span><br>        <span class="hljs-variable language_">self</span>.grid = &#123;&#125;<br>        <span class="hljs-comment"># 微簇列表：每个元素 dict(center, r0, N, last)</span><br>        <span class="hljs-variable language_">self</span>.cmcs = []<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_cell_index</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">tuple</span>(np.floor((x - <span class="hljs-variable language_">self</span>.bounds[:,<span class="hljs-number">0</span>]) / <span class="hljs-variable language_">self</span>.size).astype(<span class="hljs-built_in">int</span>))<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_update_grid</span>(<span class="hljs-params">self, g</span>):<br>        c = <span class="hljs-variable language_">self</span>.grid.get(g)<br>        <span class="hljs-keyword">if</span> c <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            <span class="hljs-variable language_">self</span>.grid[g] = &#123;<span class="hljs-string">&quot;rho&quot;</span>:<span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;t&quot;</span>:<span class="hljs-variable language_">self</span>.t&#125;<br>        <span class="hljs-keyword">else</span>:<br>            dt = <span class="hljs-variable language_">self</span>.t - c[<span class="hljs-string">&quot;t&quot;</span>]<br>            <span class="hljs-keyword">if</span> dt&gt;<span class="hljs-number">0</span>:<br>                c[<span class="hljs-string">&quot;rho&quot;</span>] *= np.exp(-<span class="hljs-variable language_">self</span>.decay*dt)<br>            c[<span class="hljs-string">&quot;rho&quot;</span>] += <span class="hljs-number">1.0</span><br>            c[<span class="hljs-string">&quot;t&quot;</span>] = <span class="hljs-variable language_">self</span>.t<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_assign_to_cmc</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-variable language_">self</span>.cmcs:<br>            <span class="hljs-comment"># 新建微簇</span><br>            <span class="hljs-variable language_">self</span>.cmcs.append(&#123;<span class="hljs-string">&quot;center&quot;</span>:x.copy(), <span class="hljs-string">&quot;r0&quot;</span>:<span class="hljs-variable language_">self</span>.init_r, <span class="hljs-string">&quot;N&quot;</span>:<span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;last&quot;</span>:<span class="hljs-variable language_">self</span>.t&#125;)<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>, <span class="hljs-string">&quot;new&quot;</span><br>        dists = [np.linalg.norm(x - c[<span class="hljs-string">&quot;center&quot;</span>]) <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.cmcs]<br>        j = <span class="hljs-built_in">int</span>(np.argmin(dists))<br>        c = <span class="hljs-variable language_">self</span>.cmcs[j]<br>        r = dists[j]<br>        <span class="hljs-comment"># 判定核/壳/外</span><br>        <span class="hljs-keyword">if</span> r &lt;= c[<span class="hljs-string">&quot;r0&quot;</span>]/<span class="hljs-number">2</span>:<br>            c[<span class="hljs-string">&quot;N&quot;</span>] += <span class="hljs-number">1.0</span><br>            eta = <span class="hljs-number">1.0</span> / c[<span class="hljs-string">&quot;N&quot;</span>]<br>            c[<span class="hljs-string">&quot;center&quot;</span>] = (<span class="hljs-number">1</span>-eta)*c[<span class="hljs-string">&quot;center&quot;</span>] + eta*x<br>            c[<span class="hljs-string">&quot;last&quot;</span>] = <span class="hljs-variable language_">self</span>.t<br>            <span class="hljs-keyword">return</span> j, <span class="hljs-string">&quot;core&quot;</span><br>        <span class="hljs-keyword">elif</span> r &lt;= c[<span class="hljs-string">&quot;r0&quot;</span>]:<br>            c[<span class="hljs-string">&quot;N&quot;</span>] += <span class="hljs-number">1.0</span><br>            eta = <span class="hljs-number">1.0</span> / c[<span class="hljs-string">&quot;N&quot;</span>]<br>            c[<span class="hljs-string">&quot;center&quot;</span>] = (<span class="hljs-number">1</span>-eta)*c[<span class="hljs-string">&quot;center&quot;</span>] + eta*x<br>            <span class="hljs-comment"># 轻微扩半径以兼容漂移</span><br>            c[<span class="hljs-string">&quot;r0&quot;</span>] = <span class="hljs-built_in">max</span>(c[<span class="hljs-string">&quot;r0&quot;</span>], r*<span class="hljs-number">1.05</span>)<br>            c[<span class="hljs-string">&quot;last&quot;</span>] = <span class="hljs-variable language_">self</span>.t<br>            <span class="hljs-keyword">return</span> j, <span class="hljs-string">&quot;shell&quot;</span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-comment"># 视为异常：新建微簇</span><br>            <span class="hljs-variable language_">self</span>.cmcs.append(&#123;<span class="hljs-string">&quot;center&quot;</span>:x.copy(), <span class="hljs-string">&quot;r0&quot;</span>:<span class="hljs-variable language_">self</span>.init_r, <span class="hljs-string">&quot;N&quot;</span>:<span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;last&quot;</span>:<span class="hljs-variable language_">self</span>.t&#125;)<br>            <span class="hljs-keyword">return</span> <span class="hljs-built_in">len</span>(<span class="hljs-variable language_">self</span>.cmcs)-<span class="hljs-number">1</span>, <span class="hljs-string">&quot;outlier&quot;</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_cmc_intersect</span>(<span class="hljs-params">self, i, j</span>):<br>        a, b = <span class="hljs-variable language_">self</span>.cmcs[i], <span class="hljs-variable language_">self</span>.cmcs[j]<br>        d = np.linalg.norm(a[<span class="hljs-string">&quot;center&quot;</span>] - b[<span class="hljs-string">&quot;center&quot;</span>])<br>        <span class="hljs-keyword">return</span> (d &lt;= a[<span class="hljs-string">&quot;r0&quot;</span>]) <span class="hljs-keyword">or</span> (d &lt;= b[<span class="hljs-string">&quot;r0&quot;</span>]) <span class="hljs-keyword">or</span> (d &lt;= (a[<span class="hljs-string">&quot;r0&quot;</span>]/<span class="hljs-number">2</span> + b[<span class="hljs-string">&quot;r0&quot;</span>]))<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_macro_clusters</span>(<span class="hljs-params">self</span>):<br>        n = <span class="hljs-built_in">len</span>(<span class="hljs-variable language_">self</span>.cmcs)<br>        <span class="hljs-comment"># 构造交集图并取连通分量</span><br>        g = [[] <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n)]<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(i+<span class="hljs-number">1</span>, n):<br>                <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>._cmc_intersect(i, j):<br>                    g[i].append(j)<br>                    g[j].append(i)<br>        comp = [-<span class="hljs-number">1</span>]*n<br>        cid = <span class="hljs-number">0</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-keyword">if</span> comp[i] != -<span class="hljs-number">1</span>: <span class="hljs-keyword">continue</span><br>            cid += <span class="hljs-number">1</span><br>            q = deque([i])<br>            comp[i] = cid<br>            <span class="hljs-keyword">while</span> q:<br>                u = q.popleft()<br>                <span class="hljs-keyword">for</span> v <span class="hljs-keyword">in</span> g[u]:<br>                    <span class="hljs-keyword">if</span> comp[v]==-<span class="hljs-number">1</span>:<br>                        comp[v]=cid<br>                        q.append(v)<br>        <span class="hljs-keyword">return</span> comp<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">partial_fit_predict</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-variable language_">self</span>.t += <span class="hljs-number">1</span><br>        x = np.asarray(x)<br>        g = <span class="hljs-variable language_">self</span>._cell_index(x)<br>        <span class="hljs-variable language_">self</span>._update_grid(g)<br>        idx, st = <span class="hljs-variable language_">self</span>._assign_to_cmc(x)<br>        comp = <span class="hljs-variable language_">self</span>._macro_clusters()<br>        <span class="hljs-comment"># 返回所属宏簇ID</span><br>        <span class="hljs-keyword">return</span> comp[idx]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="C-DenStream（指数衰减-核心-潜在-离群-微簇）"><a href="#C-DenStream（指数衰减-核心-潜在-离群-微簇）" class="headerlink" title="C) DenStream（指数衰减 + 核心&#x2F;潜在&#x2F;离群 微簇）"></a><a id="c"></a>C) DenStream（指数衰减 + 核心&#x2F;潜在&#x2F;离群 微簇）</h2><h3 id="流程图-2"><a href="#流程图-2" class="headerlink" title="流程图"></a>流程图</h3><pre><code class=" mermaid">flowchart TD
+    X[&quot;点 x_t 到达&quot;] --&gt; A[&quot;寻找最近微簇&quot;]
+    A --&gt; B&#123;&quot;距离是否 ≤ ε？&quot;&#125;
+    B -- &quot;是&quot; --&gt; U[&quot;吸纳并（带衰减）更新中心/权重/半径&quot;]
+    B -- &quot;否&quot; --&gt; O[&quot;新建离群微簇&quot;]
+    U --&gt; P&#123;&quot;权重 ≥ β 且 半径 ≤ ε？&quot;&#125;
+    P -- &quot;是&quot; --&gt; C[&quot;标记为核心/潜在微簇&quot;]
+    P -- &quot;否&quot; --&gt; R[&quot;保持为潜在/离群&quot;]
+    O --&gt; S[&quot;周期修剪低权重离群微簇&quot;]
+    C --&gt; Y[&quot;输出簇ID（可离线合并）&quot;]
+    R --&gt; Y
+    S --&gt; Y
+</code></pre>
+
+
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> deque<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DenStream</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    简化 DenStream：</span><br><span class="hljs-string">    - 指数衰减: w(t) = w(t-1)*exp(-lambda*dt) + 1</span><br><span class="hljs-string">    - 分类微簇: core / potential / outlier 依据权重阈值 β 与半径 ε</span><br><span class="hljs-string">    - 周期修剪: 对低权重的 outlier 删除</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, eps=<span class="hljs-number">0.5</span>, beta=<span class="hljs-number">10.0</span>, lambd=<span class="hljs-number">0.01</span>, cleanup_period=<span class="hljs-number">100</span></span>):<br>        <span class="hljs-variable language_">self</span>.eps = eps<br>        <span class="hljs-variable language_">self</span>.beta = beta<br>        <span class="hljs-variable language_">self</span>.lambd = lambd<br>        <span class="hljs-variable language_">self</span>.period = cleanup_period<br>        <span class="hljs-variable language_">self</span>.t = <span class="hljs-number">0</span><br>        <span class="hljs-variable language_">self</span>.clusters = []  <span class="hljs-comment"># 每个: &#123;center, weight, radius, last, kind&#125;</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_decay</span>(<span class="hljs-params">self, c</span>):<br>        dt = <span class="hljs-variable language_">self</span>.t - c[<span class="hljs-string">&quot;last&quot;</span>]<br>        <span class="hljs-keyword">if</span> dt &gt; <span class="hljs-number">0</span>:<br>            c[<span class="hljs-string">&quot;weight&quot;</span>] *= np.exp(-<span class="hljs-variable language_">self</span>.lambd*dt)<br>            c[<span class="hljs-string">&quot;last&quot;</span>] = <span class="hljs-variable language_">self</span>.t<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_nearest</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-variable language_">self</span>.clusters:<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span>, np.inf<br>        d = [np.linalg.norm(x - c[<span class="hljs-string">&quot;center&quot;</span>]) <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.clusters]<br>        j = <span class="hljs-built_in">int</span>(np.argmin(d))<br>        <span class="hljs-keyword">return</span> j, d[j]<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_cleanup</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-comment"># 删除长期低权重的 outlier</span><br>        keep = []<br>        <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.clusters:<br>            <span class="hljs-variable language_">self</span>._decay(c)<br>            <span class="hljs-keyword">if</span> c[<span class="hljs-string">&quot;kind&quot;</span>] == <span class="hljs-string">&quot;outlier&quot;</span> <span class="hljs-keyword">and</span> c[<span class="hljs-string">&quot;weight&quot;</span>] &lt; <span class="hljs-number">1.0</span>:<br>                <span class="hljs-keyword">continue</span><br>            keep.append(c)<br>        <span class="hljs-variable language_">self</span>.clusters = keep<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">partial_fit_predict</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-variable language_">self</span>.t += <span class="hljs-number">1</span><br>        x = np.asarray(x)<br>        j, dist = <span class="hljs-variable language_">self</span>._nearest(x)<br>        <span class="hljs-keyword">if</span> j <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">or</span> dist &gt; <span class="hljs-variable language_">self</span>.eps:<br>            <span class="hljs-comment"># 新建 outlier 微簇</span><br>            <span class="hljs-variable language_">self</span>.clusters.append(&#123;<br>                <span class="hljs-string">&quot;center&quot;</span>: x.copy(),<br>                <span class="hljs-string">&quot;weight&quot;</span>: <span class="hljs-number">1.0</span>,<br>                <span class="hljs-string">&quot;radius&quot;</span>: <span class="hljs-number">0.0</span>,<br>                <span class="hljs-string">&quot;last&quot;</span>: <span class="hljs-variable language_">self</span>.t,<br>                <span class="hljs-string">&quot;kind&quot;</span>: <span class="hljs-string">&quot;outlier&quot;</span><br>            &#125;)<br>            cid = <span class="hljs-built_in">len</span>(<span class="hljs-variable language_">self</span>.clusters) - <span class="hljs-number">1</span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-comment"># 吸纳</span><br>            c = <span class="hljs-variable language_">self</span>.clusters[j]<br>            <span class="hljs-variable language_">self</span>._decay(c)<br>            c[<span class="hljs-string">&quot;weight&quot;</span>] += <span class="hljs-number">1.0</span><br>            eta = <span class="hljs-number">1.0</span> / c[<span class="hljs-string">&quot;weight&quot;</span>]<br>            c[<span class="hljs-string">&quot;center&quot;</span>] = (<span class="hljs-number">1</span>-eta)*c[<span class="hljs-string">&quot;center&quot;</span>] + eta*x<br>            c[<span class="hljs-string">&quot;radius&quot;</span>] = <span class="hljs-built_in">max</span>(c[<span class="hljs-string">&quot;radius&quot;</span>], dist)<br>            c[<span class="hljs-string">&quot;kind&quot;</span>] = <span class="hljs-string">&quot;core&quot;</span> <span class="hljs-keyword">if</span> (c[<span class="hljs-string">&quot;weight&quot;</span>] &gt;= <span class="hljs-variable language_">self</span>.beta <span class="hljs-keyword">and</span> c[<span class="hljs-string">&quot;radius&quot;</span>]&lt;=<span class="hljs-variable language_">self</span>.eps) <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;potential&quot;</span><br>            cid = j<br>        <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.t % <span class="hljs-variable language_">self</span>.period == <span class="hljs-number">0</span>:<br>            <span class="hljs-variable language_">self</span>._cleanup()<br>        <span class="hljs-comment"># 以微簇索引近似作为簇ID（生产中应对 core 微簇做连通/离线聚合）</span><br>        <span class="hljs-keyword">return</span> cid<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="D-HPStream（Projected-Clustering-with-Fading）"><a href="#D-HPStream（Projected-Clustering-with-Fading）" class="headerlink" title="D) HPStream（Projected Clustering with Fading）"></a><a id="d"></a>D) HPStream（Projected Clustering with Fading）</h2><h3 id="流程图-3"><a href="#流程图-3" class="headerlink" title="流程图"></a>流程图</h3><pre><code class=" mermaid">flowchart TD
+    X[&quot;点 x_t 到达&quot;] --&gt; W[&quot;为各簇衰减更新均值/方差/权重&quot;]
+    W --&gt; D[&quot;计算各维重要性（1/方差）&quot;]
+    D --&gt; L[&quot;为每簇选择前 l 个相关维&quot;]
+    L --&gt; A[&quot;在所选子空间上计算与中心距离&quot;]
+    A --&gt; J&#123;&quot;是否在吸纳阈值内？&quot;&#125;
+    J -- &quot;是&quot; --&gt; U[&quot;吸纳并增量更新统计量&quot;]
+    J -- &quot;否&quot; --&gt; N[&quot;新建小簇或缓冲，定期合并&quot;]
+    U --&gt; O[&quot;输出当前簇ID&quot;]
+    N --&gt; O
+</code></pre>
+
+
+<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">HPStream</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    HPStream 风格实现：</span><br><span class="hljs-string">    - 维护每簇衰减统计: 重心、方差、权重；</span><br><span class="hljs-string">    - 以方差倒数为维重要性，选 top-l 维作为该簇的子空间；</span><br><span class="hljs-string">    - 在子空间上做距离/吸纳；</span><br><span class="hljs-string">    - 简化了离线阶段(只做小簇合并门槛)。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, l=<span class="hljs-number">5</span>, eps=<span class="hljs-number">1.0</span>, lambd=<span class="hljs-number">0.01</span>, min_weight=<span class="hljs-number">5.0</span></span>):<br>        <span class="hljs-variable language_">self</span>.l = l<br>        <span class="hljs-variable language_">self</span>.eps = eps<br>        <span class="hljs-variable language_">self</span>.lambd = lambd<br>        <span class="hljs-variable language_">self</span>.minw = min_weight<br>        <span class="hljs-variable language_">self</span>.t = <span class="hljs-number">0</span><br>        <span class="hljs-variable language_">self</span>.clusters = []  <span class="hljs-comment"># &#123;mu, var, w, last&#125;</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_decay</span>(<span class="hljs-params">self, c</span>):<br>        dt = <span class="hljs-variable language_">self</span>.t - c[<span class="hljs-string">&quot;last&quot;</span>]<br>        <span class="hljs-keyword">if</span> dt &gt; <span class="hljs-number">0</span>:<br>            factor = np.exp(-<span class="hljs-variable language_">self</span>.lambd * dt)<br>            c[<span class="hljs-string">&quot;w&quot;</span>] *= factor<br>            <span class="hljs-comment"># 均值保持；方差向 0 平移（简化：按同因子衰减）</span><br>            c[<span class="hljs-string">&quot;var&quot;</span>] *= factor<br>            c[<span class="hljs-string">&quot;last&quot;</span>] = <span class="hljs-variable language_">self</span>.t<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_subspace_dims</span>(<span class="hljs-params">self, c</span>):<br>        <span class="hljs-comment"># 重要性 ~ 1 / (var + 1e-6)</span><br>        score = <span class="hljs-number">1.0</span> / (c[<span class="hljs-string">&quot;var&quot;</span>] + <span class="hljs-number">1e-6</span>)<br>        <span class="hljs-keyword">return</span> np.argsort(-score)[:<span class="hljs-variable language_">self</span>.l]<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_dist_subspace</span>(<span class="hljs-params">self, x, c, dims</span>):<br>        d = x[dims] - c[<span class="hljs-string">&quot;mu&quot;</span>][dims]<br>        <span class="hljs-keyword">return</span> np.linalg.norm(d)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">partial_fit_predict</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-variable language_">self</span>.t += <span class="hljs-number">1</span><br>        x = np.asarray(x)<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-variable language_">self</span>.clusters:<br>            <span class="hljs-variable language_">self</span>.clusters.append(&#123;<br>                <span class="hljs-string">&quot;mu&quot;</span>: x.copy(),<br>                <span class="hljs-string">&quot;var&quot;</span>: np.ones_like(x)*<span class="hljs-number">1e-2</span>,<br>                <span class="hljs-string">&quot;w&quot;</span>: <span class="hljs-number">1.0</span>,<br>                <span class="hljs-string">&quot;last&quot;</span>: <span class="hljs-variable language_">self</span>.t<br>            &#125;)<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>        <span class="hljs-comment"># 尝试吸纳最近簇（在其子空间）</span><br>        best, bd = <span class="hljs-literal">None</span>, np.inf<br>        <span class="hljs-keyword">for</span> i, c <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(<span class="hljs-variable language_">self</span>.clusters):<br>            <span class="hljs-variable language_">self</span>._decay(c)<br>            dims = <span class="hljs-variable language_">self</span>._subspace_dims(c)<br>            d = <span class="hljs-variable language_">self</span>._dist_subspace(x, c, dims)<br>            <span class="hljs-keyword">if</span> d &lt; bd:<br>                bd, best = d, i<br>        <span class="hljs-keyword">if</span> bd &lt;= <span class="hljs-variable language_">self</span>.eps:<br>            c = <span class="hljs-variable language_">self</span>.clusters[best]<br>            c[<span class="hljs-string">&quot;w&quot;</span>] += <span class="hljs-number">1.0</span><br>            eta = <span class="hljs-number">1.0</span> / c[<span class="hljs-string">&quot;w&quot;</span>]<br>            delta = x - c[<span class="hljs-string">&quot;mu&quot;</span>]<br>            c[<span class="hljs-string">&quot;mu&quot;</span>] += eta * delta<br>            c[<span class="hljs-string">&quot;var&quot;</span>] = (<span class="hljs-number">1</span>-eta)*c[<span class="hljs-string">&quot;var&quot;</span>] + eta*(delta**<span class="hljs-number">2</span>)<br>            <span class="hljs-keyword">return</span> best<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-comment"># 新建小簇</span><br>            <span class="hljs-variable language_">self</span>.clusters.append(&#123;<br>                <span class="hljs-string">&quot;mu&quot;</span>: x.copy(),<br>                <span class="hljs-string">&quot;var&quot;</span>: np.ones_like(x)*<span class="hljs-number">1e-2</span>,<br>                <span class="hljs-string">&quot;w&quot;</span>: <span class="hljs-number">1.0</span>,<br>                <span class="hljs-string">&quot;last&quot;</span>: <span class="hljs-variable language_">self</span>.t<br>            &#125;)<br>            <span class="hljs-keyword">return</span> <span class="hljs-built_in">len</span>(<span class="hljs-variable language_">self</span>.clusters)-<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="E-EDSSC（动态稀疏子空间聚类-for-演化高维流）"><a href="#E-EDSSC（动态稀疏子空间聚类-for-演化高维流）" class="headerlink" title="E) EDSSC（动态稀疏子空间聚类 for 演化高维流）"></a><a id="e"></a>E) EDSSC（动态稀疏子空间聚类 for 演化高维流）</h2><h3 id="流程图-4"><a href="#流程图-4" class="headerlink" title="流程图"></a>流程图</h3><pre><code class=" mermaid">flowchart TD
+    S[&quot;静态缓冲数据 X0&quot;] --&gt; L[&quot;Lasso 自表达求 C&quot;]
+    L --&gt; W[&quot;构亲和矩阵（|C|+|C^T|）并谱聚类&quot;]
+    W --&gt; B[&quot;每簇做 PCA 得到子空间基 U_k&quot;]
+    B --&gt; R[&quot;进入在线阶段&quot;]
+    R --&gt; X[&quot;新样本 x_t&quot;]
+    X --&gt; E[&quot;到各子空间的残差 r_k&quot;]
+    E --&gt; D&#123;&quot;min(r_k) 是否 &lt; 阈值 τ？&quot;&#125;
+    D -- &quot;是&quot; --&gt; A[&quot;分配给子空间 k，并做增量 PCA 更新&quot;]
+    D -- &quot;否&quot; --&gt; N[&quot;创建新子空间 / 触发分裂&quot;]
+    A --&gt; O[&quot;输出子空间ID&quot;]
+    N --&gt; O
+</code></pre>
+
+
+<h3 id="代码-4"><a href="#代码-4" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> Lasso<br><span class="hljs-keyword">from</span> sklearn.cluster <span class="hljs-keyword">import</span> SpectralClustering<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">EDSSC</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    EDSSC 风格实现：</span><br><span class="hljs-string">    - 预热窗口做 Lasso 自表达 + 谱聚类 -&gt; 初始子空间；</span><br><span class="hljs-string">    - 在线阶段用残差到子空间基的最小值进行分配；</span><br><span class="hljs-string">    - 子空间基用简易增量PCA更新（Oja风格）。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, alpha=<span class="hljs-number">0.01</span>, n_init_subspaces=<span class="hljs-number">5</span>, subspace_rank=<span class="hljs-number">5</span>, tau=<span class="hljs-number">0.5</span>, lr=<span class="hljs-number">0.05</span></span>):<br>        <span class="hljs-variable language_">self</span>.alpha = alpha<br>        <span class="hljs-variable language_">self</span>.K = n_init_subspaces<br>        <span class="hljs-variable language_">self</span>.r = subspace_rank<br>        <span class="hljs-variable language_">self</span>.tau = tau<br>        <span class="hljs-variable language_">self</span>.lr = lr<br>        <span class="hljs-variable language_">self</span>.bases = []  <span class="hljs-comment"># list of U_k (d x r)</span><br>        <span class="hljs-variable language_">self</span>.labels_ = <span class="hljs-literal">None</span><br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_normalize</span>(<span class="hljs-params">X</span>):<br>        n = np.linalg.norm(X, axis=<span class="hljs-number">0</span>) + <span class="hljs-number">1e-8</span><br>        <span class="hljs-keyword">return</span> X / n<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_self_expressive</span>(<span class="hljs-params">self, X</span>):<br>        <span class="hljs-comment"># 求解 X ≈ X C, 对每列做 Lasso（排除自身）</span><br>        n = X.shape[<span class="hljs-number">1</span>]<br>        C = np.zeros((n, n))<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            Xi = np.delete(X, i, axis=<span class="hljs-number">1</span>)<br>            yi = X[:, i]<br>            lasso = Lasso(alpha=<span class="hljs-variable language_">self</span>.alpha, fit_intercept=<span class="hljs-literal">False</span>, max_iter=<span class="hljs-number">2000</span>)<br>            lasso.fit(Xi, yi)<br>            coef = lasso.coef_<br>            C[:i, i] = coef[:i]<br>            C[i+<span class="hljs-number">1</span>:, i] = coef[i:]<br>        <span class="hljs-keyword">return</span> C<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_spectral_cluster</span>(<span class="hljs-params">self, C, K</span>):<br>        W = np.<span class="hljs-built_in">abs</span>(C) + np.<span class="hljs-built_in">abs</span>(C.T)<br>        sc = SpectralClustering(n_clusters=K, affinity=<span class="hljs-string">&#x27;precomputed&#x27;</span>, assign_labels=<span class="hljs-string">&#x27;kmeans&#x27;</span>)<br>        y = sc.fit_predict(W)<br>        <span class="hljs-keyword">return</span> y<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_init_bases</span>(<span class="hljs-params">self, X, y</span>):<br>        d = X.shape[<span class="hljs-number">0</span>]<br>        <span class="hljs-variable language_">self</span>.bases = []<br>        <span class="hljs-keyword">for</span> k <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-variable language_">self</span>.K):<br>            Xk = X[:, y==k]<br>            <span class="hljs-keyword">if</span> Xk.shape[<span class="hljs-number">1</span>] &lt; <span class="hljs-variable language_">self</span>.r:<br>                <span class="hljs-comment"># 不足 r 列时，做零填充</span><br>                U = np.eye(d, <span class="hljs-variable language_">self</span>.r)<br>            <span class="hljs-keyword">else</span>:<br>                <span class="hljs-comment"># PCA: top-r 左奇异向量</span><br>                U, _, _ = np.linalg.svd(Xk, full_matrices=<span class="hljs-literal">False</span>)<br>                U = U[:, :<span class="hljs-variable language_">self</span>.r]<br>            <span class="hljs-variable language_">self</span>.bases.append(U)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">fit_init</span>(<span class="hljs-params">self, X0</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;静态预热阶段。</span><br><span class="hljs-string">        X0: d x n0&quot;&quot;&quot;</span><br>        X0 = <span class="hljs-variable language_">self</span>._normalize(X0)<br>        C = <span class="hljs-variable language_">self</span>._self_expressive(X0)<br>        y = <span class="hljs-variable language_">self</span>._spectral_cluster(C, <span class="hljs-variable language_">self</span>.K)<br>        <span class="hljs-variable language_">self</span>._init_bases(X0, y)<br>        <span class="hljs-variable language_">self</span>.labels_ = y<br>        <span class="hljs-keyword">return</span> y<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_residuals</span>(<span class="hljs-params">self, x</span>):<br>        rs = []<br>        <span class="hljs-keyword">for</span> U <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.bases:<br>            proj = U @ (U.T @ x)<br>            rs.append(np.linalg.norm(x - proj))<br>        <span class="hljs-keyword">return</span> np.array(rs)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_update_basis</span>(<span class="hljs-params">self, k, x</span>):<br>        <span class="hljs-comment"># Oja 风格增量PCA: 对 U 做一小步朝向 x 的投影子空间更新</span><br>        U = <span class="hljs-variable language_">self</span>.bases[k]<br>        proj = U @ (U.T @ x)<br>        err = x - proj<br>        U_new = U + <span class="hljs-variable language_">self</span>.lr * np.outer(err, (U.T @ x))<br>        <span class="hljs-comment"># 正交化</span><br>        q, _ = np.linalg.qr(U_new)<br>        <span class="hljs-variable language_">self</span>.bases[k] = q[:, :<span class="hljs-variable language_">self</span>.r]<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">partial_fit_predict</span>(<span class="hljs-params">self, x</span>):<br>        x = x / (np.linalg.norm(x) + <span class="hljs-number">1e-8</span>)<br>        rs = <span class="hljs-variable language_">self</span>._residuals(x)<br>        k = <span class="hljs-built_in">int</span>(np.argmin(rs))<br>        <span class="hljs-keyword">if</span> rs[k] &lt; <span class="hljs-variable language_">self</span>.tau:<br>            <span class="hljs-variable language_">self</span>._update_basis(k, x)<br>            <span class="hljs-keyword">return</span> k<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-comment"># 新子空间：以 x 为起点（若需要可设最大子空间数/合并策略）</span><br>            d = x.shape[<span class="hljs-number">0</span>]<br>            U = np.zeros((d, <span class="hljs-variable language_">self</span>.r))<br>            U[:, <span class="hljs-number">0</span>] = x / (np.linalg.norm(x) + <span class="hljs-number">1e-8</span>)<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-variable language_">self</span>.r):<br>                <span class="hljs-comment"># 随机正交补（简易）</span><br>                v = np.random.randn(d)<br>                v -= U[:, :j] @ (U[:, :j].T @ v)<br>                U[:, j] = v / (np.linalg.norm(v) + <span class="hljs-number">1e-8</span>)<br>            <span class="hljs-variable language_">self</span>.bases.append(U)<br>            <span class="hljs-variable language_">self</span>.K += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.K - <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="F-流数据聚类总结"><a href="#F-流数据聚类总结" class="headerlink" title="F) 流数据聚类总结"></a><a id="f"></a>F) 流数据聚类总结</h2><p>事实上，这几个算法无非就是在线维护、动态插入并调整思路的几种不同的呈现形式，这种思路的确最受欢迎，在这种思路上逐渐改动确实是较为省力且讨巧的方法。自然，这些算法存在共性问题：</p>
+<p><strong>稳定–敏捷两难（遗忘&#x2F;衰减的权衡）</strong><br> 衰减快：对新模式灵敏但簇抖动、遗忘历史；衰减慢：稳定但跟不上漂移，出现滞后与过时簇占内存。</p>
+<p><strong>超参敏感且在线难调</strong><br> 半径&#x2F;密度阈值、网格粒度、衰减系数、子空间维数&#x2F;秩、残差阈值等对结果影响巨大，而在线场景缺少可靠的即时监督信号来调参。</p>
+<p><strong>可扩展性与内存控制</strong></p>
+<p>高频流 + 高维度 → 网格&#x2F;微簇数量暴涨；自表达&#x2F;谱分解在长时运行有累积成本。</p>
+<p>每个算法也存在着不同的适应场景与独特优缺点：</p>
+<p>DenStream&#x2F;网格法在早期样本少、密度不稳定；EDSSC 需要<strong>预热窗口</strong>做自表达与谱聚类；CEDGM&#x2F;网格法需要维护核心格或CMC的连通&#x2F;相交图；若簇数量大或频繁变化，增量更新可能成为瓶颈…</p>
+<p>所以，我们能做些什么以求改进呢？我也不清楚（要是我知道就不在这敲这篇不知道有没有用处的blog了…</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>机器学习-增量更新的流数据聚类</div>
+      <div>http://example.com/2025/10/27/机器学习-增量更新的流数据聚类/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>oxygen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年10月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/10/12/Rust-base-learning-5/" title="Rust-base-learning-5">
+                        <span class="hidden-mobile">Rust-base-learning-5</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

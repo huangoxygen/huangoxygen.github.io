@@ -1,0 +1,848 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="oxygen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="· Rust基础学习–（三）六、流程控制1、分支控制：if-else用if-else赋值： 12345678910fn main() &#123;    let condition &#x3D; true;    let number &#x3D; if condition &#123;        5    &#125; else &#123;        6&#x2F;&#x2F;用if-else语句赋值的时候，不能在不同分支使">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust-base-learning-3">
+<meta property="og:url" content="http://example.com/2025/07/02/Rust-base-learning-3/index.html">
+<meta property="og:site_name" content="oxygen&#39;s blog">
+<meta property="og:description" content="· Rust基础学习–（三）六、流程控制1、分支控制：if-else用if-else赋值： 12345678910fn main() &#123;    let condition &#x3D; true;    let number &#x3D; if condition &#123;        5    &#125; else &#123;        6&#x2F;&#x2F;用if-else语句赋值的时候，不能在不同分支使">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-02T03:40:39.000Z">
+<meta property="article:modified_time" content="2025-07-05T15:23:26.691Z">
+<meta property="article:author" content="oxygen">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Rust-base-learning-3 - oxygen&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>huangoxygen</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Rust-base-learning-3"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-07-02 11:40" pubdate>
+          2025年7月2日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Rust-base-learning-3</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>·</p>
+<h1 id="Rust基础学习–（三）"><a href="#Rust基础学习–（三）" class="headerlink" title="Rust基础学习–（三）"></a>Rust基础学习–（三）</h1><h2 id="六、流程控制"><a href="#六、流程控制" class="headerlink" title="六、流程控制"></a>六、流程控制</h2><h4 id="1、分支控制：if-else"><a href="#1、分支控制：if-else" class="headerlink" title="1、分支控制：if-else"></a>1、分支控制：if-else</h4><p>用if-else赋值：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">condition</span> = <span class="hljs-literal">true</span>;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">number</span> = <span class="hljs-keyword">if</span> condition &#123;<br>        <span class="hljs-number">5</span><br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-number">6</span><span class="hljs-comment">//用if-else语句赋值的时候，不能在不同分支使用不同的变量类型，否则报错</span><br>    &#125;;<br><br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;The value of number is: &#123;&#125;&quot;</span>, number);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>用if-else进行逻辑判断：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">n</span> = <span class="hljs-number">6</span>;<br><br>    <span class="hljs-keyword">if</span> n % <span class="hljs-number">4</span> == <span class="hljs-number">0</span> &#123;<br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;number is divisible by 4&quot;</span>);<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> n % <span class="hljs-number">3</span> == <span class="hljs-number">0</span> &#123;<br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;number is divisible by 3&quot;</span>);<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> n % <span class="hljs-number">2</span> == <span class="hljs-number">0</span> &#123;<br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;number is divisible by 2&quot;</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;number is not divisible by 4, 3, or 2&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="2、循环控制"><a href="#2、循环控制" class="headerlink" title="2、循环控制"></a>2、循环控制</h4><p><strong>（1）for循环</strong></p>
+<p>示例：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">for</span> <span class="hljs-variable">i</span> <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>..=<span class="hljs-number">5</span> &#123;<span class="hljs-comment">//在in后面往往使用集合的引用格式，如果不使用引用，会导致所有权被转移到for语句块中，后续不可以再使用该集合</span><br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;&#123;&#125;&quot;</span>, i);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>【对于实现了 <code>copy</code> 特征的数组（例如 [i32; 10]）而言， <code>for item in arr</code> 并不会把 <code>arr</code> 的所有权转移，而是直接对其进行了拷贝，因此循环之后仍然可以使用 <code>arr</code> 。】</p>
+<p>如果不需要使用声明的i，也可以用如下方式控制循环：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">for</span> <span class="hljs-variable">_</span> <span class="hljs-keyword">in</span> <span class="hljs-number">0</span>..<span class="hljs-number">10</span> &#123;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>总结如下：</p>
+<table>
+<thead>
+<tr>
+<th>使用方法</th>
+<th>等价使用方式</th>
+<th>所有权</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>for item in collection</code></td>
+<td><code>for item in IntoIterator::into_iter(collection)</code></td>
+<td>转移所有权</td>
+</tr>
+<tr>
+<td><code>for item in &amp;collection</code></td>
+<td><code>for item in collection.iter()</code></td>
+<td>不可变借用</td>
+</tr>
+<tr>
+<td><code>for item in &amp;mut collection</code></td>
+<td><code>for item in collection.iter_mut()</code></td>
+<td>可变借用</td>
+</tr>
+</tbody></table>
+<p>如果想在循环中<strong>获取元素的索引</strong>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">a</span> = [<span class="hljs-number">4</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>];<br>    <span class="hljs-comment">// `.iter()` 方法把 `a` 数组变成一个迭代器</span><br>    <span class="hljs-keyword">for</span> (i, v) <span class="hljs-keyword">in</span> a.<span class="hljs-title function_ invoke__">iter</span>().<span class="hljs-title function_ invoke__">enumerate</span>() &#123;<br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;第&#123;&#125;个元素是&#123;&#125;&quot;</span>, i + <span class="hljs-number">1</span>, v);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>continue：跳过本次循环继续，break：跳过当前整个循环（<strong>break 可以单独使用，也可以带一个返回值</strong>，有些类似 <code>return</code>）。</p>
+<p><strong>（2）while循环</strong></p>
+<p>eg;</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs RUST"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">n</span> = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">while</span> n &lt;= <span class="hljs-number">5</span>  &#123;<br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;&#123;&#125;!&quot;</span>, n);<br><br>        n = n + <span class="hljs-number">1</span>;<br>    &#125;<br><br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;我出来了！&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>【for比while更安全，功能更强大，这是因为编译器增加了运行时代码来对每次while循环的每个元素进行条件检查，而，<code>for</code> 并不会使用索引去访问数组，因此更安全也更简洁，同时避免 <code>运行时的边界检查</code>，性能更高】</p>
+<p><strong>（3）loop循环</strong></p>
+<p>又称无条件循环，使用if和break跳出循环。</p>
+<p>eg:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">counter</span> = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">result</span> = <span class="hljs-keyword">loop</span> &#123;<br>        counter += <span class="hljs-number">1</span>;<br><br>        <span class="hljs-keyword">if</span> counter == <span class="hljs-number">10</span> &#123;<br>            <span class="hljs-keyword">break</span> counter * <span class="hljs-number">2</span>;<br>        &#125;<br>    &#125;;<br><br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;The result is &#123;&#125;&quot;</span>, result);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="七、模式匹配"><a href="#七、模式匹配" class="headerlink" title="七、模式匹配"></a>七、模式匹配</h2><h4 id="1、match"><a href="#1、match" class="headerlink" title="1、match"></a>1、match</h4><p>eg;</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Direction</span> &#123;<br>    East,<br>    West,<br>    North,<br>    South,<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">dire</span> = Direction::South;<br>    <span class="hljs-keyword">match</span> dire &#123;<br>        Direction::East =&gt; <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;East&quot;</span>),<br>        Direction::North | Direction::South =&gt; &#123;<br>            <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;South or North&quot;</span>);<br>        &#125;,<br>        _ =&gt; <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;West&quot;</span>),<br>    &#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>match</code> 的匹配必须要穷举出所有可能，因此这里用 <code>_</code> 来代表未列出的所有可能性</li>
+<li><code>match</code> 的每一个分支都必须是一个表达式，且所有分支的表达式最终返回值的类型必须相同</li>
+<li><strong>X | Y</strong>，类似逻辑运算符 <code>或</code>，代表该分支可以匹配 <code>X</code> 也可以匹配 <code>Y</code>，只要满足一个即可</li>
+</ul>
+<p>（其实 <code>match</code> 跟其他语言中的 <code>switch</code> 非常像，<code>_</code> 类似于 <code>switch</code> 中的 <code>default</code>。）</p>
+<h4 id="2、if-let"><a href="#2、if-let" class="headerlink" title="2、if let"></a>2、if let</h4><p><strong>当你只要匹配一个条件，且忽略其他条件时就用 <code>if let</code> ，否则都用 <code>match</code></strong>。</p>
+<p>eg：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">let</span> <span class="hljs-variable">v</span> = <span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-number">3u8</span>);<br><span class="hljs-keyword">match</span> v &#123;<br>    <span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-number">3</span>) =&gt; <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;three&quot;</span>),<br>    _ =&gt; (),<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="3、matches-宏"><a href="#3、matches-宏" class="headerlink" title="3、matches!宏"></a>3、matches!宏</h4><p>Rust 标准库中提供了一个非常实用的宏：<code>matches!</code>，它可以将一个表达式跟模式进行匹配，然后返回匹配的结果 <code>true</code> or <code>false</code>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">MyEnum</span> &#123;<br>    Foo,<br>    Bar<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">v</span> = <span class="hljs-built_in">vec!</span>[MyEnum::Foo,MyEnum::Bar,MyEnum::Foo];<br>    v.<span class="hljs-title function_ invoke__">iter</span>().<span class="hljs-title function_ invoke__">filter</span>(|x| matches!(x, MyEnum::Foo));<br><span class="hljs-comment">//对 v 进行过滤，只保留类型是 MyEnum::Foo 的元素</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其他例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">let</span> <span class="hljs-variable">foo</span> = <span class="hljs-string">&#x27;f&#x27;</span>;<br><span class="hljs-built_in">assert!</span>(matches!(foo, <span class="hljs-string">&#x27;A&#x27;</span>..=<span class="hljs-string">&#x27;Z&#x27;</span> | <span class="hljs-string">&#x27;a&#x27;</span>..=<span class="hljs-string">&#x27;z&#x27;</span>));<br><br><span class="hljs-keyword">let</span> <span class="hljs-variable">bar</span> = <span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-number">4</span>);<br><span class="hljs-built_in">assert!</span>(matches!(bar, <span class="hljs-title function_ invoke__">Some</span>(x) <span class="hljs-keyword">if</span> x &gt; <span class="hljs-number">2</span>));<br></code></pre></td></tr></table></figure>
+
+<p>【注：无论是<code>match</code> 还是 <code>if let</code>，这里都是一个新的代码块，而且这里的绑定相当于新变量，如果你使用同名变量，会发生变量遮蔽】</p>
+<h4 id="4、模式及其适用场景"><a href="#4、模式及其适用场景" class="headerlink" title="4、模式及其适用场景"></a>4、模式及其适用场景</h4><p>模式是 Rust 中的特殊语法，它用来匹配类型中的结构和数据，它往往和 <code>match</code> 表达式联用，以实现强大的模式匹配能力。一般包括：</p>
+<ul>
+<li>字面值</li>
+<li>解构的数组、枚举、结构体或者元组</li>
+<li>变量</li>
+<li>通配符</li>
+<li>占位符</li>
+</ul>
+<p>适用场景：</p>
+<ul>
+<li><p>match 分支</p>
+</li>
+<li><p>if let分支</p>
+</li>
+<li><p>while let条件循环</p>
+</li>
+<li><p>for循环</p>
+</li>
+<li><p>let语句</p>
+</li>
+<li><p>函数参数</p>
+</li>
+<li><p>let-else语句（新增）</p>
+<p>使用 <code>let-else</code> 匹配，即可使 <code>let</code> 变为可驳模式。它可以使用 <code>else</code> 分支来处理模式不匹配的情况，但是 <code>else</code> 分支中必须用发散的代码块处理（例如：<code>break</code>、<code>return</code>、<code>panic</code>）。</p>
+<p>模式：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">let</span> <span class="hljs-variable">PATTERN</span> = EXPRESSION <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-comment">// 模式匹配失败时执行的代码</span><br>    <span class="hljs-comment">// 必须以发散表达式（如 panic!、return、break）结束</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p><strong>PATTERN</strong>：要匹配的模式（如 <code>Some(x)</code>、<code>(a, b)</code> 等）。</p>
+<p><strong>EXPRESSION</strong>：要匹配的值。</p>
+<p><strong>else 块</strong>：模式匹配失败时执行的代码，必须以 <strong>发散表达式</strong>（diverging expression）结束（即程序控制流不会继续执行后续代码）。</p>
+<p>eg：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> std::<span class="hljs-type">str</span>::FromStr;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">get_count_item</span>(s: &amp;<span class="hljs-type">str</span>) <span class="hljs-punctuation">-&gt;</span> (<span class="hljs-type">u64</span>, &amp;<span class="hljs-type">str</span>) &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">it</span> = s.<span class="hljs-title function_ invoke__">split</span>(<span class="hljs-string">&#x27; &#x27;</span>);<br>    <span class="hljs-keyword">let</span> (<span class="hljs-title function_ invoke__">Some</span>(count_str), <span class="hljs-title function_ invoke__">Some</span>(item)) = (it.<span class="hljs-title function_ invoke__">next</span>(), it.<span class="hljs-title function_ invoke__">next</span>()) <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-built_in">panic!</span>(<span class="hljs-string">&quot;Can&#x27;t segment count item pair: &#x27;&#123;s&#125;&#x27;&quot;</span>);<br>    &#125;;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">Ok</span>(count) = <span class="hljs-type">u64</span>::<span class="hljs-title function_ invoke__">from_str</span>(count_str) <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-built_in">panic!</span>(<span class="hljs-string">&quot;Can&#x27;t parse integer: &#x27;&#123;count_str&#125;&#x27;&quot;</span>);<br>    &#125;;<br>    <span class="hljs-comment">// error: `else` clause of `let...else` does not diverge</span><br>    <span class="hljs-comment">// let Ok(count) = u64::from_str(count_str) else &#123; 0 &#125;;</span><br>    (count, item)<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-built_in">assert_eq!</span>(<span class="hljs-title function_ invoke__">get_count_item</span>(<span class="hljs-string">&quot;3 chairs&quot;</span>), (<span class="hljs-number">3</span>, <span class="hljs-string">&quot;chairs&quot;</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>(与 <code>match</code> 和 <code>if let</code> 相比，<code>let-else</code> 的一个显著特点在于其解包成功时所创建的变量具有更广的作用域。在 <code>let-else</code> 语句中，成功匹配后的变量不再仅限于特定分支内使用)</p>
+</li>
+</ul>
+<h4 id="5、全模式列表"><a href="#5、全模式列表" class="headerlink" title="5、全模式列表"></a>5、<a target="_blank" rel="noopener" href="https://course.rs/basic/match-pattern/all-patterns.html#%E5%85%A8%E6%A8%A1%E5%BC%8F%E5%88%97%E8%A1%A8">全模式列表</a></h4><p>见链接</p>
+<h2 id="八、方法Method"><a href="#八、方法Method" class="headerlink" title="八、方法Method"></a>八、方法Method</h2><h4 id="定义：使用impl来定义方法"><a href="#定义：使用impl来定义方法" class="headerlink" title="定义：使用impl来定义方法"></a>定义：使用impl来定义方法</h4><p>eg：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Circle</span> &#123;<br>    x: <span class="hljs-type">f64</span>,<br>    y: <span class="hljs-type">f64</span>,<br>    radius: <span class="hljs-type">f64</span>,<br>&#125;<br><span class="hljs-keyword">impl</span> <span class="hljs-title class_">Circle</span> &#123;<br>    <span class="hljs-comment">// new是Circle的关联函数，因为它的第一个参数不是self，且new并不是关键字</span><br>    <span class="hljs-comment">// 这种方法往往用于初始化当前结构体的实例</span><br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">new</span>(x: <span class="hljs-type">f64</span>, y: <span class="hljs-type">f64</span>, radius: <span class="hljs-type">f64</span>) <span class="hljs-punctuation">-&gt;</span> Circle &#123;<br>        Circle &#123;<br>            x: x,<br>            y: y,<br>            radius: radius,<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// Circle的方法，&amp;self表示借用当前的Circle结构体</span><br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">area</span>(&amp;<span class="hljs-keyword">self</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">f64</span> &#123;<br>        std::<span class="hljs-type">f64</span>::consts::PI * (<span class="hljs-keyword">self</span>.radius * <span class="hljs-keyword">self</span>.radius)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="self、-self-和-mut-self："><a href="#self、-self-和-mut-self：" class="headerlink" title="self、&amp;self 和 &amp;mut self："></a>self、&amp;self 和 &amp;mut self：</h4><p>（python里的self其实相当于这里的&amp;mut self）</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-meta">#[derive(Debug)]</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Rectangle</span> &#123;<br>    width: <span class="hljs-type">u32</span>,<br>    height: <span class="hljs-type">u32</span>,<br>&#125;<br><br><span class="hljs-keyword">impl</span> <span class="hljs-title class_">Rectangle</span> &#123;<br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">area</span>(&amp;<span class="hljs-keyword">self</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">u32</span> &#123;<br>        <span class="hljs-keyword">self</span>.width * <span class="hljs-keyword">self</span>.height<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">rect1</span> = Rectangle &#123; width: <span class="hljs-number">30</span>, height: <span class="hljs-number">50</span> &#125;;<br><br>    <span class="hljs-built_in">println!</span>(<br>        <span class="hljs-string">&quot;The area of the rectangle is &#123;&#125; square pixels.&quot;</span>,<br>        rect1.<span class="hljs-title function_ invoke__">area</span>()<br>    );<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在 <code>area</code> 的签名中，我们使用 <code>&amp;self</code> 替代 <code>rectangle: &amp;Rectangle</code>，<code>&amp;self</code> 其实是 <code>self: &amp;Self</code> 的简写（注意大小写）。在一个 <code>impl</code> 块内，<code>Self</code> 指代被实现方法的结构体类型，<code>self</code> 指代此类型的实例，换句话说，<code>self</code> 指代的是 <code>Rectangle</code> 结构体实例，这样的写法会让我们的代码简洁很多，而且非常便于理解：我们为哪个结构体实现方法，那么 <code>self</code> 就是指代哪个结构体的实例。</p>
+<p><code>self</code> 依然有所有权的概念：</p>
+<ul>
+<li><code>self</code> 表示 <code>Rectangle</code> 的所有权转移到该方法中，这种形式用的较少</li>
+<li><code>&amp;self</code> 表示该方法对 <code>Rectangle</code> 的不可变借用</li>
+<li><code>&amp;mut self</code> 表示可变借用</li>
+</ul>
+<p>在上面的例子中，选择 <code>&amp;self</code> 的理由跟在函数中使用 <code>&amp;Rectangle</code> 是相同的：我们并不想获取所有权，也无需去改变它，只是希望能够读取结构体中的数据。如果想要在方法中去改变当前的结构体，需要将第一个参数改为 <code>&amp;mut self</code>。仅仅通过使用 <code>self</code> 作为第一个参数来使方法获取实例的所有权是很少见的，这种使用方式往往用于把当前的对象转成另外一个对象时使用，转换完后，就不再关注之前的对象，且可以防止对之前对象的误调用。</p>
+<p>总结，使用方法代替函数有以下好处：</p>
+<ul>
+<li>不用在函数签名中重复书写 <code>self</code> 对应的类型</li>
+<li>代码的组织性和内聚性更强，对于代码维护和阅读来说，好处巨大</li>
+</ul>
+<p>【在 Rust 中，允许方法名跟结构体的字段名相同。eg，当我们使用 <code>rect1.width()</code> 时，Rust 知道我们调用的是它的方法，如果使用 <code>rect1.width</code>，则是访问它的字段。一般来说，方法跟字段同名，往往适用于实现 <code>getter</code> 访问器，例如:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">mod</span> my &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">Rectangle</span> &#123;<br>        width: <span class="hljs-type">u32</span>,<br>        <span class="hljs-keyword">pub</span> height: <span class="hljs-type">u32</span>,<br>    &#125;<br><br>    <span class="hljs-keyword">impl</span> <span class="hljs-title class_">Rectangle</span> &#123;<br>        <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">new</span>(width: <span class="hljs-type">u32</span>, height: <span class="hljs-type">u32</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-keyword">Self</span> &#123;<br>            Rectangle &#123; width, height &#125;<br>        &#125;<br>        <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">width</span>(&amp;<span class="hljs-keyword">self</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">u32</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>.width;<br>        &#125;<br>        <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">height</span>(&amp;<span class="hljs-keyword">self</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">u32</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>.height;<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">rect1</span> = my::Rectangle::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-number">30</span>, <span class="hljs-number">50</span>);<br><br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;&#123;&#125;&quot;</span>, rect1.<span class="hljs-title function_ invoke__">width</span>()); <span class="hljs-comment">// OK</span><br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;&#123;&#125;&quot;</span>, rect1.<span class="hljs-title function_ invoke__">height</span>()); <span class="hljs-comment">// OK</span><br>    <span class="hljs-comment">// println!(&quot;&#123;&#125;&quot;, rect1.width); // Error - the visibility of field defaults to private</span><br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;&#123;&#125;&quot;</span>, rect1.height); <span class="hljs-comment">// OK</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>当从模块外部访问结构体时，结构体的字段默认是私有的，其目的是隐藏信息（封装）。我们如果想要从模块外部获取 <code>Rectangle</code> 的字段，只需把它的 <code>new</code>， <code>width</code> 和 <code>height</code> 方法设置为公开可见，那么用户就可以创建一个矩形，同时通过访问器 <code>rect1.width()</code> 和 <code>rect1.height()</code> 方法来获取矩形的宽度和高度。</p>
+<p>因为 <code>width</code> 字段是私有的，当用户访问 <code>rect1.width</code> 字段时，就会报错。注意在此例中，<code>Self</code> 指代的就是被实现方法的结构体 <code>Rectangle</code>。</p>
+<p>特别的是，这种默认的可见性（私有的）可以通过 <code>pub</code> 进行覆盖，这样对于模块外部来说，就可以直接访问使用 <code>pub</code> 修饰的字段而无需通过访问器。这种可见性仅当从定义结构的模块外部访问时才重要，并且具有隐藏信息（封装）的目的。</p>
+<p>（暴论总结：感觉和c++的class的封装差不多）】</p>
+<p>【-&gt;运算符在rust的替代方式：（rust并没有该运算符）</p>
+<p>在 C&#x2F;C++ 语言中，有两个不同的运算符来调用方法：<code>.</code> 直接在对象上调用方法，而 <code>-&gt;</code> 在一个对象的指针上调用方法，这时需要先解引用指针。换句话说，如果 <code>object</code> 是一个指针，那么 <code>object-&gt;something()</code> 和 <code>(*object).something()</code> 是一样的。</p>
+<p>Rust 并没有一个与 <code>-&gt;</code> 等效的运算符；相反，Rust 有一个叫 <strong>自动引用和解引用</strong>的功能。方法调用是 Rust 中少数几个拥有这种行为的地方。</p>
+<p>他是这样工作的：当使用 <code>object.something()</code> 调用方法时，Rust 会自动为 <code>object</code> 添加 <code>&amp;</code>（视可见性添加<code>&amp;mut</code>)、 <code>*</code> 以便使 <code>object</code> 与方法签名匹配。也就是说，这些代码是等价的：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs rust">p1.<span class="hljs-title function_ invoke__">distance</span>(&amp;p2);<br>(&amp;p1).<span class="hljs-title function_ invoke__">distance</span>(&amp;p2);<br></code></pre></td></tr></table></figure>
+
+<p>第一行看起来简洁的多。这种自动引用的行为之所以有效，是因为方法有一个明确的接收者———— <code>self</code> 的类型。在给出接收者和方法名的前提下，Rust 可以明确地计算出方法是仅仅读取（<code>&amp;self</code>），做出修改（<code>&amp;mut self</code>）或者是获取所有权（<code>self</code>）。事实上，Rust 对方法接收者的隐式借用让所有权在实践中更友好。】</p>
+<h4 id="关联函数："><a href="#关联函数：" class="headerlink" title="关联函数："></a>关联函数：</h4><p>定义在 <code>impl</code> 中且没有 <code>self</code> 的函数被称之为<strong>关联函数</strong>： 因为它没有 <code>self</code>，不能用 <code>f.read()</code> 的形式调用，因此它是一个函数而不是方法，它又在 <code>impl</code> 中，与结构体紧密关联，因此称为关联函数。</p>
+<p>eg：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">impl</span> <span class="hljs-title class_">Rectangle</span> &#123;<br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">new</span>(w: <span class="hljs-type">u32</span>, h: <span class="hljs-type">u32</span>) <span class="hljs-punctuation">-&gt;</span> Rectangle &#123;<br>        Rectangle &#123; width: w, height: h &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>（Rust 中有一个约定俗成的规则，使用 <code>new</code> 来作为构造器的名称，出于设计上的考虑，Rust 特地没有用 <code>new</code> 作为关键字。）</p>
+<p>因为是函数，所以不能用 <code>.</code> 的方式来调用，我们需要用 <code>::</code> 来调用，例如 <code>let sq = Rectangle::new(3, 3);</code>。这个方法位于结构体的命名空间中：<code>::</code> 语法用于关联函数和模块创建的命名空间。</p>
+<h4 id="多个-impl-定义"><a href="#多个-impl-定义" class="headerlink" title="多个 impl 定义"></a>多个 impl 定义</h4><p>Rust 允许我们为一个结构体定义多个 <code>impl</code> 块，目的是提供更多的灵活性和代码组织性，例如当方法多了后，可以把相关的方法组织在同一个 <code>impl</code> 块中，那么就可以形成多个 <code>impl</code> 块，各自完成一块儿目标。</p>
+<h4 id="为枚举实现方法"><a href="#为枚举实现方法" class="headerlink" title="为枚举实现方法"></a>为枚举实现方法</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-meta">#![allow(unused)]</span><br><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Message</span> &#123;<br>    Quit,<br>    Move &#123; x: <span class="hljs-type">i32</span>, y: <span class="hljs-type">i32</span> &#125;,<br>    <span class="hljs-title function_ invoke__">Write</span>(<span class="hljs-type">String</span>),<br>    <span class="hljs-title function_ invoke__">ChangeColor</span>(<span class="hljs-type">i32</span>, <span class="hljs-type">i32</span>, <span class="hljs-type">i32</span>),<br>&#125;<br><br><span class="hljs-keyword">impl</span> <span class="hljs-title class_">Message</span> &#123;<br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">call</span>(&amp;<span class="hljs-keyword">self</span>) &#123;<br>        <span class="hljs-comment">// 在这里定义方法体</span><br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">m</span> = Message::<span class="hljs-title function_ invoke__">Write</span>(<span class="hljs-type">String</span>::<span class="hljs-title function_ invoke__">from</span>(<span class="hljs-string">&quot;hello&quot;</span>));<br>    m.<span class="hljs-title function_ invoke__">call</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>枚举类型之所以强大，不仅仅在于它好用、可以<a target="_blank" rel="noopener" href="https://course.rs/basic/compound-type/enum.html#%E5%90%8C%E4%B8%80%E5%8C%96%E7%B1%BB%E5%9E%8B">同一化类型</a>，还在于，我们可以像结构体一样，为枚举实现方法。</p>
+<p>（除了结构体和枚举，我们还能为特征(trait)实现方法）</p>
+<h2 id="九、泛型Generics"><a href="#九、泛型Generics" class="headerlink" title="九、泛型Generics"></a>九、泛型Generics</h2><h4 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h4><p>泛型是一种多态。泛型主要目的是为程序员提供编程的便利，减少代码的臃肿，同时可以极大地丰富语言本身的表达能力。换句话说，就是一个函数，可以代替几十个，甚至数百个函数。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-comment">//不使用泛型</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">add_i8</span>(a:<span class="hljs-type">i8</span>, b:<span class="hljs-type">i8</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">i8</span> &#123;<br>    a + b<br>&#125;<br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">add_i32</span>(a:<span class="hljs-type">i32</span>, b:<span class="hljs-type">i32</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">i32</span> &#123;<br>    a + b<br>&#125;<br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">add_f64</span>(a:<span class="hljs-type">f64</span>, b:<span class="hljs-type">f64</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">f64</span> &#123;<br>    a + b<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;add i8: &#123;&#125;&quot;</span>, <span class="hljs-title function_ invoke__">add_i8</span>(<span class="hljs-number">2i8</span>, <span class="hljs-number">3i8</span>));<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;add i32: &#123;&#125;&quot;</span>, <span class="hljs-title function_ invoke__">add_i32</span>(<span class="hljs-number">20</span>, <span class="hljs-number">30</span>));<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;add f64: &#123;&#125;&quot;</span>, <span class="hljs-title function_ invoke__">add_f64</span>(<span class="hljs-number">1.23</span>, <span class="hljs-number">1.23</span>));<br>&#125;<br><span class="hljs-comment">//使用泛型</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">add</span>&lt;T&gt;(a:T, b:T) <span class="hljs-punctuation">-&gt;</span> T &#123;<br>    a + b<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;add i8: &#123;&#125;&quot;</span>, <span class="hljs-title function_ invoke__">add</span>(<span class="hljs-number">2i8</span>, <span class="hljs-number">3i8</span>));<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;add i32: &#123;&#125;&quot;</span>, <span class="hljs-title function_ invoke__">add</span>(<span class="hljs-number">20</span>, <span class="hljs-number">30</span>));<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;add f64: &#123;&#125;&quot;</span>, <span class="hljs-title function_ invoke__">add</span>(<span class="hljs-number">1.23</span>, <span class="hljs-number">1.23</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上面代码的 <code>T</code> 就是<strong>泛型参数</strong>，实际上在 Rust 中，泛型参数的名称你可以任意起，但是出于惯例，我们都用 <code>T</code> （<code>T</code> 是 <code>type</code> 的首字母）来作为首选，这个名称越短越好，除非需要表达含义，否则一个字母是最完美的。</p>
+<p>使用泛型参数，有一个先决条件，必需在使用前对其进行声明：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">largest</span>&lt;T&gt;(list: &amp;[T]) <span class="hljs-punctuation">-&gt;</span> T &#123;<br>&#125;<br><span class="hljs-comment">//但是，如果并不是所有的类型都能进行函数中的运算，就需要加以限制，否则会报错</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">add</span>&lt;T: std::ops::Add&lt;Output = T&gt;&gt;(a:T, b:T) <span class="hljs-punctuation">-&gt;</span> T &#123;<span class="hljs-comment">//eg</span><br>    a + b<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>该泛型函数的作用是从列表中找出最大的值，其中列表中的元素类型为 T。首先 <code>largest&lt;T&gt;</code> 对泛型参数 <code>T</code> 进行了声明，然后才在函数参数中进行使用该泛型参数 <code>list: &amp;[T]</code>（&amp;[T]类型是数组切片） 。</p>
+<h4 id="结构体中使用泛型"><a href="#结构体中使用泛型" class="headerlink" title="结构体中使用泛型"></a>结构体中使用泛型</h4><p>结构体中的字段类型也可以用泛型来定义，下面代码定义了一个坐标点 <code>Point</code>，它可以存放任何类型的坐标值：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Point</span>&lt;T&gt; &#123;<br>    x: T,<br>    y: T,<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">integer</span> = Point &#123; x: <span class="hljs-number">5</span>, y: <span class="hljs-number">10</span> &#125;;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">float</span> = Point &#123; x: <span class="hljs-number">1.0</span>, y: <span class="hljs-number">4.0</span> &#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里有两点需要特别的注意：</p>
+<ul>
+<li><strong>提前声明</strong>，跟泛型函数定义类似，首先我们在使用泛型参数之前必需要进行声明 <code>Point&lt;T&gt;</code>，接着就可以在结构体的字段类型中使用 <code>T</code> 来替代具体的类型</li>
+<li><strong>x 和 y 是相同的类型</strong>（如果想让 <code>x</code> 和 <code>y</code> 既能类型相同，又能类型不同，就需要使用不同的泛型参数）</li>
+</ul>
+<h4 id="枚举中使用泛型"><a href="#枚举中使用泛型" class="headerlink" title="枚举中使用泛型"></a>枚举中使用泛型</h4><p><code>Option&lt;T&gt;</code> 是一个拥有泛型 <code>T</code> 的枚举类型，它第一个成员是 <code>Some(T)</code>，存放了一个类型为 <code>T</code> 的值。得益于泛型的引入，我们可以在任何一个需要返回值的函数中，去使用 <code>Option&lt;T&gt;</code> 枚举类型来做为返回值，用于返回一个任意类型的值 <code>Some(T)</code>，或者没有值 <code>None</code>。</p>
+<p>此外，还有一个重要的枚举类型：result&lt;T,E&gt;</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Result</span>&lt;T, E&gt; &#123;<br>    <span class="hljs-title function_ invoke__">Ok</span>(T),<br>    <span class="hljs-title function_ invoke__">Err</span>(E),<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个枚举和 <code>Option</code> 一样，主要用于函数返回值，与 <code>Option</code> 用于值的存在与否不同，<code>Result </code>关注的主要是值的正确性。</p>
+<p>如果函数正常运行，则最后返回一个 <code>Ok(T)</code>，<code>T</code> 是函数具体的返回值类型，如果函数异常运行，则返回一个 <code>Err(E)</code>，<code>E</code> 是错误类型。例如打开一个文件：如果成功打开文件，则返回 <code>Ok(std::fs::File)</code>，因此 <code>T</code> 对应的是 <code>std::fs::File</code> 类型；而当打开文件时出现问题时，返回 <code>Err(std::io::Error)</code>，<code>E</code> 对应的就是 <code>std::io::Error</code> 类型。</p>
+<h4 id="方法中使用泛型"><a href="#方法中使用泛型" class="headerlink" title="方法中使用泛型"></a>方法中使用泛型</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Point</span>&lt;T&gt; &#123;<br>    x: T,<br>    y: T,<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;T&gt; Point&lt;T&gt; &#123;<br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">x</span>(&amp;<span class="hljs-keyword">self</span>) <span class="hljs-punctuation">-&gt;</span> &amp;T &#123;<br>        &amp;<span class="hljs-keyword">self</span>.x<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">p</span> = Point &#123; x: <span class="hljs-number">5</span>, y: <span class="hljs-number">10</span> &#125;;<br><br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;p.x = &#123;&#125;&quot;</span>, p.<span class="hljs-title function_ invoke__">x</span>());<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用泛型参数前，依然需要提前声明：<code>impl&lt;T&gt;</code>，只有提前声明了，我们才能在<code>Point&lt;T&gt;</code>中使用它，这样 Rust 就知道 <code>Point</code> 的尖括号中的类型是泛型而不是具体类型。需要注意的是，这里的 <code>Point&lt;T&gt;</code> 不再是泛型声明，而是一个完整的结构体类型，因为我们定义的结构体就是 <code>Point&lt;T&gt;</code> 而不再是 <code>Point</code>。</p>
+<p>除了结构体中的泛型参数，我们还能在该结构体的方法中定义额外的泛型参数，就跟泛型函数一样：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Point</span>&lt;T, U&gt; &#123;<br>    x: T,<br>    y: U,<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;T, U&gt; Point&lt;T, U&gt; &#123;<br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">mixup</span>&lt;V, W&gt;(<span class="hljs-keyword">self</span>, other: Point&lt;V, W&gt;) <span class="hljs-punctuation">-&gt;</span> Point&lt;T, W&gt; &#123;<br>        Point &#123;<br>            x: <span class="hljs-keyword">self</span>.x,<br>            y: other.y,<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">p1</span> = Point &#123; x: <span class="hljs-number">5</span>, y: <span class="hljs-number">10.4</span> &#125;;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">p2</span> = Point &#123; x: <span class="hljs-string">&quot;Hello&quot;</span>, y: <span class="hljs-string">&#x27;c&#x27;</span>&#125;;<br><br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">p3</span> = p1.<span class="hljs-title function_ invoke__">mixup</span>(p2);<br><br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;p3.x = &#123;&#125;, p3.y = &#123;&#125;&quot;</span>, p3.x, p3.y);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个例子中，<code>T,U</code> 是定义在结构体 <code>Point</code> 上的泛型参数，<code>V,W</code> 是单独定义在方法 <code>mixup</code> 上的泛型参数，它们并不冲突，说白了，你可以理解为，一个是结构体泛型，一个是函数泛型。</p>
+<p>此外，对于 <code>Point&lt;T&gt;</code> 类型，不仅能定义基于 <code>T</code> 的方法，还能针对特定的具体类型，进行方法定义：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">impl</span> <span class="hljs-title class_">Point</span>&lt;<span class="hljs-type">f32</span>&gt; &#123;<br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">distance_from_origin</span>(&amp;<span class="hljs-keyword">self</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">f32</span> &#123;<br>        (<span class="hljs-keyword">self</span>.x.<span class="hljs-title function_ invoke__">powi</span>(<span class="hljs-number">2</span>) + <span class="hljs-keyword">self</span>.y.<span class="hljs-title function_ invoke__">powi</span>(<span class="hljs-number">2</span>)).<span class="hljs-title function_ invoke__">sqrt</span>()<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="const-泛型：针对值的泛型"><a href="#const-泛型：针对值的泛型" class="headerlink" title="const 泛型：针对值的泛型"></a>const 泛型：针对值的泛型</h4><p>（rust1.51版本引入）</p>
+<p>在数组中，<code>[i32; 2]</code> 和 <code>[i32; 3]</code> 是不同的数组类型。因此我们可以使用const泛型处理数组长度问题，使其可以打印出任意长度的数组。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">display_array</span>&lt;T: std::fmt::<span class="hljs-built_in">Debug</span>, <span class="hljs-keyword">const</span> N: <span class="hljs-type">usize</span>&gt;(arr: [T; N]) &#123;<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;&#123;:?&#125;&quot;</span>, arr);<br>&#125;<br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">arr</span>: [<span class="hljs-type">i32</span>; <span class="hljs-number">3</span>] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];<br>    <span class="hljs-title function_ invoke__">display_array</span>(arr);<br><br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">arr</span>: [<span class="hljs-type">i32</span>; <span class="hljs-number">2</span>] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>];<br>    <span class="hljs-title function_ invoke__">display_array</span>(arr);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>const 泛型表达式</strong></p>
+<p>假设我们某段代码需要在内存很小的平台上工作，因此需要限制函数参数占用的内存大小，此时就可以使用 const 泛型表达式来实现：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-comment">// 目前只能在nightly版本下使用</span><br><span class="hljs-meta">#![allow(incomplete_features)]</span><br><span class="hljs-meta">#![feature(generic_const_exprs)]</span><br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">something</span>&lt;T&gt;(val: T)<br><span class="hljs-keyword">where</span><br>    Assert&lt;&#123; core::mem::size_of::&lt;T&gt;() &lt; <span class="hljs-number">768</span> &#125;&gt;: IsTrue,<br>    <span class="hljs-comment">//       ^-----------------------------^ 这里是一个 const 表达式，换成其它的 const 表达式也可以</span><br>&#123;<br>    <span class="hljs-comment">//</span><br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-title function_ invoke__">something</span>([<span class="hljs-number">0u8</span>; <span class="hljs-number">0</span>]); <span class="hljs-comment">// ok</span><br>    <span class="hljs-title function_ invoke__">something</span>([<span class="hljs-number">0u8</span>; <span class="hljs-number">512</span>]); <span class="hljs-comment">// ok</span><br>    <span class="hljs-title function_ invoke__">something</span>([<span class="hljs-number">0u8</span>; <span class="hljs-number">1024</span>]); <span class="hljs-comment">// 编译错误，数组长度是1024字节，超过了768字节的参数长度限制</span><br>&#125;<br><br><span class="hljs-comment">// ---</span><br><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">Assert</span>&lt;<span class="hljs-keyword">const</span> CHECK: <span class="hljs-type">bool</span>&gt; &#123;<br>    <span class="hljs-comment">//</span><br>&#125;<br><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">trait</span> <span class="hljs-title class_">IsTrue</span> &#123;<br>    <span class="hljs-comment">//</span><br>&#125;<br><br><span class="hljs-keyword">impl</span> <span class="hljs-title class_">IsTrue</span> <span class="hljs-keyword">for</span> <span class="hljs-title class_">Assert</span>&lt;<span class="hljs-literal">true</span>&gt; &#123;<br>    <span class="hljs-comment">//</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>const fn</strong></p>
+<p>在讨论完 <code>const</code> 泛型后，不得不提及另一个与之密切相关且强大的特性：<code>const fn</code>，即常量函数。<code>const fn</code> 允许我们在编译期对函数进行求值，从而实现更高效、更灵活的代码设计。</p>
+<p>要定义一个常量函数，只需要在函数声明前加上 <code>const</code> 关键字。例如：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">const</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">add</span>(a: <span class="hljs-type">usize</span>, b: <span class="hljs-type">usize</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">usize</span> &#123;<br>    a + b<br>&#125;<br><br><span class="hljs-keyword">const</span> RESULT: <span class="hljs-type">usize</span> = <span class="hljs-title function_ invoke__">add</span>(<span class="hljs-number">5</span>, <span class="hljs-number">10</span>);<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;The result is: &#123;&#125;&quot;</span>, RESULT);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>虽然 <code>const fn</code> 提供了很多便利，但是由于其在编译期执行，以确保函数能在编译期被安全地求值，因此有一些限制，例如，不可将随机数生成器写成 <code>const fn</code>。</p>
+<p>无论在编译时还是运行时调用 <code>const fn</code>，它们的结果总是相同，即使多次调用也是如此。唯一的例外是，如果你在极端情况下进行复杂的浮点操作，你可能会得到（非常轻微的）不同结果。因此，不建议使 <code>数组长度 (arr.len())</code> 和 <code>Enum判别式</code> 依赖于浮点计算。</p>
+<p><strong>结合 const fn 与 const 泛型</strong></p>
+<p>将 <code>const fn</code> 与 <code>const 泛型</code> 结合，可以实现更加灵活和高效的代码设计。例如，创建一个固定大小的缓冲区结构，其中缓冲区大小由编译期计算确定：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Buffer</span>&lt;<span class="hljs-keyword">const</span> N: <span class="hljs-type">usize</span>&gt; &#123;<br>    data: [<span class="hljs-type">u8</span>; N],<br>&#125;<br><br><span class="hljs-keyword">const</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">compute_buffer_size</span>(factor: <span class="hljs-type">usize</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">usize</span> &#123;<br>    factor * <span class="hljs-number">1024</span><br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">const</span> SIZE: <span class="hljs-type">usize</span> = <span class="hljs-title function_ invoke__">compute_buffer_size</span>(<span class="hljs-number">4</span>);<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">buffer</span> = Buffer::&lt;SIZE&gt; &#123;<br>        data: [<span class="hljs-number">0</span>; SIZE],<br>    &#125;;<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Buffer size: &#123;&#125; bytes&quot;</span>, buffer.data.<span class="hljs-title function_ invoke__">len</span>());<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>compute_buffer_size</code> 是一个常量函数，它根据传入的 <code>factor</code> 计算缓冲区的大小。在 <code>main</code> 函数中，我们使用 <code>compute_buffer_size(4)</code> 来计算缓冲区大小为 4096 字节，并将其作为泛型参数传递给 <code>Buffer</code> 结构体。这样，缓冲区的大小在编译期就被确定下来，避免了运行时的计算开销。</p>
+<h4 id="泛型的性能保证"><a href="#泛型的性能保证" class="headerlink" title="泛型的性能保证"></a>泛型的性能保证</h4><p>Rust 通过在编译时进行泛型代码的 <strong>单态化</strong>(<em>monomorphization</em>)来保证效率。单态化是一个通过填充编译时使用的具体类型，将通用代码转换为特定代码的过程。</p>
+<p>编译器所做的工作正好与我们创建泛型函数的步骤相反，编译器寻找所有泛型代码被调用的位置并针对具体类型生成代码。</p>
+<p>让我们看看一个使用标准库中 <code>Option</code> 枚举的例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">let</span> <span class="hljs-variable">integer</span> = <span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-number">5</span>);<br><span class="hljs-keyword">let</span> <span class="hljs-variable">float</span> = <span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-number">5.0</span>);<br></code></pre></td></tr></table></figure>
+
+<p>当 Rust 编译这些代码的时候，它会进行单态化。编译器会读取传递给 <code>Option&lt;T&gt;</code> 的值并发现有两种 <code>Option&lt;T&gt;</code>：一种对应 <code>i32</code> 另一种对应 <code>f64</code>。为此，它会将泛型定义 <code>Option&lt;T&gt;</code> 展开为 <code>Option_i32</code> 和 <code>Option_f64</code>，接着将泛型定义替换为这两个具体的定义。</p>
+<p>编译器生成的单态化版本的代码看起来像这样：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Option_i32</span> &#123;<br>    <span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-type">i32</span>),<br>    <span class="hljs-literal">None</span>,<br>&#125;<br><br><span class="hljs-keyword">enum</span> <span class="hljs-title class_">Option_f64</span> &#123;<br>    <span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-type">f64</span>),<br>    <span class="hljs-literal">None</span>,<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">integer</span> = Option_i32::<span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-number">5</span>);<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">float</span> = Option_f64::<span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-number">5.0</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们可以使用泛型来编写不重复的代码，而 Rust 将会为每一个实例编译其特定类型的代码。这意味着在使用泛型时没有运行时开销；当代码运行，它的执行效率就跟好像手写每个具体定义的重复代码一样。这个单态化过程正是 Rust 泛型在运行时极其高效的原因。</p>
+<p>To Be Continue…</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Rust-base-learning-3</div>
+      <div>http://example.com/2025/07/02/Rust-base-learning-3/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>oxygen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年7月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/07/05/Rust-base-learning-4/" title="Rust-base-learning-4">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Rust-base-learning-4</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/28/Rust-base-learning-2/" title="Rust-base-learning-2">
+                        <span class="hidden-mobile">Rust-base-learning-2</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

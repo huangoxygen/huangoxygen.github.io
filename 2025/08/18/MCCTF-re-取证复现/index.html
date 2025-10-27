@@ -1,0 +1,749 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="oxygen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="· reEzhard_launcher直接给源文件的re题一般没有难的…直接看逻辑，异或0不用管，直接拼接就行 （re就出一题还这么简单…有点难绷） 取证1.1【妙妙取证小工具   MemProcFS： 作用：把物理内存（RAM）映射为一个虚拟文件系统，用户可以像浏览普通文件夹一样，直接访问内存中的进程、模块、句柄、网络连接等信息。 用法： （1）取证模式启动指令: .\memprocfs.exe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MCCTF-re-取证复现">
+<meta property="og:url" content="http://example.com/2025/08/18/MCCTF-re-%E5%8F%96%E8%AF%81%E5%A4%8D%E7%8E%B0/index.html">
+<meta property="og:site_name" content="oxygen&#39;s blog">
+<meta property="og:description" content="· reEzhard_launcher直接给源文件的re题一般没有难的…直接看逻辑，异或0不用管，直接拼接就行 （re就出一题还这么简单…有点难绷） 取证1.1【妙妙取证小工具   MemProcFS： 作用：把物理内存（RAM）映射为一个虚拟文件系统，用户可以像浏览普通文件夹一样，直接访问内存中的进程、模块、句柄、网络连接等信息。 用法： （1）取证模式启动指令: .\memprocfs.exe">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/MCCTF-re-%E5%8F%96%E8%AF%81%E5%A4%8D%E7%8E%B0/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20250818185723.png">
+<meta property="article:published_time" content="2025-08-18T01:54:41.000Z">
+<meta property="article:modified_time" content="2025-08-21T07:14:38.385Z">
+<meta property="article:author" content="oxygen">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/MCCTF-re-%E5%8F%96%E8%AF%81%E5%A4%8D%E7%8E%B0/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20250818185723.png">
+  
+  
+  
+  <title>MCCTF-re-取证复现 - oxygen&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>huangoxygen</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MCCTF-re-取证复现"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-18 09:54" pubdate>
+          2025年8月18日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          10 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">MCCTF-re-取证复现</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>·</p>
+<h2 id="re"><a href="#re" class="headerlink" title="re"></a>re</h2><h4 id="Ezhard-launcher"><a href="#Ezhard-launcher" class="headerlink" title="Ezhard_launcher"></a>Ezhard_launcher</h4><p>直接给源文件的re题一般没有难的…直接看逻辑，异或0不用管，直接拼接就行</p>
+<p>（re就出一题还这么简单…有点难绷）</p>
+<h2 id="取证"><a href="#取证" class="headerlink" title="取证"></a>取证</h2><h4 id="1-1"><a href="#1-1" class="headerlink" title="1.1"></a>1.1</h4><p>【妙妙取证小工具   MemProcFS：</p>
+<p>作用：<strong>把物理内存（RAM）映射为一个虚拟文件系统</strong>，用户可以像浏览普通文件夹一样，直接访问内存中的进程、模块、句柄、网络连接等信息。</p>
+<p>用法：</p>
+<p>（1）取证模式启动指令:</p>
+<p><code>.\memprocfs.exe -device &quot;&lt;内存镜像文件（mem文件）&gt;&quot; -forensic 1</code></p>
+<p>（2）分析进程信息:</p>
+<p><code>mem</code>：进程内存空间</p>
+<p><code>modules</code>：加载的 DLL 列表</p>
+<p><code>handles</code>：句柄信息</p>
+<p><code>threads</code>：线程堆栈】</p>
+<p>【妙妙取证小工具 Volatility：</p>
+<p>使用教程<a target="_blank" rel="noopener" href="https://volatility3.readthedocs.io/en/latest/index.html?utm_source=chatgpt.com">Volatility 3 — Volatility 3 2.26.2 文档</a></p>
+<p>本题使用的插件：</p>
+<p>1.windows.netscan（1.1、2.1使用）</p>
+<p>主要功能：</p>
+<ul>
+<li>枚举 <strong>TCP IPv4&#x2F;IPv6 连接</strong></li>
+<li>枚举 <strong>UDP IPv4&#x2F;IPv6 端点</strong></li>
+<li>列出 <strong>本地&#x2F;远程 IP 与端口</strong></li>
+<li>显示 <strong>TCP 状态</strong>（LISTENING、ESTABLISHED、CLOSE_WAIT 等）</li>
+<li>显示 <strong>所属进程</strong>（PID&#x2F;进程名）</li>
+<li>提取 <strong>时间戳</strong>（对象创建时间）</li>
+</ul>
+<p>指令：</p>
+<p><code>vol -f &lt;内存镜像文件（mem文件）&gt; windows.netscan [选项]</code></p>
+<p><strong>常用参数</strong></p>
+<ul>
+<li><p><code>-p PID</code><br> 仅显示某个进程相关的网络对象。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">vol -f mem<span class="hljs-selector-class">.img</span> windows<span class="hljs-selector-class">.netscan</span> <span class="hljs-attr">--pid</span> <span class="hljs-number">1234</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><code>--dump</code><br> 部分版本支持将扫描到的对象导出（例如 PCAP、原始结构体），但标准版主要是显示表格。</p>
+</li>
+<li><p><code>-r json</code> &#x2F; <code>-r csv</code><br> 指定输出格式（renderer），方便后续处理：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs css">vol -f mem<span class="hljs-selector-class">.img</span> -<span class="hljs-attribute">r</span> json windows<span class="hljs-selector-class">.netscan</span> &gt; netscan<span class="hljs-selector-class">.json</span><br>vol -f mem<span class="hljs-selector-class">.img</span> -<span class="hljs-attribute">r</span> csv windows<span class="hljs-selector-class">.netscan</span> &gt; netscan<span class="hljs-selector-class">.csv</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><code>-o &lt;目录&gt;</code><br> 指定输出目录（有的 renderer 或插件 dump 文件时需要）。</p>
+</li>
+<li><p><code>-vv</code><br> 打印更详细的调试信息。</p>
+</li>
+</ul>
+<p>2.windows.pslist（3.1、4.1、5.1使用）</p>
+<p>主要功能：</p>
+<ul>
+<li><strong>列举 Windows 内存镜像中的所有进程 (processes)</strong>。</li>
+<li>信息来源是 <strong>EPROCESS 链表</strong>（内核里维护的进程列表）。</li>
+<li>输出表格包含进程的 PID、父进程、进程名、创建&#x2F;退出时间、线程数、句柄数等。</li>
+</ul>
+<p><strong>常用用法</strong></p>
+<ol>
+<li><p><strong>查看所有进程</strong></p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dos"><span class="hljs-built_in">vol</span> -f mem.img windows.pslist<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>过滤特定进程（Windows）</strong></p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dos"><span class="hljs-built_in">vol</span> -f mem.img windows.pslist | <span class="hljs-built_in">findstr</span> notepad<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>输出为 JSON 或 CSV</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs css">vol -f mem<span class="hljs-selector-class">.img</span> -<span class="hljs-attribute">r</span> json windows<span class="hljs-selector-class">.pslist</span> &gt; pslist<span class="hljs-selector-class">.json</span><br>vol -f mem<span class="hljs-selector-class">.img</span> -<span class="hljs-attribute">r</span> csv windows<span class="hljs-selector-class">.pslist</span> &gt; pslist<span class="hljs-selector-class">.csv</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>结合其他插件</strong></p>
+<ul>
+<li>找到可疑进程 PID → 再用 <code>windows.dlllist</code> 查看加载的模块</li>
+<li>再用 <code>windows.memdump</code> 或 <code>windows.memmap --dump</code> dump 内存</li>
+</ul>
+</li>
+</ol>
+<p>3.windows.memmap（3.1使用）</p>
+<p><strong>插件作用</strong>：<strong>枚举并展示某个进程的虚拟内存空间映射情况</strong>。</p>
+<p><strong>用法示例</strong></p>
+<ol>
+<li><p><strong>查看进程的内存映射</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">vol -f mem<span class="hljs-selector-class">.img</span> windows<span class="hljs-selector-class">.memmap</span> <span class="hljs-attr">--pid</span> <span class="hljs-number">1234</span><br></code></pre></td></tr></table></figure>
+
+<p>输出类似：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Virtual</span>            Physical        Size     File     Protection   Type<br><span class="hljs-attribute">0x0000000140000000</span> <span class="hljs-number">0</span>x0000000012345 <span class="hljs-number">0</span>x1000   notepad.exe  r-x      Image<br><span class="hljs-attribute">0x0000000140010000</span> <span class="hljs-number">0</span>x0000000012350 <span class="hljs-number">0</span>x2000   ntdll.dll    r--      Mapped<br><span class="hljs-attribute">0x0000000140030000</span> <span class="hljs-number">0</span>x0000000012360 <span class="hljs-number">0</span>x1000   -            rw-      Private<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>dump 进程的内存</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">vol -f mem<span class="hljs-selector-class">.img</span> windows<span class="hljs-selector-class">.memmap</span> <span class="hljs-attr">--pid</span> <span class="hljs-number">1234</span> <span class="hljs-attr">--dump</span> -o dumps/<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>会把进程的虚拟内存区域导出到 <code>dumps/</code> 目录</li>
+<li>文件名中会包含虚拟地址，方便后续逆向分析</li>
+</ul>
+</li>
+<li><p><strong>结合 strings&#x2F;分析工具使用</strong><br> dump 出的内存块可直接用 <code>strings</code> 搜索敏感数据，或丢进 IDA&#x2F;Ghidra 分析。</p>
+</li>
+</ol>
+<p>】</p>
+<p>用Volatility跑出来windows.netscan</p>
+<p>在 netscan.txt 里能看到多条对 10.10.0.133:80 的入站连接，来源就是 10.10.0.1（网关&#x2F;反代的内侧地址），因此10.10.0.1就是攻击者ip地址。</p>
+<h4 id="2-1"><a href="#2-1" class="headerlink" title="2.1"></a>2.1</h4><p>同一份netscan.txt，有一条已建立过的对外会话：</p>
+<p>0x3fc827a0  TCPv4  10.10.0.133  64999    66.240.205.34    9002    CLOSE_WAIT -   -    N&#x2F;A</p>
+<p>再加上word.exe 的字符串里也包含 66.240.205.34。所以推断攻击者外联 IP 和端口就是66.240.205.34:9002</p>
+<h4 id="3-1"><a href="#3-1" class="headerlink" title="3.1"></a>3.1</h4><p>在内存镜像里先定位进程：</p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dos"><span class="hljs-built_in">vol</span> -f D:\BaiduNetdiskDownload\memdump\memdump.mem windows.pslist | <span class="hljs-built_in">findstr</span> /i notepad  <br></code></pre></td></tr></table></figure>
+
+<p>dump 进程内存：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">vol -o D:\case\dump_notepad -f D:\BaiduNetdiskDownload\memdump\memdump<span class="hljs-selector-class">.mem</span> windows<span class="hljs-selector-class">.memmap</span> <span class="hljs-attr">--pid</span> <span class="hljs-number">1632</span> <span class="hljs-attr">--dump</span><br></code></pre></td></tr></table></figure>
+
+<p>在 <code>dumps/</code> 目录里会生成一个 <code>.dmp</code> 文件，对应 notepad 的进程内存。</p>
+<p>对 dump 出的进程镜像做字符串提取：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-built_in">string</span>s.exe -a -n <span class="hljs-number">6</span> D:\<span class="hljs-keyword">case</span>\dump_notepad\*.dmp &gt; D:\<span class="hljs-keyword">case</span>\notepad_strings_ascii.txt<br></code></pre></td></tr></table></figure>
+
+<p>再搜索关键字，比如路径、后缀名、上传动作，这样就能找到上传路径：C:&#x2F;phpstudy_pro&#x2F;WWW&#x2F;uploads&#x2F;shell.php</p>
+<h4 id="4-1"><a href="#4-1" class="headerlink" title="4.1"></a>4.1</h4><p>根据notepad的进程内存中找到的勒索信内容，复制后上网检索，得知勒索病毒为LockBit 3.0</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs dts">&gt;&gt;&gt;&gt; Your data are stolen and encrypted<br>The data will be published on TOR website if you do not pay the ransom<br>Links for Tor Browser:<br><span class="hljs-symbol"></span><br><span class="hljs-symbol">http:</span><span class="hljs-comment">//lockbitapt2yfbt7lchxejuq47kmqvgqxvvipqkmevv4l3az13gy6pyd.onion</span><br><span class="hljs-symbol">http:</span><span class="hljs-comment">//lockbitapt5x4zkjbcqmz6fdhrdeqqgaadevviwgxukksspn1idyd7gd.onion</span><br><span class="hljs-symbol">http:</span><span class="hljs-comment">//lockbitapt6vx57t3eeqjofwgcplmutr3a35nygvokia5uucip4ykyd.onion</span><br><span class="hljs-symbol">http:</span><span class="hljs-comment">//lockbitapt34kvrip6xoiyl0hxhrwsvpzdfgfss5z4bbsyvnzsbdquqd.onion</span><br><span class="hljs-symbol">http:</span><span class="hljs-comment">//lockbitaptci2q4atewz2ise62q63wfktryl4qtuw5qax262gktzigd.onion</span><br><span class="hljs-symbol">http:</span><span class="hljs-comment">//lockbitaptipkdqjvnvoqzhc6bgetgucdk5xjacozeawihmoio6yd.onion</span><br><span class="hljs-symbol">http:</span><span class="hljs-comment">//lockbitapt7ephv2oigdncfthwhpgwmqojnxqdyh.onion</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="5-1"><a href="#5-1" class="headerlink" title="5.1"></a>5.1</h4><p>同上，可以看到域名：.onion</p>
+<h4 id="6-1"><a href="#6-1" class="headerlink" title="6.1"></a>6.1</h4><p>经过构建攻击路线，猜测黑客通过皮肤上传站上传shell.php，拿到shell后上传勒索病毒，所以加密器在C:&#x2F;phpstudy_pro&#x2F;WWW&#x2F;uploads&#x2F;LB3Decryptor.exe，且经过前几题排查确定为LockBit3.0勒索病毒，到github拉下来分析build脚本，调用 keygen 以生成公钥和私钥加密密钥。</p>
+<p>由于猜测是利用webshell上传的勒索病毒，所以在内存中搜索shell.php,找到了上传文件的包。</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c">volatility <span class="hljs-punctuation">-</span>f &lt;内存镜像文件&gt; windows.strings <span class="hljs-string">| grep &quot;</span>shell.php<span class="hljs-string">&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/MCCTF-re-%E5%8F%96%E8%AF%81%E5%A4%8D%E7%8E%B0/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20250818185723.png" srcset="/img/loading.gif" lazyload alt="如图"></p>
+<p>然后找到公钥和私钥，用生成脚本生成出解密器，找到其解密日志文件即可</p>
+<p>但是没有成功复现，回头复现好再补充吧()</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MCCTF-re-取证复现</div>
+      <div>http://example.com/2025/08/18/MCCTF-re-取证复现/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>oxygen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年8月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/09/04/24%E7%8D%AC%E8%B1%B8%E6%9D%AF%E5%A4%8D%E7%8E%B0/" title="24獬豸杯复现">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">24獬豸杯复现</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/08/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/" title="whuctf新生练习赛-re-wp">
+                        <span class="hidden-mobile">whuctf新生练习赛-re-wp</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

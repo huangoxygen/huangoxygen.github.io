@@ -1,0 +1,691 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="oxygen">
+  <meta name="keywords" content="">
+  
+    <meta property="og:type" content="website">
+<meta property="og:title" content="oxygen&#39;s blog">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="oxygen&#39;s blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="oxygen">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>oxygen&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 100vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>huangoxygen</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="一口吃不成个胖子，但一口一口可以"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          style="margin-top: 0">
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/10/27/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0%E7%9A%84%E6%B5%81%E6%95%B0%E6%8D%AE%E8%81%9A%E7%B1%BB/" target="_self">
+          机器学习-增量更新的流数据聚类
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/10/27/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0%E7%9A%84%E6%B5%81%E6%95%B0%E6%8D%AE%E8%81%9A%E7%B1%BB/" target="_self">
+        <div>
+          增量更新的流数据聚类 A. 通用 Density-Grid 流水线（对应典型网格法） B. CEDGM（基于密度网格 + 核心微簇 + 宏簇相交） C. DenStream（指数衰减 + 核心&#x2F;潜在&#x2F;离群 微簇） D. HPStream（投影&#x2F;子空间聚类 + 衰减簇摘要） E. EDSSC（高维演化数据流的动态稀疏子空间聚类） F. 流数据聚类总结   A) 通用 D
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-10-27 21:05" pubdate>
+              2025-10-27
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/10/12/Rust-base-learning-5/" target="_self">
+          Rust-base-learning-5
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/10/12/Rust-base-learning-5/" target="_self">
+        <div>
+          · Rust基础学习–（五）十一、动态数组 Vector时隔三个月，rust base learning又被捡起来了嘻嘻（）实则舍友开始学rust，被卷到了所以捡起来了…回归正题。 vector实际上在cpp里经常见到了，这么好用的功能居然在这么恶心的语言里有，良心了。 1、创建动态数组vec::new1let v: Vec&lt;i32&gt; = Vec::new();  最经典的创建方式，如
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-10-12 01:21" pubdate>
+              2025-10-12
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/" target="_self">
+          机器学习-可扩展流形学习方法SUDE
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/" target="_self">
+        <div>
+          · 一、前置知识1、 K 近邻集合（KNN）定义：给定一个点 xix_ixi 与正整数 KKK，它的 K 近邻集合$$\mathcal{N}K(i) &#x3D; \operatorname*{arg,Kmin}{j \neq i} ; d_{ij}$$即与 xix_ixi 距离最小的 KKK 个样本的索引集合（实现里通常包含自邻居） 2、反近邻计数（RNN）定义：一个点 x_u 的 RNN 计数
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-09-14 16:16" pubdate>
+              2025-09-14
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-CDC%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/" target="_self">
+          机器学习-CDC聚类算法
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-CDC%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/" target="_self">
+        <div>
+          · 前置知识准备：1、Gram矩阵：定义：$$G &#x3D; \left[ \langle v_i, v_j \rangle \right]_{i,j&#x3D;1}^k$$G 是一个 k*k 的对称矩阵； 第 (i,j)(i,j)(i,j) 元素就是向量 vi 和 vj 的内积。 意义：用于刻画向量之间的角度与长度关系，Gram矩阵就是向量组的内积表 2、聚类算法：传统聚类方法包括： **（1
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-09-10 16:09" pubdate>
+              2025-09-10
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/09/04/24%E7%8D%AC%E8%B1%B8%E6%9D%AF%E5%A4%8D%E7%8E%B0/" target="_self">
+          24獬豸杯复现
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/09/04/24%E7%8D%AC%E8%B1%B8%E6%9D%AF%E5%A4%8D%E7%8E%B0/" target="_self">
+        <div>
+          · apk取证1、APK包名是多少。（标准格式：com.xxx.xxx）FLAG：com.example.readeveryday  2、APK的主函数名是多少。（标准格式：comlongxin）FLAG：StartShow 见1 3、APK的签名算法是什么。（标准格式：xxx）FLAG：SHA1withRSA  4、APK的应用版本是多少。（标准格式：1.2）FLAG：1.0 见1 5、请判断该
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-09-04 15:23" pubdate>
+              2025-09-04
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/08/18/MCCTF-re-%E5%8F%96%E8%AF%81%E5%A4%8D%E7%8E%B0/" target="_self">
+          MCCTF-re-取证复现
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/08/18/MCCTF-re-%E5%8F%96%E8%AF%81%E5%A4%8D%E7%8E%B0/" target="_self">
+        <div>
+          · reEzhard_launcher直接给源文件的re题一般没有难的…直接看逻辑，异或0不用管，直接拼接就行 （re就出一题还这么简单…有点难绷） 取证1.1【妙妙取证小工具   MemProcFS： 作用：把物理内存（RAM）映射为一个虚拟文件系统，用户可以像浏览普通文件夹一样，直接访问内存中的进程、模块、句柄、网络连接等信息。 用法： （1）取证模式启动指令: .\memprocfs.exe
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-08-18 09:54" pubdate>
+              2025-08-18
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/08/08/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/" target="_self">
+          whuctf新生练习赛-re-wp
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/08/08/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-wp/" target="_self">
+        <div>
+          · guess number在Linux系统里面运行即可，注意这个程序是32位的，而我们直接下载的Linux虚拟机&#x2F;wsl多数是64位的，需要再安装32位的支持包（直接问ai即可） ezbase这道题作为ida的入门，其实本意是在考察汇编语言（这题由于用的并不自己写的加密函数而是直接调用扩展的库函数，IDA反汇编结果有点过于难看了），关于汇编语言，这里推荐去看b站视频即可简单入门，看懂就
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-08-08 19:36" pubdate>
+              2025-08-08
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/08/06/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-boss-wp/" target="_self">
+          whuctf新生练习赛-re-boss-wp
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/08/06/whuctf%E6%96%B0%E7%94%9F%E7%BB%83%E4%B9%A0%E8%B5%9B-re-boss-wp/" target="_self">
+        <div>
+          · 1、修复DOS头打开DIE发现不能识别出文件类型，是DOS头受损，需要手动修复。打开010 Editor，果然文件头是错的。 DOS格式是什么呢？ DOS头（IMAGE_DOS_HEADER）的大小为40H（64字节） DOS头的基本结构如下： struct _IMAGE_DOS_HEADER { 0x00 WORD e_magic; * &#x2F;&#x2F;5A 4D MZ标记，用来判断
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-08-06 08:32" pubdate>
+              2025-08-06
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/07/06/Rust-re-learning/" target="_self">
+          Rust-re-learning
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/07/06/Rust-re-learning/" target="_self">
+        <div>
+          · rust逆向思路：快速定位关键函数 (真正的main函数)：观察输出、输入，字符串搜索，断点等方法。  定位关键 加密区 ：根据输入的flag，打硬件断点，快速捕获程序中对flag访问的位置（加密区）。  定位错误输出（附近一定有比较功能的程序）：定位到比较位置后 提取出正确加密后的结果 。  调用约定和名称修饰rust目前还没有一个稳定的ABI（Application Binary Inte
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-07-06 23:15" pubdate>
+              2025-07-06
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/07/05/Rust-base-learning-4/" target="_self">
+          Rust-base-learning-4
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/07/05/Rust-base-learning-4/" target="_self">
+        <div>
+          Rust基础学习–（四）十、特征Trait特征定义了一组可以被共享的行为，只要实现了特征，就能使用这组行为。 定义如果不同的类型具有相同的行为，那么我们就可以定义一个特征，然后为这些类型实现该特征。定义特征是把一些方法组合在一起，目的是定义一个实现某些目标所必需的行为的集合。 eg： 123pub trait Summary &#123;    fn summarize(&amp;self) -&
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-07-05 23:29" pubdate>
+              2025-07-05
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

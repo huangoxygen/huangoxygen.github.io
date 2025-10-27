@@ -1,0 +1,696 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="oxygen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="· 一、前置知识1、 K 近邻集合（KNN）定义：给定一个点 xix_ixi 与正整数 KKK，它的 K 近邻集合$$\mathcal{N}K(i) &#x3D; \operatorname*{arg,Kmin}{j \neq i} ; d_{ij}$$即与 xix_ixi 距离最小的 KKK 个样本的索引集合（实现里通常包含自邻居） 2、反近邻计数（RNN）定义：一个点 x_u 的 RNN 计数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习-可扩展流形学习方法SUDE">
+<meta property="og:url" content="http://example.com/2025/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/index.html">
+<meta property="og:site_name" content="oxygen&#39;s blog">
+<meta property="og:description" content="· 一、前置知识1、 K 近邻集合（KNN）定义：给定一个点 xix_ixi 与正整数 KKK，它的 K 近邻集合$$\mathcal{N}K(i) &#x3D; \operatorname*{arg,Kmin}{j \neq i} ; d_{ij}$$即与 xix_ixi 距离最小的 KKK 个样本的索引集合（实现里通常包含自邻居） 2、反近邻计数（RNN）定义：一个点 x_u 的 RNN 计数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/%E6%95%A3%E7%82%B9%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/img/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/%E5%8E%9F%E5%A7%8B%E7%83%AD%E5%8A%9B%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/img/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/%E5%BD%92%E4%B8%80%E7%83%AD%E5%8A%9B%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/img/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/1.bmp">
+<meta property="og:image" content="http://example.com/img/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/2.bmp">
+<meta property="article:published_time" content="2025-09-14T08:16:11.000Z">
+<meta property="article:modified_time" content="2025-10-11T19:11:36.600Z">
+<meta property="article:author" content="oxygen">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/%E6%95%A3%E7%82%B9%E5%9B%BE.png">
+  
+  
+  
+  <title>机器学习-可扩展流形学习方法SUDE - oxygen&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>huangoxygen</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="机器学习-可扩展流形学习方法SUDE"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-09-14 16:16" pubdate>
+          2025年9月14日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">机器学习-可扩展流形学习方法SUDE</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>·</p>
+<h2 id="一、前置知识"><a href="#一、前置知识" class="headerlink" title="一、前置知识"></a>一、前置知识</h2><h3 id="1、-K-近邻集合（KNN）"><a href="#1、-K-近邻集合（KNN）" class="headerlink" title="1、 K 近邻集合（KNN）"></a>1、 K 近邻集合（KNN）</h3><p><strong>定义</strong>：给定一个点 xix_ixi 与正整数 KKK，它的 K 近邻集合<br>$$<br>\mathcal{N}<em>K(i) &#x3D; \operatorname*{arg,Kmin}</em>{j \neq i} ; d_{ij}<br>$$<br>即与 xix_ixi 距离最小的 KKK 个样本的索引集合（实现里通常包含自邻居）</p>
+<h3 id="2、反近邻计数（RNN）"><a href="#2、反近邻计数（RNN）" class="headerlink" title="2、反近邻计数（RNN）"></a>2、反近邻计数（RNN）</h3><p><strong>定义</strong>：一个点 x_u 的 RNN 计数是<br>$$<br>\mathrm{RNN}(u)&#x3D;\left|\left{,i\in{1,\dots,N};\big|; u\in \mathcal{N}_{k_1}(i)\right}\right|<br>$$<br>也就是“有多少别人的 KNN 集合把它包含进去”。RNN 能反映<strong>枢纽点（hub）</strong>：在高维&#x2F;不均匀数据中，某些点会频繁出现在他人的近邻里，RNN 值大。</p>
+<h3 id="3、共享近邻（SNN）"><a href="#3、共享近邻（SNN）" class="headerlink" title="3、共享近邻（SNN）"></a>3、共享近邻（SNN）</h3><p><strong>核心思想</strong>：如果两个点 i,ji,ji,j 的邻居集合高度重合，那么它们“相似”的证据更强。</p>
+<p><strong>定义（加权版）</strong>：设<br>$$<br>N_i &#x3D; \mathcal{N}<em>{k_1}(i)、N_j &#x3D; \mathcal{N}</em>{k_1}(j)<br>$$<br>用 RNN 作为共享邻居的权重，则<br>$$<br>\mathrm{SNN}<em>{ij} &#x3D; \sum</em>{u \in N_i \cap N_j} w(u),<br>\quad w(u) &#x3D; \mathrm{RNN}(u)<br>$$<br>代码实现：对固定的 i，把每个候选 j 与 i 是否“共享近邻”转成 0&#x2F;1 指示（<code>np.isin(...).astype(int)</code>），再把被共享的邻居位置用 <code>rnn</code> 加权并对行求和，得到行向量 <code>snn[i,·]</code>。</p>
+<h3 id="4、SNN-强度的归一化"><a href="#4、SNN-强度的归一化" class="headerlink" title="4、SNN 强度的归一化"></a>4、SNN 强度的归一化</h3><p><strong>为什么要归一化</strong>：不同 iii 的 SNN 数值尺度不同（取决于 Ni 的大小&#x2F;密度&#x2F;枢纽分布），直接拿来缩放距离不稳。</p>
+<p>我们不妨做个测试来验证SNN归一化的必要性：</p>
+<p>这是原本的散点图（测试数据集）</p>
+<p><img src="/img/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/%E6%95%A3%E7%82%B9%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="散点图"></p>
+<p>这是未经过归一化处理后的SNN</p>
+<p><img src="/img/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/%E5%8E%9F%E5%A7%8B%E7%83%AD%E5%8A%9B%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="原始热力图"></p>
+<p>这是经过归一化处理的SNN</p>
+<p><img src="/img/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/%E5%BD%92%E4%B8%80%E7%83%AD%E5%8A%9B%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="归一热力图"></p>
+<p>显而易见，归一化处理后不同 i 的数值被压到相同尺度 [0,1]，便于后续用来“软缩放”距离。</p>
+<h3 id="5、软缩放距离"><a href="#5、软缩放距离" class="headerlink" title="5、软缩放距离"></a>5、软缩放距离</h3><p><strong>目的</strong>：共享近邻越强（越像同类），就把它们的高维距离<strong>乘一个小因子</strong>缩短；共享弱的点对则缩放因子接近 1，几乎不变。</p>
+<p><strong>定义</strong>：给定原始欧氏距离 与归一化后的SNN	<br>$$<br>d_{ij} 、\tilde{\mathrm{SNN}}<em>{ij}<br>$$<br>定义<br>$$<br>\tilde{\mathrm{d}}</em>{ij}​&#x3D;(1−\tilde{\mathrm{SNN}}{ij}​)agg_coef⋅d_{ij}​,agg_coef&gt;0.<br>$$<br>性质：</p>
+<p><img src="/img/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/1.bmp" srcset="/img/loading.gif" lazyload alt="1"></p>
+<h3 id="6、自适应带宽"><a href="#6、自适应带宽" class="headerlink" title="6、自适应带宽"></a>6、自适应带宽</h3><p><strong>目的</strong>：在密度不均匀的数据上，让每个点有自己的“局部尺度”，避免用全局 σ造成稠密区过拟合&#x2F;稀疏区欠拟合。</p>
+<p><strong>定义</strong>：对每个 i，用它<strong>经软缩放后的</strong>最近 k2个距离的<strong>均值</strong>当作局部尺度，再<strong>平方</strong>得到方差：<br>$$<br>\sigma_i^2 ;&#x3D;; \left( \frac{1}{k_2} \sum_{j \in \mathcal{N}<em>{k_2}^{(\mathrm{mod})}(i)} \tilde{d}</em>{ij} \right)^2<br>$$<br>在稠密区，σi 小，核变“窄”，只加强很近的点；在稀疏区，σi 大，核“宽”，避免把一切都判为极不相似。</p>
+<h3 id="7、高斯核相似度"><a href="#7、高斯核相似度" class="headerlink" title="7、高斯核相似度"></a>7、高斯核相似度</h3><p>公式：<br>$$<br>P_{ij} ;\propto; \exp!\left(-\tfrac{1}{2}\tfrac{\tilde{d}<em>{ij}^2}{\sigma_i^2}\right),<br>\qquad j \in \mathcal{N}</em>{k_2}^{(\mathrm{mod})}(i)<br>$$<br>其他位置为 0（保持稀疏）。</p>
+<p><img src="/img/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%B5%81%E5%BD%A2%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95SUDE/2.bmp" srcset="/img/loading.gif" lazyload alt="2"></p>
+<h3 id="8、稀疏矩阵的-CSR-表示"><a href="#8、稀疏矩阵的-CSR-表示" class="headerlink" title="8、稀疏矩阵的 CSR 表示"></a>8、稀疏矩阵的 CSR 表示</h3><p><strong>概念</strong>：CSR 用三组向量存矩阵的非零项：</p>
+<ul>
+<li><code>row</code>：每个非零的行索引（按行块存储）</li>
+<li><code>col</code>：每个非零的列索引</li>
+<li><code>data</code>：对应的非零值<br> 配合内部指针（<code>indptr</code>）就能重建稀疏矩阵，矩阵–向量乘法&#x2F;按行切片都很快。</li>
+</ul>
+<h2 id="二、算法分析"><a href="#二、算法分析" class="headerlink" title="二、算法分析"></a>二、算法分析</h2><h3 id="1、PCA算法："><a href="#1、PCA算法：" class="headerlink" title="1、PCA算法："></a>1、PCA算法：</h3><h4 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h4><p>PCA 用于大规模或高维数据的降维初始化，目标是：</p>
+<p><strong>找方向（主成分）</strong>：在原始高维数据中，找到一组正交方向，使得数据在这些方向上的方差最大。</p>
+<p><strong>投影降维</strong>：把原始数据投影到前几个主成分方向上，得到低维表示，同时尽可能保留原始数据的结构信息。</p>
+<h4 id="流程："><a href="#流程：" class="headerlink" title="流程："></a>流程：</h4><p><strong>零均值化</strong>：<br> 对每个维度减去均值，让数据中心在原点。</p>
+<p><strong>计算协方差矩阵</strong>：（ 协方差是两个变量的线性相关性强度）<br>$$<br>C&#x3D; \frac{1}{n} X^T X<br>$$<br>表示不同特征之间的相关性。</p>
+<p><strong>特征分解</strong>：<br> 解出协方差矩阵的特征值和特征向量：</p>
+<ul>
+<li>特征值 λ 表示该方向上的方差大小。</li>
+<li>特征向量 M 表示该方向的坐标轴（主成分方向）。</li>
+</ul>
+<p><strong>排序选取</strong>：<br> 将特征值按大小排序，取前 k 个最大特征值对应的特征向量，组成投影矩阵。</p>
+<p><strong>投影得到低维表示</strong>：<br>$$<br>Y&#x3D;XMk<br>$$<br>其中<br>$$<br>M_k<br>$$<br> 是前 k 个主成分向量。</p>
+<h3 id="2、PPS算法"><a href="#2、PPS算法" class="headerlink" title="2、PPS算法"></a>2、PPS算法</h3><h4 id="简介：-1"><a href="#简介：-1" class="headerlink" title="简介："></a>简介：</h4><p>选出一部分点（地标）参与嵌入学习，既能代表整体分布，又不会太密集。优先挑选 <strong>“重要点”</strong>（RNN 值高 &#x3D; 在很多人的近邻里出现过 &#x3D; 数据中心&#x2F;高密度点）。每选一个地标，就把它周围的点（它的近邻）从候选列表里删掉，避免采样过于拥挤。最终得到的地标，既分散又代表数据核心结构。</p>
+<h4 id="流程：-1"><a href="#流程：-1" class="headerlink" title="流程："></a>流程：</h4><ol>
+<li><strong>排序</strong>：按 <code>rnn</code> 从大到小排队，形成候选队列 <code>id_sort</code>。</li>
+<li><strong>循环选点</strong>：<ul>
+<li>取队首（当前 RNN 最大的点）作为一个地标，加入 <code>id_samp</code>。</li>
+<li>将这个点的近邻（根据 <code>knn</code>）加入一个待删除集合 <code>rm_pts</code>。</li>
+<li>如果 <code>order &gt; 1</code>，继续扩展，把近邻的近邻也删掉。</li>
+<li>把这些点从候选队列 <code>id_sort</code> 中移除。</li>
+</ul>
+</li>
+<li><strong>重复</strong>：直到没有候选点。</li>
+<li><strong>输出</strong>：得到一组分散、密度敏感的地标索引 <code>id_samp</code>。</li>
+</ol>
+<h3 id="3、地标上学习低维表示算法"><a href="#3、地标上学习低维表示算法" class="headerlink" title="3、地标上学习低维表示算法"></a>3、地标上学习低维表示算法</h3><h4 id="低维：learning-s"><a href="#低维：learning-s" class="headerlink" title="低维：learning_s"></a>低维：learning_s</h4><p>流程：输入→建图→初始化→分块优化→输出</p>
+<h4 id="高维：learning-l"><a href="#高维：learning-l" class="headerlink" title="高维：learning_l"></a>高维：learning_l</h4><p>流程：</p>
+<h2 id="三、代码分析"><a href="#三、代码分析" class="headerlink" title="三、代码分析"></a>三、代码分析</h2><h3 id="1、PCA算法"><a href="#1、PCA算法" class="headerlink" title="1、PCA算法"></a>1、PCA算法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">init_pca</span>(<span class="hljs-params">X, no_dims, contri</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    对数据进行 PCA 预处理（用于大规模或高维数据的降维初始化）。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    参数：</span><br><span class="hljs-string">    X        - N×D 的数据矩阵，每一行是一个样本，每一列是一个特征。</span><br><span class="hljs-string">    no_dims  - 目标降维维度（至少保证结果维度 &gt;= no_dims+1）。</span><br><span class="hljs-string">    contri   - 累积方差贡献率阈值（例如 0.8 表示保留 80% 的方差信息）。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br><br>    m = X.shape[<span class="hljs-number">1</span>]                  <span class="hljs-comment"># 原始特征维度数 D</span><br>    X = X - np.mean(X, axis=<span class="hljs-number">0</span>)      <span class="hljs-comment"># 1: 数据零均值化（减去每列的均值）</span><br><br>    <span class="hljs-comment"># 2: 计算协方差矩阵 (D×D)，用于衡量各特征间的相关性</span><br>    C = np.cov(X, rowvar=<span class="hljs-literal">False</span>)     <br><br>    <span class="hljs-comment"># 防止协方差矩阵中出现 NaN，替换为 0</span><br>    C[np.isnan(C)] = <span class="hljs-number">0</span><br>    C[np.isinf(C)] = <span class="hljs-number">0</span><br><br>    <span class="hljs-comment"># 3: 对协方差矩阵做特征分解，得到特征值 lamda 和特征向量 M</span><br>    <span class="hljs-comment"># 特征值表示该方向上的方差大小，特征向量表示主成分方向</span><br>    lamda, M = np.linalg.eig(C)<br>    lamda = np.real(lamda)          <span class="hljs-comment"># 取实部（理论上应为实数，但数值计算可能有虚部）</span><br><br>    <span class="hljs-comment"># 4: 确定最佳降维维度m</span><br>    <span class="hljs-keyword">if</span> m &lt; <span class="hljs-number">2001</span>:<br>        <span class="hljs-comment"># 如果维度不超过 2000，使用所有特征值计算累计方差贡献率</span><br>        ind = np.where(np.cumsum(lamda) / <span class="hljs-built_in">sum</span>(lamda) &gt; contri)<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-comment"># 如果维度超过 2000，只取前 2000 个特征值估计贡献率（避免计算开销过大）</span><br>        ind = np.where(np.cumsum(lamda) / <span class="hljs-built_in">sum</span>(lamda[:<span class="hljs-number">2000</span>]) &gt; contri)<br><br>    <span class="hljs-comment"># bestDim 至少为 no_dims+1，同时也要满足贡献率阈值</span><br>    bestDim = <span class="hljs-built_in">max</span>(no_dims + <span class="hljs-number">1</span>, <span class="hljs-built_in">int</span>(ind[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]))<br><br>    <span class="hljs-comment"># 5: 取前m个主成分方向（特征向量），并将数据投影到这些方向上</span><br>    mappedX = X @ np.real(M)[:, :bestDim]<br><br>    <span class="hljs-keyword">return</span> mappedX  <span class="hljs-comment"># 返回降维后的数据，形状 (N, m)</span><br><br></code></pre></td></tr></table></figure>
+
+<h3 id="2、PPS算法-1"><a href="#2、PPS算法-1" class="headerlink" title="2、PPS算法"></a>2、PPS算法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">pps</span>(<span class="hljs-params">knn, rnn, order</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Plum Pudding Sampling (PPS)</span><br><span class="hljs-string">    返回选出的地标点索引集合。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    参数：</span><br><span class="hljs-string">    knn    - N*k 的矩阵，每一行存储该点的 k 个最近邻索引。</span><br><span class="hljs-string">    rnn    - 长度为 N 的数组，每个元素是该点作为别人近邻出现的次数（RNN值）。</span><br><span class="hljs-string">    order  - 正整数，表示要剔除的邻居阶数。order=1 表示直接邻居，order=2 表示邻居的邻居也要剔除。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br><br>    id_samp = []  <br>    <span class="hljs-comment"># 存储最终选出的地标点索引</span><br><br>    id_sort = <span class="hljs-built_in">sorted</span>(<span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(rnn)), key=<span class="hljs-keyword">lambda</span> k: rnn[k], reverse=<span class="hljs-literal">True</span>)<br>    <span class="hljs-comment"># 按 RNN 值从大到小对所有点排序，得到候选点队列</span><br>    <span class="hljs-comment"># RNN 值高的点更“重要”，优先被选为地标</span><br><br>    <span class="hljs-keyword">while</span> <span class="hljs-built_in">len</span>(id_sort) &gt; <span class="hljs-number">0</span>:  <br>        <span class="hljs-comment"># 当还有候选点时，不断选择新地标</span><br>        id_samp.append(id_sort[<span class="hljs-number">0</span>])  <br>        <span class="hljs-comment"># 选出当前 RNN 最大的点作为一个地标</span><br><br>        rm_pts = [id_sort[<span class="hljs-number">0</span>]]  <br>        <span class="hljs-comment"># 待移除点集合，初始只包含刚选的地标</span><br><br>        <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(order):  <br>            <span class="hljs-comment"># 根据指定阶数，扩展要删除的邻域</span><br>            <span class="hljs-comment"># knn[rm_pts]：取出 rm_pts 中点的近邻集合</span><br>            <span class="hljs-comment"># flatten(把 多维数组 → 一维数组的拷贝) + tolist(numpy 数组 → Python 原生 list)：转为一维列表</span><br>            rm_pts.extend(knn[rm_pts].flatten().tolist())<br><br>        rm_pts = <span class="hljs-built_in">set</span>(rm_pts)  <br>        <span class="hljs-comment"># 转为集合，避免重复</span><br><br>        rm_id = np.where(np.isin(id_sort, <span class="hljs-built_in">list</span>(rm_pts)))[<span class="hljs-number">0</span>]<br>        <span class="hljs-comment"># 找到候选队列 id_sort 中属于 rm_pts 的索引位置</span><br><br>        id_sort = [id_sort[i] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(id_sort)) <span class="hljs-keyword">if</span> i <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> rm_id]<br>        <span class="hljs-comment"># 从候选队列里剔除这些点，避免它们在后续被再次选为地标</span><br><br>    <span class="hljs-keyword">return</span> id_samp  <br>    <span class="hljs-comment"># 返回所有选中的地标点索引</span><br><br></code></pre></td></tr></table></figure>
+
+<h3 id="learning-l"><a href="#learning-l" class="headerlink" title="learning_l"></a>learning_l</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sklearn.neighbors <span class="hljs-keyword">import</span> NearestNeighbors<br><span class="hljs-keyword">from</span> scipy.sparse <span class="hljs-keyword">import</span> diags           <span class="hljs-comment"># 稀疏对角矩阵构造（用于度矩阵等）</span><br><span class="hljs-keyword">from</span> scipy.sparse <span class="hljs-keyword">import</span> csr_matrix      <span class="hljs-comment"># 压缩稀疏行矩阵（邻接/概率矩阵用这个省内存）</span><br><span class="hljs-keyword">from</span> scipy.spatial.distance <span class="hljs-keyword">import</span> cdist <span class="hljs-comment"># 成对距离（这里主要用欧氏距离）</span><br><span class="hljs-keyword">from</span> init_pca <span class="hljs-keyword">import</span> init_pca            <span class="hljs-comment"># 你自定义的 PCA 预降维（保留贡献率阈值）</span><br><span class="hljs-keyword">from</span> pca <span class="hljs-keyword">import</span> pca                      <span class="hljs-comment"># 线性 PCA 初始化</span><br><span class="hljs-keyword">from</span> mds <span class="hljs-keyword">import</span> mds                      <span class="hljs-comment"># 经典 MDS 初始化</span><br><span class="hljs-keyword">import</span> scipy.sparse.linalg <span class="hljs-keyword">as</span> sp_linalg  <span class="hljs-comment"># 稀疏矩阵特征分解</span><br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">import</span> math<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">learning_l</span>(<span class="hljs-params">X_samp, k1, get_knn, rnn, id_samp, no_dims, initialize, agg_coef, T_epoch</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    作用（地标的 block 版学习）：</span><br><span class="hljs-string">      - 在地标子集 X_samp 上学习其低维嵌入 Y（维度 = no_dims）</span><br><span class="hljs-string">      - 自适应确定地标层的近邻数 k2（用于构造高维概率 P）</span><br><span class="hljs-string">      - 与 learning_s 的区别：这里对 P、Q 的梯度按“数据块”计算（降低峰值内存，适合更大 N）</span><br><span class="hljs-string"></span><br><span class="hljs-string">    参数：</span><br><span class="hljs-string">      X_samp     : (N, dim) 地标样本矩阵（从全体 X 中采样而来）</span><br><span class="hljs-string">      k1         : 采样阶段的 K（&gt;0 表示此时 get_knn / rnn / id_samp 可用；=0 表示无采样信息）</span><br><span class="hljs-string">      get_knn    : (n, k1+1) 全数据的 KNN 索引矩阵（含自邻居），仅当 k1&gt;0 时使用</span><br><span class="hljs-string">      rnn        : (n,)      全数据的 RNN 计数（点作为别人近邻被命中的次数），仅当 k1&gt;0 时使用</span><br><span class="hljs-string">      id_samp    : (N,)      地标在原数据中的索引（映射 get_knn / rnn 用），仅当 k1&gt;0 时使用</span><br><span class="hljs-string">      no_dims    : 目标嵌入维度（Y 的列数）</span><br><span class="hljs-string">      initialize : 初始嵌入方式：&#x27;le&#x27;（Laplacian Eigenmaps）、&#x27;pca&#x27;、&#x27;mds&#x27;</span><br><span class="hljs-string">      agg_coef   : SNN 聚合系数，控制 (1 - SNN)^agg_coef 对高维距离的“软缩放”强度</span><br><span class="hljs-string">      T_epoch    : 训练轮数</span><br><span class="hljs-string"></span><br><span class="hljs-string">    返回：</span><br><span class="hljs-string">      Y  : (N, no_dims) 地标的低维嵌入</span><br><span class="hljs-string">      k2 : 地标层使用的近邻数（用于构造 P 的局部自适应核）</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># 基本尺寸</span><br>    N, dim = X_samp.shape<br><br>    <span class="hljs-comment"># 自适应确定 k2（邻域大小）</span><br>    <span class="hljs-comment">#   - 小样本直接取 N 或固定值</span><br>    <span class="hljs-comment">#   - 中等样本按比例（约 2%N + 常数）</span><br>    <span class="hljs-comment">#   - 超大样本对数增长 + 常数，避免 k2 过大</span><br> <br>    <span class="hljs-keyword">if</span> N &lt; <span class="hljs-number">9</span>:<br>        k2 = N<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">if</span> N &gt; <span class="hljs-number">1000</span>:<br>            k2 = <span class="hljs-built_in">int</span>(np.ceil(np.log2(N)) + <span class="hljs-number">18</span>)<br>        <span class="hljs-keyword">elif</span> N &gt; <span class="hljs-number">50</span>:<br>            k2 = <span class="hljs-built_in">int</span>(np.ceil(<span class="hljs-number">0.02</span> * N)) + <span class="hljs-number">8</span><br>        <span class="hljs-keyword">else</span>:<br>            k2 = <span class="hljs-number">9</span><br><br>    <span class="hljs-comment"># 构造高维概率矩阵 P（仅在每行的 k2 个近邻上赋值 -&gt; 稀疏）</span><br>    <span class="hljs-comment"># 两种路径：</span><br>    <span class="hljs-comment">#   1) k1&gt;0：使用采样阶段的 SNN（共享近邻）思想修正距离（增强类内凝聚、抑制跨类吸引）</span><br>    <span class="hljs-comment">#   2) k1=0：直接在 X_samp 上做 KNN，并用逐点带宽的高斯核</span><br>    <span class="hljs-keyword">if</span> k1 &gt; <span class="hljs-number">0</span>:<br>        <span class="hljs-comment"># 用列表累积稀疏矩阵的行/列/值，最后一次性构造 csr_matrix</span><br>        row = []  <span class="hljs-comment"># 行索引列表</span><br>        col = []  <span class="hljs-comment"># 列索引列表</span><br>        Pval = [] <span class="hljs-comment"># 非零值列表</span><br><br>        <span class="hljs-comment"># (N, k1+1)：第 i 个地标的邻居（含自邻居）的 RNN 值，用于度量“共享邻居强度”</span><br>        knn_rnn_mat = rnn[get_knn[id_samp]]<br><br>        <span class="hljs-comment"># 逐行构造：第 i 行仅在其前 k2 个“修正距离”最近的点上赋值</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(N):<br>            <span class="hljs-comment"># snn_id[j, t] = 1 表示地标 j 的第 t 个邻居落在“地标 i 的邻居集合”内（有共享近邻）</span><br>            snn_id = np.isin(get_knn[id_samp], get_knn[id_samp[i]]).astype(<span class="hljs-built_in">int</span>)  <span class="hljs-comment"># (N, k1+1)</span><br>            <span class="hljs-comment"># 与 i 存在至少一个共享邻居的地标行索引</span><br>            nn_id = np.where(np.<span class="hljs-built_in">max</span>(snn_id, axis=<span class="hljs-number">1</span>) == <span class="hljs-number">1</span>)[<span class="hljs-number">0</span>]<br><br>            <span class="hljs-comment"># snn：与 i 共享近邻的“强度”向量（强调枢纽邻居：RNN 大的邻居占更大权重）</span><br>            snn = np.zeros((<span class="hljs-number">1</span>, N))<br>            snn[:, nn_id] = np.<span class="hljs-built_in">sum</span>(knn_rnn_mat[nn_id] * snn_id[nn_id], axis=<span class="hljs-number">1</span>)<br><br>            <span class="hljs-comment"># 归一化共享强度 -&gt; [0,1]；然后对原始欧氏距离乘以 (1 - snn)^agg_coef 做“软缩放”</span><br>            <span class="hljs-comment"># 共享越强（类内关系越强），(1 - snn) 越小，修正后的距离越短 -&gt; 更强的类内吸引</span><br>            mod_dis = (<span class="hljs-number">1</span> - snn / <span class="hljs-built_in">max</span>(np.<span class="hljs-built_in">max</span>(snn), np.finfo(<span class="hljs-built_in">float</span>).tiny)) ** agg_coef /<br>                      * cdist(X_samp[i:i + <span class="hljs-number">1</span>, :], X_samp)         <span class="hljs-comment"># (1, N)</span><br><br>            <span class="hljs-comment"># 取该行前 k2 个最小修正距离的索引与数值</span><br>            sort_dis = np.sort(mod_dis, axis=<span class="hljs-number">1</span>)                  <span class="hljs-comment"># (1, N)</span><br>            idx = np.argsort(mod_dis, axis=<span class="hljs-number">1</span>)                    <span class="hljs-comment"># (1, N)</span><br>            mean_samp_dis_squared = np.square(np.mean(sort_dis[<span class="hljs-number">0</span>, :k2]))  <span class="hljs-comment"># 局部带宽（均值距离平方）</span><br><br>            <span class="hljs-comment"># 高斯核：exp(-0.5 * d^2 / sigma^2)，仅对前 k2 个赋值</span><br>            Pval.extend(np.exp(<br>                -<span class="hljs-number">0.5</span> * np.square(sort_dis[<span class="hljs-number">0</span>, :k2]) /<br>                np.maximum(mean_samp_dis_squared, np.finfo(<span class="hljs-built_in">float</span>).tiny)<br>            ))<br>            <span class="hljs-comment"># 写入对应的 (row, col)</span><br>            row.extend((i * np.ones((k2, <span class="hljs-number">1</span>))).flatten().tolist())<br>            col.extend(idx[<span class="hljs-number">0</span>, :k2])<br><br>        <span class="hljs-comment"># 组装成 (N, N) 稀疏矩阵 P（未对称/未归一化）</span><br>        P = csr_matrix((Pval, (row, col)), shape=(N, N))<br><br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-comment"># 无采样信息：直接用 X_samp 做 KNN，再按逐点带宽的高斯核构造 P</span><br>        <span class="hljs-keyword">if</span> N &gt; <span class="hljs-number">5000</span> <span class="hljs-keyword">and</span> dim &gt; <span class="hljs-number">50</span>:<br>            <span class="hljs-comment"># 大规模高维：先 PCA 预降（保留 contri=0.8 方差），再做邻居搜索 -&gt; 更快/更稳</span><br>            xx = init_pca(X_samp, no_dims, <span class="hljs-number">0.8</span>)<br>            samp_dis, samp_knn = NearestNeighbors(n_neighbors=k2).fit(xx).kneighbors(xx)<br>        <span class="hljs-keyword">else</span>:<br>            samp_dis, samp_knn = NearestNeighbors(n_neighbors=k2).fit(X_samp).kneighbors(X_samp)<br><br>        <span class="hljs-comment"># (N,): 每个点的局部带宽（其 k2 个邻居距离的均值平方）</span><br>        mean_samp_dis_squared = np.square(np.mean(samp_dis, axis=<span class="hljs-number">1</span>))<br><br>        <span class="hljs-comment"># (N, k2)：每行对其 k2 个邻居赋高斯权重（逐点带宽）</span><br>        Pval = np.exp(<br>            -<span class="hljs-number">0.5</span> * np.square(samp_dis) /<br>            np.maximum(mean_samp_dis_squared[:, np.newaxis], np.finfo(<span class="hljs-built_in">float</span>).tiny)<br>        )<br><br>        <span class="hljs-comment"># 直接用稀疏构造：行索引展开为 [0..N-1] 各重复 k2 次，列索引为 samp_knn.flatten()</span><br>        P = csr_matrix(<br>            (Pval.flatten(), ([i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(N) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(k2)], samp_knn.flatten())),<br>            shape=(N, N)<br>        )<br><br>    <span class="hljs-comment"># 对称化（P &lt;- (P + P^T)/2），稳定相似度，兼顾 i-&gt;j 与 j-&gt;i</span><br>    <span class="hljs-comment"># 仍保持稀疏格式</span><br>    P = (P + P.transpose()) / <span class="hljs-number">2</span><br><br>    <span class="hljs-comment"># 初始化低维嵌入 Y</span><br>    <span class="hljs-comment">#   &#x27;le&#x27;  ：对称归一化拉普拉斯的最小特征向量（去掉平凡解） -&gt; Laplacian Eigenmaps</span><br>    <span class="hljs-comment">#   &#x27;pca&#x27; ：线性 PCA 投影</span><br>    <span class="hljs-comment">#   &#x27;mds&#x27; ：经典 MDS</span><br>    <span class="hljs-keyword">if</span> initialize == <span class="hljs-string">&#x27;le&#x27;</span>:<br>        <span class="hljs-comment"># 度矩阵（稀疏对角），注意 P.sum(axis=0) 返回 (1, N) 稀疏矩阵，先 flatten 成 1D</span><br>        Dg = diags(np.array(P.<span class="hljs-built_in">sum</span>(axis=<span class="hljs-number">0</span>)).flatten())<br>        <span class="hljs-comment"># 对称归一化拉普拉斯： L = D^&#123;1/2&#125; (D - P) D^&#123;1/2&#125;</span><br>        L = np.sqrt(Dg) @ (Dg - P) @ np.sqrt(Dg)<br>        <span class="hljs-comment"># 取最小的 no_dims+1 个特征对（SM=Smallest Magnitude），去掉第一个（常量向量）</span><br>        eigenvalues, eigenvectors = sp_linalg.eigs(L, k=no_dims + <span class="hljs-number">1</span>, which=<span class="hljs-string">&#x27;SM&#x27;</span>)<br>        smallest_indices = np.argsort(np.<span class="hljs-built_in">abs</span>(eigenvalues))<br>        Y = np.real(eigenvectors[:, smallest_indices[<span class="hljs-number">1</span>:]])  <span class="hljs-comment"># (N, no_dims)</span><br>        <span class="hljs-keyword">del</span> Dg, L<br><br>    <span class="hljs-keyword">elif</span> initialize == <span class="hljs-string">&#x27;pca&#x27;</span>:<br>        Y = pca(X_samp, no_dims)<br><br>    <span class="hljs-keyword">elif</span> initialize == <span class="hljs-string">&#x27;mds&#x27;</span>:<br>        Y = mds(X_samp, no_dims)<br><br>    <span class="hljs-comment"># 概率归一化：P 视作“联合概率矩阵”，对总和（减去 N 个对角自项）做归一化</span><br>    <span class="hljs-comment"># 注意：此处 P 为 csr_matrix，np.sum(P) 返回标量</span><br>    P = P / (np.<span class="hljs-built_in">sum</span>(P) - N)<br><br>    <span class="hljs-comment"># Block 设定：把 N 行按块切分（每块 ~3000 行），分块计算梯度，降低内存峰值</span><br>    no_blocks = math.ceil(N / <span class="hljs-number">3000</span>)         <span class="hljs-comment"># 需要的块数</span><br>    mark = np.zeros((no_blocks, <span class="hljs-number">2</span>))         <span class="hljs-comment"># 每块的起止行号 [start, end]（闭区间）</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(no_blocks):<br>        start = i * math.ceil(N / no_blocks)<br>        end   = <span class="hljs-built_in">min</span>((i + <span class="hljs-number">1</span>) * math.ceil(N / no_blocks) - <span class="hljs-number">1</span>, N - <span class="hljs-number">1</span>)<br>        mark[i, :] = [start, end]<br><br>    <span class="hljs-comment"># 训练超参与动量变量</span><br>    <span class="hljs-comment">#   - 学习率调度：warmup 后做余弦退火（max_alpha -&gt; min_alpha）</span><br>    <span class="hljs-comment">#   - preGrad：上一轮的梯度（动量）</span><br>    max_alpha = <span class="hljs-number">2.5</span> * N  <span class="hljs-comment"># 预热阶段较大的步长（按 N 放缩）</span><br>    min_alpha = <span class="hljs-number">2</span> * N    <span class="hljs-comment"># 退火最低步长</span><br>    warm_step = <span class="hljs-number">10</span>       <span class="hljs-comment"># 预热轮数</span><br>    preGrad = np.zeros((N, no_dims))  <span class="hljs-comment"># 动量缓存</span><br>    epoch = <span class="hljs-number">1</span><br><br>    <span class="hljs-comment"># 迭代优化（KLD 损失的近似梯度；log 内核：Q_ij = 1/(1 + log(1 + d^2)))</span><br>    <span class="hljs-comment"># 与 learning_s 的区别：这里按块累计 Pgrad/Qgrad 和 sumQ</span><br>    <span class="hljs-keyword">while</span> epoch &lt;= T_epoch:<br>        <span class="hljs-comment"># 学习率调度</span><br>        <span class="hljs-keyword">if</span> epoch &lt;= warm_step:<br>            alpha = max_alpha<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-comment"># 余弦退火：从 max_alpha 平滑衰减到 min_alpha</span><br>            alpha = min_alpha + <span class="hljs-number">0.5</span> * (max_alpha - min_alpha) * (<br>                <span class="hljs-number">1</span> + np.cos(np.pi * ((epoch - warm_step) / (T_epoch - warm_step)))<br>            )<br><br>        <span class="hljs-comment"># 分块累计梯度</span><br>        Pgrad = np.zeros((N, no_dims))  <span class="hljs-comment"># 来源于 P（真实分布）的梯度部分</span><br>        Qgrad = np.zeros((N, no_dims))  <span class="hljs-comment"># 来源于 Q（模型分布）的梯度部分</span><br>        sumQ = <span class="hljs-number">0</span>                        <span class="hljs-comment"># 所有块的 Q1 总和（用于归一化 Q）</span><br><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(no_blocks):<br>            <span class="hljs-comment"># 当前块的行索引（连续区间）</span><br>            idx = [j <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">int</span>(mark[i, <span class="hljs-number">0</span>]), <span class="hljs-built_in">int</span>(mark[i, <span class="hljs-number">1</span>]) + <span class="hljs-number">1</span>)]<br><br>            <span class="hljs-comment"># 计算当前块与全体的低维平方距离 D</span><br>            D = cdist(Y[idx], Y) ** <span class="hljs-number">2</span>             <span class="hljs-comment"># (len_blk, N)</span><br><br>            <span class="hljs-comment"># 低维相似度核与其导数辅助项</span><br>            Q1  = <span class="hljs-number">1</span> / (<span class="hljs-number">1</span> + np.log(<span class="hljs-number">1</span> + D))         <span class="hljs-comment"># log-kernel，相比 t 分布更重尾，利于类内紧凑/收敛</span><br>            QQ1 = <span class="hljs-number">1</span> / (<span class="hljs-number">1</span> + D)                     <span class="hljs-comment"># 辅助项：对 (1 + log(1 + D)) 的链式导数中会出现</span><br>            <span class="hljs-keyword">del</span> D<br><br>            <span class="hljs-comment"># P 部分的梯度“权重矩阵”（注意这里对 P 是稀疏乘法，再 toarray 进入 dense 计算）</span><br>            <span class="hljs-comment"># -4 * P[idx,:] ⊙ Q1 ⊙ QQ1</span><br>            <span class="hljs-comment"># 负号是因为后续采用 (diag(row_sums) - Mat) @ Y 的拉普拉斯形式</span><br>            Pmat = -<span class="hljs-number">4</span> * P[idx, :].multiply(Q1).multiply(QQ1).toarray()<br><br>            <span class="hljs-comment"># Q 部分的梯度“权重矩阵”：</span><br>            <span class="hljs-comment"># -4 * (Q1^2) * QQ1   （Q 的归一化在块外通过 sumQ 统一处理）</span><br>            Qmat = -<span class="hljs-number">4</span> * Q1 ** <span class="hljs-number">2</span> * QQ1<br>            <span class="hljs-keyword">del</span> QQ1<br><br>            len_blk = <span class="hljs-built_in">len</span>(idx)<br><br>            <span class="hljs-comment"># 把每行的“对角位”减去行和：实现 (diag(row_sums) - Mat)</span><br>            <span class="hljs-comment"># 这里 idPQ[:,1] = 块起始行 + [0..len_blk-1]，恰好对应全局行号的对角位置</span><br>            idPQ = np.column_stack((np.array(<span class="hljs-built_in">range</span>(len_blk)), idx[<span class="hljs-number">0</span>] + np.array(<span class="hljs-built_in">range</span>(len_blk))))<br>            Pmat[idPQ[:, <span class="hljs-number">0</span>], idPQ[:, <span class="hljs-number">1</span>]] = Pmat[idPQ[:, <span class="hljs-number">0</span>], idPQ[:, <span class="hljs-number">1</span>]] - np.<span class="hljs-built_in">sum</span>(Pmat, axis=<span class="hljs-number">1</span>)<br>            Qmat[idPQ[:, <span class="hljs-number">0</span>], idPQ[:, <span class="hljs-number">1</span>]] = Qmat[idPQ[:, <span class="hljs-number">0</span>], idPQ[:, <span class="hljs-number">1</span>]] - np.<span class="hljs-built_in">sum</span>(Qmat, axis=<span class="hljs-number">1</span>)<br><br>            <span class="hljs-comment"># 乘以 Y 得到梯度贡献： (diag(row_sums) - Mat) @ Y</span><br>            Pgrad[idx] = Pmat @ Y<br>            Qgrad[idx] = Qmat @ Y<br>            <span class="hljs-keyword">del</span> Pmat, Qmat<br><br>            <span class="hljs-comment"># 统计 Q 的归一化分母（全体 Q1 的总和，减去 N 的自项在块外统一处理）</span><br>            sumQ = sumQ + np.<span class="hljs-built_in">sum</span>(Q1)<br><br>        <span class="hljs-comment"># 组合总梯度并更新 Y：</span><br>        <span class="hljs-comment">#   grad_total = Pgrad - Qgrad / (sumQ - N)</span><br>        <span class="hljs-comment">#   动量项：((epoch-1)/(epoch+2)) * preGrad    （随轮数递增的动量系数）</span><br>        Y = Y - alpha * (Pgrad - Qgrad / (sumQ - N) + (epoch - <span class="hljs-number">1</span>) / (epoch + <span class="hljs-number">2</span>) * preGrad)<br>        preGrad = Pgrad - Qgrad / (sumQ - N)<br><br>        epoch = epoch + <span class="hljs-number">1</span><br><br>    <span class="hljs-built_in">print</span>(<span class="hljs-built_in">str</span>(epoch - <span class="hljs-number">1</span>) + <span class="hljs-string">&#x27; epochs have been computed!&#x27;</span>)<br>    <span class="hljs-keyword">return</span> Y, k2<br><br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>机器学习-可扩展流形学习方法SUDE</div>
+      <div>http://example.com/2025/09/14/机器学习-可扩展流形学习方法SUDE/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>oxygen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年9月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/10/12/Rust-base-learning-5/" title="Rust-base-learning-5">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Rust-base-learning-5</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-CDC%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/" title="机器学习-CDC聚类算法">
+                        <span class="hidden-mobile">机器学习-CDC聚类算法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
