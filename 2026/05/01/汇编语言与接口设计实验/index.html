@@ -1,0 +1,1220 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="oxygen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="汇编语言与接口设计实验赶作业，顺便留点开源复习资料吧:） 实验 1  查看 CPU 和内存，用机器指令和汇编指令编程1、相关知识主要是关于debug使用，要了解的包括8086 CPU 的寄存器、内存地址表示方法，以及常见Debug调试指令。 寄存器8086 常用寄存器可以分成几类：  通用寄存器：AX、BX、CX、DX。它们都可以作为 16 位寄存器使用，也可以拆成高 8 位和低 8 位，如 AX">
+<meta property="og:type" content="article">
+<meta property="og:title" content="汇编语言与接口设计实验">
+<meta property="og:url" content="http://example.com/2026/05/01/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E4%B8%8E%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1%E5%AE%9E%E9%AA%8C/index.html">
+<meta property="og:site_name" content="oxygen&#39;s blog">
+<meta property="og:description" content="汇编语言与接口设计实验赶作业，顺便留点开源复习资料吧:） 实验 1  查看 CPU 和内存，用机器指令和汇编指令编程1、相关知识主要是关于debug使用，要了解的包括8086 CPU 的寄存器、内存地址表示方法，以及常见Debug调试指令。 寄存器8086 常用寄存器可以分成几类：  通用寄存器：AX、BX、CX、DX。它们都可以作为 16 位寄存器使用，也可以拆成高 8 位和低 8 位，如 AX">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-01T08:06:12.000Z">
+<meta property="article:modified_time" content="2026-05-01T09:59:00.783Z">
+<meta property="article:author" content="oxygen">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>汇编语言与接口设计实验 - oxygen&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>huangoxygen</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="汇编语言与接口设计实验"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-05-01 16:06" pubdate>
+          2026年5月1日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          95 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">汇编语言与接口设计实验</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="汇编语言与接口设计实验"><a href="#汇编语言与接口设计实验" class="headerlink" title="汇编语言与接口设计实验"></a>汇编语言与接口设计实验</h1><p>赶作业，顺便留点开源复习资料吧:）</p>
+<h2 id="实验-1-查看-CPU-和内存，用机器指令和汇编指令编程"><a href="#实验-1-查看-CPU-和内存，用机器指令和汇编指令编程" class="headerlink" title="实验 1  查看 CPU 和内存，用机器指令和汇编指令编程"></a>实验 1  查看 CPU 和内存，用机器指令和汇编指令编程</h2><h3 id="1、相关知识"><a href="#1、相关知识" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><p>主要是关于debug使用，要了解的包括8086 CPU 的寄存器、内存地址表示方法，以及常见Debug调试指令。</p>
+<h4 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h4><p>8086 常用寄存器可以分成几类：</p>
+<ul>
+<li><p>通用寄存器：<code>AX</code>、<code>BX</code>、<code>CX</code>、<code>DX</code>。它们都可以作为 16 位寄存器使用，也可以拆成高 8 位和低 8 位，如 <code>AX=AH+AL</code>。</p>
+</li>
+<li><p><code>AX</code>：累加器，很多算术运算、乘除法、I&#x2F;O 指令默认使用它。例如 <code>add ax,ax</code> 就是把 <code>AX</code> 翻倍。</p>
+</li>
+<li><p><code>BX</code>：基址寄存器，常用于内存寻址，例如 <code>[bx]</code> 表示访问 <code>DS:BX</code>。</p>
+</li>
+<li><p><code>CX</code>：计数寄存器，<code>loop</code> 指令默认使用 <code>CX</code> 作为循环次数。</p>
+</li>
+<li><p><code>DX</code>：数据寄存器，常配合 <code>AX</code> 表示 32 位数据 <code>DX:AX</code>，也常用于端口号。</p>
+</li>
+<li><p>段寄存器：<code>CS</code>、<code>DS</code>、<code>SS</code>、<code>ES</code>。<code>CS</code> 是代码段，<code>DS</code> 是数据段，<code>SS</code> 是栈段，<code>ES</code> 是附加段，常用于数据搬运和显存操作。</p>
+</li>
+<li><p>指针和变址寄存器：<code>SP</code>、<code>BP</code>、<code>SI</code>、<code>DI</code>。<code>SP</code> 指向栈顶，<code>BP</code> 常用于访问栈中参数，<code>SI</code> 常作源地址，<code>DI</code> 常作目标地址。</p>
+</li>
+<li><p>指令指针：<code>IP</code> 保存下一条将要执行的指令偏移地址，它不能像普通寄存器一样直接 <code>mov ip,...</code>，通常通过跳转、调用、中断等方式改变。</p>
+<p>【<code>CS:IP</code> 指向下一条要执行的指令；<code>DS</code> 通常指向数据段；<code>SS:SP</code> 指向栈顶。理解这三个组合非常重要：<code>CS:IP</code> 管“执行哪里”，<code>DS:偏移</code> 管“取哪里的数据”，<code>SS:SP</code> 管“栈顶在哪里”】</p>
+</li>
+<li><p>标志寄存器：<code>FLAGS</code> 保存运算状态和控制状态。常见标志有 <code>CF</code> 进位、<code>ZF</code> 零、<code>SF</code> 符号、<code>OF</code> 溢出、<code>PF</code> 奇偶、<code>DF</code> 方向、<code>IF</code> 中断允许、<code>TF</code> 单步。他们的位置如下：</p>
+<table>
+<thead>
+<tr>
+<th>位号</th>
+<th>15</th>
+<th>14</th>
+<th>13</th>
+<th>12</th>
+<th>11</th>
+<th>10</th>
+<th>9</th>
+<th>8</th>
+<th>7</th>
+<th>6</th>
+<th>5</th>
+<th>4</th>
+<th>3</th>
+<th>2</th>
+<th>1</th>
+<th>0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标志位</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>OF</td>
+<td>DF</td>
+<td>IF</td>
+<td>TF</td>
+<td>SF</td>
+<td>ZF</td>
+<td></td>
+<td>AF</td>
+<td></td>
+<td>PF</td>
+<td></td>
+<td>CF</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h4 id="内存地址表示方法"><a href="#内存地址表示方法" class="headerlink" title="内存地址表示方法"></a>内存地址表示方法</h4><p>通过<strong>段地址:偏移地址</strong>访问内存</p>
+<p>物理地址计算公式为：<br>$$<br>物理地址 &#x3D; 段地址 * 16 + 偏移地址<br>$$</p>
+<h4 id="debug常用指令"><a href="#debug常用指令" class="headerlink" title="debug常用指令"></a>debug常用指令</h4><p>包括：</p>
+<ul>
+<li><code>R</code>：查看或修改寄存器。</li>
+<li><code>D</code>：查看内存。</li>
+<li><code>E</code>：修改内存。</li>
+<li><code>A</code>：输入汇编指令。</li>
+<li><code>U</code>：反汇编。</li>
+<li><code>T</code>：单步执行。</li>
+</ul>
+<h3 id="2、实验指令"><a href="#2、实验指令" class="headerlink" title="2、实验指令"></a>2、实验指令</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs text">debug<br>-r<br>-a 100<br>mov ax,1<br>add ax,ax<br>add ax,ax<br>add ax,ax<br>add ax,ax<br>add ax,ax<br>add ax,ax<br>add ax,ax<br>add ax,ax<br><br>-r cs<br>1000<br>-r ip<br>0100<br>-t<br>-d f000:fff0<br>-e b800:0000 41 1e 42 2e 43 4e 44 5e<br></code></pre></td></tr></table></figure>
+
+<h3 id="3、实验结果"><a href="#3、实验结果" class="headerlink" title="3、实验结果"></a>3、实验结果</h3><p><code>add ax,ax</code> 连续执行后：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">0001 -&gt; 0002 -&gt; 0004 -&gt; 0008 -&gt; 0010 -&gt; 0020 -&gt; 0040 -&gt; 0080 -&gt; 0100<br></code></pre></td></tr></table></figure>
+
+<p>最终 <code>AX=0100H</code>。BIOS 日期处读到 <code>01/01/92</code>。向 <code>B800:0000</code> 写入后，显存内容为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">41 1E 42 2E 43 4E 44 5E<br></code></pre></td></tr></table></figure>
+
+<h2 id="实验-2-用机器指令和汇编指令编程"><a href="#实验-2-用机器指令和汇编指令编程" class="headerlink" title="实验 2  用机器指令和汇编指令编程"></a><strong>实验 2  用机器指令和汇编指令编程</strong></h2><h3 id="1、相关知识-1"><a href="#1、相关知识-1" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><p>本实验涉及存储方式、存取方法</p>
+<h4 id="8086数据存储方式"><a href="#8086数据存储方式" class="headerlink" title="8086数据存储方式"></a>8086数据存储方式</h4><p>小端存储</p>
+<p>1234H：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">低地址 <span class="hljs-operator">=</span> <span class="hljs-number">34</span>H<br>高地址 <span class="hljs-operator">=</span> <span class="hljs-number">12</span>H<br></code></pre></td></tr></table></figure>
+
+<p>对应读取也要这么理解</p>
+<h4 id="SS-SP工作原理（栈）"><a href="#SS-SP工作原理（栈）" class="headerlink" title="SS:SP工作原理（栈）"></a>SS:SP工作原理（栈）</h4><p><code>SS:SP</code> 指向当前栈顶，8086 的栈向低地址增长：</p>
+<p> <code>push ax</code>：先执行 <code>SP=SP-2</code>，再把 <code>AX</code> 写入 <code>SS:SP</code>。</p>
+<p> <code>pop ax</code>：先从 <code>SS:SP</code> 读出一个字给 <code>AX</code>，再执行 <code>SP=SP+2</code>。</p>
+<p>（每次push、pop操作的是两个字节，一个字）</p>
+<p>注意，执行 <code>mov ss,ax</code> 后，CPU 会临时不响应中断，使紧随其后的 <code>mov sp,...</code> 能连续执行。原因是 <code>SS:SP</code> 必须共同指向正确栈顶，如果只改了 <code>SS</code> 还没改 <code>SP</code> 就发生中断，中断过程要压栈，可能把数据压到错误位置</p>
+<h3 id="2、实验内容"><a href="#2、实验内容" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）设置栈"><a href="#（1）设置栈" class="headerlink" title="（1）设置栈"></a>（1）设置栈</h4><p>把 <code>SS</code> 设置为 <code>2200H</code>，把 <code>SP</code> 设置为 <code>0100H</code>，让 <code>SS:SP=2200:0100</code> 成为新的栈顶。（任意选一块普通可写内存）</p>
+<h4 id="（2）访问-BIOS-高地址区域"><a href="#（2）访问-BIOS-高地址区域" class="headerlink" title="（2）访问 BIOS 高地址区域"></a>（2）访问 BIOS 高地址区域</h4><p>把 <code>DS</code> 设置为 <code>FFFFH</code>，用 <code>[0]</code>、<code>[2]</code>、<code>[4]</code>、<code>[6]</code> 读取连续的字数据，观察小端存储如何影响寄存器结果。（目标寄存器16位，所以一个单位要包括两个字节）</p>
+<h4 id="（3）用栈交换寄存器"><a href="#（3）用栈交换寄存器" class="headerlink" title="（3）用栈交换寄存器"></a>（3）用栈交换寄存器</h4><p>利用栈的后进先出性质，可以实现寄存器互换数据，belike：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asm">push ax<br>push bx<br>pop ax<br>pop bx<br></code></pre></td></tr></table></figure>
+
+<h3 id="3、实验代码"><a href="#3、实验代码" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs asm">mov ax,2200h<br>mov ss,ax<br>mov sp,0100h<br><br>mov ax,0ffffh<br>mov ds,ax<br>mov ax,[0]<br>add ax,[2]<br>mov bx,[4]<br>add bx,[6]<br><br>push ax<br>push bx<br>pop ax<br>pop bx<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果"><a href="#4、实验结果" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p>关键结果：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>指令</th>
+<th>变化说明</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>mov ss,ax</code></td>
+<td>设置栈段</td>
+<td><code>SS=2200H</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>mov sp,0100h</code></td>
+<td>设置栈顶偏移</td>
+<td><code>SS:SP=2200:0100</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>mov ds,0ffffh</code></td>
+<td>设置数据段</td>
+<td>后续 <code>[偏移]</code> 默认访问 <code>FFFF:偏移</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>mov ax,[0]</code></td>
+<td>读取 <code>EA 5B</code>，小端组成 <code>5BEA</code></td>
+<td><code>AX=5BEAH</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>add ax,[2]</code></td>
+<td><code>[2]</code> 为 <code>00E0H</code></td>
+<td><code>AX=5CCAH</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>mov bx,[4]</code></td>
+<td>读取 <code>F0 30</code>，小端组成 <code>30F0</code></td>
+<td><code>BX=30F0H</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>add bx,[6]</code></td>
+<td><code>[6]</code> 为 <code>2F31H</code></td>
+<td><code>BX=6021H</code></td>
+</tr>
+</tbody></table>
+<p>栈交换过程：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>指令</th>
+<th>栈顶变化</th>
+<th>数据变化</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>初始</td>
+<td>-</td>
+<td><code>SP=0100H</code></td>
+<td><code>AX=5CCAH</code>，<code>BX=6021H</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>push ax</code></td>
+<td><code>SP=00FEH</code></td>
+<td><code>2200:00FE</code> 保存 <code>5CCAH</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>push bx</code></td>
+<td><code>SP=00FCH</code></td>
+<td><code>2200:00FC</code> 保存 <code>6021H</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>pop ax</code></td>
+<td><code>SP=00FEH</code></td>
+<td>栈顶 <code>6021H</code> 弹入 <code>AX</code>，所以 <code>AX=6021H</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>pop bx</code></td>
+<td><code>SP=0100H</code></td>
+<td>下一层 <code>5CCAH</code> 弹入 <code>BX</code>，所以 <code>BX=5CCAH</code></td>
+</tr>
+</tbody></table>
+<p>最终：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">AX = 6021H<br>BX = 5CCAH<br>SP = 0100H<br></code></pre></td></tr></table></figure>
+
+<h2 id="实验-3-编程、编译、连接、跟踪"><a href="#实验-3-编程、编译、连接、跟踪" class="headerlink" title="实验 3  编程、编译、连接、跟踪"></a>实验 3  编程、编译、连接、跟踪</h2><h3 id="1、相关知识-2"><a href="#1、相关知识-2" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><p>这一节主要是走一遍标准汇编程序开发流程：写 <code>.ASM</code> 源文件，用 MASM 汇编成 <code>.OBJ</code>，用 LINK 连接成 <code>.EXE</code>，再用 Debug 跟踪。</p>
+<p>一个 MASM 程序需要包含：</p>
+<ul>
+<li><code>segment</code> &#x2F; <code>ends</code>：定义一个段，例如代码段、数据段、栈段。</li>
+<li><code>assume cs:codesg</code>：告诉汇编器哪个段寄存器和哪个段名对应。注意它是伪指令，不会真的修改 CPU 寄存器。</li>
+<li>标号 <code>start:</code>：表示程序入口处的一段地址。</li>
+<li><code>end start</code>：告诉连接器程序入口是 <code>start</code>。</li>
+<li><code>mov ax,4c00h</code> 和 <code>int 21h</code>：调用 DOS 功能返回操作系统。</li>
+</ul>
+<p>DOS 加载 <code>.EXE</code> 时，会在程序前面建立 PSP，也就是程序段前缀。PSP 中保存了命令行、文件控制块、返回入口等信息。PSP 首部通常是 <code>CD 20</code>，表示一条 <code>int 20h</code> 指令。Debug 加载程序后看到的 <code>DS</code>、<code>ES</code> 往往先指向 PSP，而不是直接指向你的数据段。</p>
+<p>调试 <code>.EXE</code> 时要关注 <code>CS:IP</code> 是否指向入口，<code>SS:SP</code> 是否指向正确栈顶，以及 <code>DS</code> 是否已经被程序设置到数据段。</p>
+<h3 id="2、实验内容-1"><a href="#2、实验内容-1" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）编写最小-ASM程序"><a href="#（1）编写最小-ASM程序" class="headerlink" title="（1）编写最小 .ASM程序"></a>（1）编写最小 .ASM程序</h4><p>程序只定义一个代码段，入口为 <code>start</code>，最后用 DOS 中断返回。</p>
+<h4 id="（2）在程序中设置栈并执行-push-pop"><a href="#（2）在程序中设置栈并执行-push-pop" class="headerlink" title="（2）在程序中设置栈并执行 push&#x2F;pop"></a>（2）<strong>在程序中设置栈并执行</strong> push&#x2F;pop</h4><p>代码设置 <code>SS</code>、<code>SP</code> 后执行几次入栈和出栈。</p>
+<h4 id="（3）用-MASM、LINK、Debug-验证"><a href="#（3）用-MASM、LINK、Debug-验证" class="headerlink" title="（3）用 MASM、LINK、Debug 验证"></a>（3）用 MASM、LINK、Debug 验证</h4><p>先汇编生成 <code>.OBJ</code>，再连接生成 <code>.EXE</code>，最后用 Debug 加载跟踪。</p>
+<h3 id="3、实验代码-1"><a href="#3、实验代码-1" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:codesg<br><br>codesg segment<br>start:<br>    mov ax,2000h<br>    mov ss,ax<br>    mov sp,0<br>    add sp,10<br>    pop ax<br>    pop bx<br>    push ax<br>    push bx<br>    pop ax<br>    pop bx<br><br>    mov ax,4c00h<br>    int 21h<br>codesg ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-1"><a href="#4、实验结果-1" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p>程序成功汇编、连接、运行。Debug 加载后可看到 PSP 首部：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">0DFA:0000  CD 20 ...<br></code></pre></td></tr></table></figure>
+
+<p><code>CD 20</code> 是机器码，表示 <code>int 20h</code>。它出现在 PSP 开头，可以看出 <code>DS</code>、<code>ES</code> 初始指向 PSP，而不是源程序里定义的代码段或数据段。Debug 加载 <code>.EXE</code> 后常见现象是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">DS = PSP 段地址<br>ES = PSP 段地址<br>CS = 代码段地址<br>IP = 程序入口偏移<br></code></pre></td></tr></table></figure>
+
+<p>所以如果程序中要访问自己的数据段，不能假设 <code>DS</code> 自动正确，必须显式执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asm">mov ax,data<br>mov ds,ax<br></code></pre></td></tr></table></figure>
+
+<p>这个实验程序能跟踪到 <code>int 21h</code> 并正常返回 DOS，可以看出入口设置正确，栈也没有被破坏。</p>
+<h2 id="实验-4-bx-和-loop-的使用"><a href="#实验-4-bx-和-loop-的使用" class="headerlink" title="实验 4  [bx] 和 loop 的使用"></a>实验 4  [bx] 和 loop 的使用</h2><p>本实验涉及间接寻址和循环控制</p>
+<h4 id="间接寻址-bx"><a href="#间接寻址-bx" class="headerlink" title="间接寻址-[bx]"></a>间接寻址-[bx]</h4><p>寻址方式就是“CPU 到哪里找操作数”。如果指令里直接写出地址，比如 <code>mov al,[0]</code>，这种更接近直接寻址；如果指令里不直接写死地址，而是把地址放在寄存器里，比如 <code>mov al,[bx]</code>，这就是寄存器间接寻址。</p>
+<p>方括号 <code>[]</code> 表示访问内存。<code>BX</code> 和 <code>[BX]</code> 不是一回事：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">BX      表示寄存器 BX 里的数值<br>[BX]    表示以 BX 的值作为偏移地址，到内存中取数据<br></code></pre></td></tr></table></figure>
+
+<p>8086 访问内存时必须有“段地址 + 偏移地址”。<code>[bx]</code> 只给出了偏移地址，默认段寄存器是 <code>DS</code>，所以：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">[bx] 实际访问 DS:BX<br>物理地址 = DS * 16 + BX<br></code></pre></td></tr></table></figure>
+
+<p>例如这个实验先设置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs asm">mov ax,0020h<br>mov ds,ax<br>mov bx,0<br></code></pre></td></tr></table></figure>
+
+<p>那么 <code>mov [bx],bl</code> 第一次访问的是 <code>0020:0000</code>。执行 <code>inc bx</code> 后，<code>BX=0001H</code>，下一次访问的就是 <code>0020:0001</code>。这样 <code>BX</code> 就像数组下标一样，控制当前访问第几个内存单元。</p>
+<p><code>mov [bx],bl</code> 中，源操作数 <code>BL</code> 是 8 位寄存器，所以这条指令每次只写 1 个字节。如果写成 <code>mov [bx],bx</code>，源操作数是 16 位寄存器，就会写入一个字，也就是连续 2 个字节。内存操作的大小一定要看清楚，否则写入范围会和预期不一样。</p>
+<p>在 8086 中，能直接放进 <code>[]</code> 里做偏移寻址的寄存器主要是 <code>BX</code>、<code>BP</code>、<code>SI</code>、<code>DI</code>。其中 <code>BX</code>、<code>SI</code>、<code>DI</code> 默认配合 <code>DS</code>，而 <code>BP</code> 默认配合 <code>SS</code>。这个区别在访问普通数据和访问栈中数据时很重要。</p>
+<p>这个实验选择 <code>BX</code>，是因为目标是一段连续内存：<code>BX</code> 负责指出当前地址，<code>BL</code> 又刚好是 <code>BX</code> 的低 8 位。于是随着 <code>BX</code> 从 <code>0000H</code> 增加到 <code>003FH</code>，<code>BL</code> 也从 <code>00H</code> 增加到 <code>3FH</code>，写入内存的内容自然就是 <code>00H~3FH</code>。</p>
+<h4 id="循环控制-loop指令"><a href="#循环控制-loop指令" class="headerlink" title="循环控制-loop指令"></a>循环控制-loop指令</h4><p><code>loop 标号</code> 是 8086 中非常常用的循环指令，它隐含使用 <code>CX</code>：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs x86asm">执行 <span class="hljs-keyword">loop</span> 时，先 <span class="hljs-built_in">CX</span>=<span class="hljs-built_in">CX</span>-<span class="hljs-number">1</span><br><br>如果 <span class="hljs-built_in">CX</span> 不等于 <span class="hljs-number">0</span>，就跳转到标号<br><br>如果 <span class="hljs-built_in">CX</span> 等于 <span class="hljs-number">0</span>，就顺序执行下一条指令<br></code></pre></td></tr></table></figure>
+
+<p>所以使用 <code>loop</code> 前必须先正确设置 <code>CX</code>。如果循环内部还要使用 <code>CX</code>，就必须先保存它，否则外层循环会被破坏。</p>
+<h3 id="2、实验内容-2"><a href="#2、实验内容-2" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）建立目标数据段"><a href="#（1）建立目标数据段" class="headerlink" title="（1）建立目标数据段"></a>（1）建立目标数据段</h4><p>把 <code>DS</code> 设置为 <code>0020H</code>，让后续 <code>[bx]</code> 都访问 <code>0020:BX</code>。（要求向 <code>0020:0000</code> 一带写入数据）</p>
+<h4 id="（2）用BX作为移动的偏移地址"><a href="#（2）用BX作为移动的偏移地址" class="headerlink" title="（2）用BX作为移动的偏移地址"></a>（2）用BX作为移动的偏移地址</h4><p>从 <code>BX=0</code> 开始，每次写完后 <code>inc bx</code>。（目标内存是连续区域，<code>BX</code> 正好适合做下标）</p>
+<h4 id="（3）用CX和loop控制循环"><a href="#（3）用CX和loop控制循环" class="headerlink" title="（3）用CX和loop控制循环"></a>（3）用CX和loop控制循环</h4><p>设置 <code>CX=64</code>，每次循环写一个字节。（要写 <code>0000H~003FH</code> 共 64 个字节）</p>
+<h3 id="3、实验代码-2"><a href="#3、实验代码-2" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p><code>T41.ASM</code>：把 <code>DS</code> 指向 <code>0020H</code>，用 <code>BX</code> 做偏移地址，用 <code>AL</code> 保存要写入的字节，循环 64 次写入连续内存。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code<br><br>code segment<br>start:<br>    mov ax,0020h<br>    mov ds,ax<br>    mov bx,0<br>    mov al,0<br>    mov cx,64<br><br>s:<br>    mov [bx],al<br>    inc bx<br>    inc al<br>    loop s<br><br>    mov ax,4c00h<br>    int 21h<br>code ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<p><code>T42.ASM</code>：用 <code>BX</code> 同时作为地址来源，<code>BL</code> 作为写入数据，突出 <code>[bx]</code> 间接寻址和 <code>loop</code> 的配合。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code<br><br>code segment<br>start:<br>    mov ax,0020h<br>    mov ds,ax<br>    mov bx,0<br>    mov cx,64<br><br>s:<br>    mov [bx],bl<br>    inc bx<br>    loop s<br><br>    mov ax,4c00h<br>    int 21h<br>code ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<p><code>T43.ASM</code>：让 <code>DS</code> 指向代码段，<code>ES</code> 指向 <code>0020H</code>，把程序开头的机器码逐字节复制到目标内存。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code<br><br>code segment<br>start:<br>    mov ax,cs<br>    mov ds,ax<br>    mov ax,0020h<br>    mov es,ax<br>    mov bx,0<br>    mov cx,17h<br><br>s:<br>    mov al,[bx]<br>    mov es:[bx],al<br>    inc bx<br>    loop s<br><br>    mov ax,4c00h<br>    int 21h<br>code ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-2"><a href="#4、实验结果-2" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p><code>0020:0000~003F</code> 写入结果为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F<br>10 11 12 13 14 15 16 17 18 19 1A 1B 1C 1D 1E 1F<br>20 21 22 23 24 25 26 27 28 29 2A 2B 2C 2D 2E 2F<br>30 31 32 33 34 35 36 37 38 39 3A 3B 3C 3D 3E 3F<br></code></pre></td></tr></table></figure>
+
+<p>结果正好是 0 到 63，可以看出循环执行了 64 次。最后一次写入时 <code>BX=003FH</code>、<code>BL=3FH</code>，写入后 <code>BX</code> 变成 <code>0040H</code>，<code>CX</code> 变成 0，<code>loop</code> 不再跳转。</p>
+<p>结果中出现类似：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">8C C8 8E D8 B8 20 00 ...<br></code></pre></td></tr></table></figure>
+
+<p>这些不是随机数据，而是程序指令的机器码。可以看出程序确实把自己的代码字节复制到了 <code>0020:0000</code>。这能帮助理解“代码也是内存中的数据”。</p>
+<h2 id="实验-5-编写、调试具有多个段的程序"><a href="#实验-5-编写、调试具有多个段的程序" class="headerlink" title="实验 5  编写、调试具有多个段的程序"></a>实验 5  编写、调试具有多个段的程序</h2><h3 id="1、相关知识-3"><a href="#1、相关知识-3" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><p>代码放代码段，变量放数据段，临时保存和调用返回地址放栈段。</p>
+<p><code>assume cs:code, ds:data, ss:stack</code> 只是告诉汇编器段寄存器和段名的对应关系，并不会真正修改 CPU 的段寄存器。真正生效必须使用机器指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asm">mov ax,data<br>mov ds,ax<br></code></pre></td></tr></table></figure>
+
+<p>也就是说，<code>assume</code> 解决的是“汇编器如何理解地址”，<code>mov ds,ax</code> 解决的是“CPU 实际访问哪个段”。二者不能混淆。</p>
+<p>程序入口由 <code>end start</code> 指定。<code>start</code> 是代码段中的标号，连接器会把这个入口写入 <code>.EXE</code> 文件头。程序加载后，DOS 根据入口设置 <code>CS:IP</code>，CPU 才会从正确位置执行。如果只写 <code>end</code>，连接器可能默认把程序开头当入口，若开头是数据段，CPU 就会把数据当指令执行。</p>
+<p>段在 <code>.EXE</code> 中装入时通常按 16 字节对齐。若某段实际占 <code>N</code> 字节，装入后占用空间通常是 <code>16 * ceil(N/16)</code> 字节。这就是为什么观察段地址关系时，段之间常常相差整数个 16 字节段落。</p>
+<p>多段数据搬运常用 <code>DS</code> 和 <code>ES</code> 配合。<code>DS</code> 可以指向源数据段，<code>ES</code> 可以指向目标数据段，通过段前缀可以把数据写入另一个段。</p>
+<h3 id="2、实验内容-3"><a href="#2、实验内容-3" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）观察多段程序的装入关系"><a href="#（1）观察多段程序的装入关系" class="headerlink" title="（1）观察多段程序的装入关系"></a>（1）观察多段程序的装入关系</h4><p>编译、连接多个段顺序不同的程序，用 Debug 查看 <code>CS</code>、<code>DS</code>、<code>SS</code> 和各段内容。（多段程序最容易混淆的是“源程序里的段名”和“运行时段寄存器的值”）</p>
+<h4 id="（2）完成-a-b-c"><a href="#（2）完成-a-b-c" class="headerlink" title="（2）完成 a+b -&gt; c"></a>（2）完成 <code>a+b -&gt; c</code></h4><p>先把 <code>a</code> 段复制到 <code>cdata</code> 段，再把 <code>b</code> 段逐字节加到 <code>cdata</code> 对应位置。（源数据在两个不同段中，目标数据在第三个段中，正好练习多段访问）</p>
+<h4 id="（3）用栈实现逆序存储"><a href="#（3）用栈实现逆序存储" class="headerlink" title="（3）用栈实现逆序存储"></a>（3）用栈实现逆序存储</h4><p>把 <code>a</code> 段中的字数据依次 <code>push</code> 入栈，再依次 <code>pop</code> 到 <code>b</code> 段。（栈后进先出，天然会把顺序反过来）</p>
+<h3 id="3、实验代码-3"><a href="#3、实验代码-3" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p><code>Q5.ASM</code>：定义 <code>a</code>、<code>b</code>、<code>cdata</code> 三个数据段，先复制 <code>a</code> 到 <code>cdata</code>，再把 <code>b</code> 逐字节加到 <code>cdata</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code<br><br>a segment<br>    db 1,2,3,4,5,6,7,8<br>a ends<br><br>b segment<br>    db 1,2,3,4,5,6,7,8<br>b ends<br><br>cdata segment<br>    db 0,0,0,0,0,0,0,0<br>cdata ends<br><br>code segment<br>start:<br>    mov ax,a<br>    mov ds,ax<br>    mov ax,cdata<br>    mov es,ax<br>    mov bx,0<br>    mov cx,8<br><br>copy_a:<br>    mov al,[bx]<br>    mov es:[bx],al<br>    inc bx<br>    loop copy_a<br><br>    mov ax,b<br>    mov ds,ax<br>    mov bx,0<br>    mov cx,8<br><br>add_b:<br>    mov al,[bx]<br>    add es:[bx],al<br>    inc bx<br>    loop add_b<br><br>    mov ax,4c00h<br>    int 21h<br>code ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<p><code>Q6.ASM</code>：把 <code>a</code> 段中的字数据依次压入以 <code>b</code> 段为栈空间的栈中，用来观察栈和多段装入关系。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code<br><br>a segment<br>    dw 1,2,3,4,5,6,7,8,9,0ah,0bh,0ch,0dh,0eh,0fh,0ffh<br>a ends<br><br>b segment<br>    dw 0,0,0,0,0,0,0,0<br>b ends<br><br>code segment<br>start:<br>    mov ax,a<br>    mov ds,ax<br>    mov ax,b<br>    mov ss,ax<br>    mov sp,10h<br>    mov bx,0<br>    mov cx,8<br><br>s:<br>    push word ptr [bx]<br>    add bx,2<br>    loop s<br><br>    mov ax,4c00h<br>    int 21h<br>code ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-3"><a href="#4、实验结果-3" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p><code>c</code> 段结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">02 04 06 08 0A 0C 0E 10<br></code></pre></td></tr></table></figure>
+
+<p>原因是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">a = 01 02 03 04 05 06 07 08<br>b = 01 02 03 04 05 06 07 08<br>c = 02 04 06 08 0A 0C 0E 10<br></code></pre></td></tr></table></figure>
+
+<p>通过 <code>push</code> 逆序存储后，<code>b</code> 段结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">08 00 07 00 06 00 05 00 04 00 03 00 02 00 01 00<br></code></pre></td></tr></table></figure>
+
+<p>这个结果每两个字节一组看更清楚：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">0008 0007 0006 0005 0004 0003 0002 0001<br></code></pre></td></tr></table></figure>
+
+<p>因为 <code>push</code> 压入的是字数据，<code>a</code> 段中的 <code>1,2,3...8</code> 被依次压栈后，最后压入的 <code>8</code> 在栈顶，所以弹出并写入 <code>b</code> 段时顺序变成 <code>8,7,6...1</code>。内存中显示为 <code>08 00</code> 而不是 <code>00 08</code>，仍然是小端存储的结果。</p>
+<h2 id="实验-6-实践课程中的程序"><a href="#实验-6-实践课程中的程序" class="headerlink" title="实验 6  实践课程中的程序"></a>实验 6  实践课程中的程序</h2><h3 id="1、相关知识-4"><a href="#1、相关知识-4" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><h4 id="字符串和固定长度记录"><a href="#字符串和固定长度记录" class="headerlink" title="字符串和固定长度记录"></a>字符串和固定长度记录</h4><p>这个实验集中练习第 7 章的字符串处理、灵活寻址方式和嵌套循环。汇编程序没有高级语言里的数组、字符串、结构体语法，所谓</p>
+<h4 id="ASCII-大小写转换"><a href="#ASCII-大小写转换" class="headerlink" title="ASCII 大小写转换"></a>ASCII 大小写转换</h4><p>ASCII 编码是这个实验的基础。英文字母的大小写编码有规律：小写字母比对应大写字母大 <code>20H</code>。例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">&#x27;A&#x27; = 41H<br>&#x27;a&#x27; = 61H<br></code></pre></td></tr></table></figure>
+
+<p>所以小写转大写可以减 <code>20H</code>，也可以用 <code>and al,11011111b</code> 清除第 5 位。但这种方法只适合确定目标字符是字母的情况，严格程序还应先判断范围。</p>
+<h4 id="寻址方式和嵌套循环"><a href="#寻址方式和嵌套循环" class="headerlink" title="寻址方式和嵌套循环"></a>寻址方式和嵌套循环</h4><p>包括：</p>
+<ul>
+<li>ASCII 大小写转换：小写转大写可清除第 5 位，即 <code>and al,11011111b</code>。</li>
+<li><code>[bx+idata]</code> 适合访问结构固定的数据。</li>
+<li><code>SI</code>、<code>DI</code> 常用于字符串源地址和目标地址。</li>
+<li>嵌套循环中必须保护外层 <code>CX</code>，常见方法是 <code>push cx</code> &#x2F; <code>pop cx</code>。</li>
+</ul>
+<h4 id="手工访问结构字段"><a href="#手工访问结构字段" class="headerlink" title="手工访问结构字段"></a>手工访问结构字段</h4><p>处理固定长度记录时，可以让一个寄存器保存</p>
+<h3 id="2、实验内容-4"><a href="#2、实验内容-4" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）明确字符串记录格式"><a href="#（1）明确字符串记录格式" class="headerlink" title="（1）明确字符串记录格式"></a>（1）明确字符串记录格式</h4><p>每行菜单字符串占固定长度，单词部分从固定偏移开始。（记录长度固定后，可以用 <code>BX</code> 表示当前行首地址）</p>
+<h4 id="（2）外层循环处理行，内层循环处理字符"><a href="#（2）外层循环处理行，内层循环处理字符" class="headerlink" title="（2）外层循环处理行，内层循环处理字符"></a>（2）外层循环处理行，内层循环处理字符</h4><p>外层循环 4 次，每次处理一行；内层循环 4 次，每次改一个字母。（共有 4 行，所以外层 <code>CX=4</code>）</p>
+<h4 id="（3）用位运算改大写"><a href="#（3）用位运算改大写" class="headerlink" title="（3）用位运算改大写"></a>（3）用位运算改大写</h4><p>读取字符后执行 <code>and al,11011111b</code>，再写回原位置。（ASCII 中小写字母比大写字母多 <code>20H</code>）</p>
+<h3 id="3、实验代码-4"><a href="#3、实验代码-4" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p>这段代码用于：处理固定长度字符串记录，把每行单词前 4 个小写字母用位运算转换成大写。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:codesg,ss:stacksg,ds:datasg<br><br>stacksg segment<br>    dw 0,0,0,0,0,0,0,0<br>stacksg ends<br><br>datasg segment<br>    db &#x27;1. display      &#x27;<br>    db &#x27;2. brows        &#x27;<br>    db &#x27;3. replace      &#x27;<br>    db &#x27;4. modify       &#x27;<br>datasg ends<br><br>codesg segment<br>start:<br>    mov ax,stacksg<br>    mov ss,ax<br>    mov sp,16<br><br>    mov ax,datasg<br>    mov ds,ax<br>    mov bx,0<br>    mov cx,4<br><br>row_loop:<br>    push cx<br>    mov si,0<br>    mov cx,4<br><br>col_loop:<br>    mov al,[bx+3+si]<br>    and al,11011111b<br>    mov [bx+3+si],al<br>    inc si<br>    loop col_loop<br><br>    add bx,16<br>    pop cx<br>    loop row_loop<br><br>    mov ax,4c00h<br>    int 21h<br>codesg ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-4"><a href="#4、实验结果-4" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p>4 行字符串变为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">1. DISPlay<br>2. BROWs<br>3. REPLace<br>4. MODIfy<br></code></pre></td></tr></table></figure>
+
+<p>每个单词只有前 4 个字母被改成大写，是因为内层 <code>CX=4</code>，只循环 4 次。后面的字母保持原样，可以看出 <code>[bx+3+si]</code> 的定位正确，没有改到编号、点号、空格或其他字段。</p>
+<h2 id="实验-7-寻址方式在结构化数据访问中的应用"><a href="#实验-7-寻址方式在结构化数据访问中的应用" class="headerlink" title="实验 7  寻址方式在结构化数据访问中的应用"></a>实验 7  寻址方式在结构化数据访问中的应用</h2><h3 id="1、相关知识-5"><a href="#1、相关知识-5" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><h4 id="结构化数据"><a href="#结构化数据" class="headerlink" title="结构化数据"></a>结构化数据</h4><p>结构化数据访问是前面寻址知识的综合应用。汇编没有真正的</p>
+<h4 id="原始数据和目标表"><a href="#原始数据和目标表" class="headerlink" title="原始数据和目标表"></a>原始数据和目标表</h4><p>原始数据分别存放：年份为字符串，收入为 <code>dd</code> 双字，雇员数为 <code>dw</code> 字。目标表每行固定 16 字节，通过固定偏移写入各字段。</p>
+<h4 id="双字数据和除法"><a href="#双字数据和除法" class="headerlink" title="双字数据和除法"></a>双字数据和除法</h4><p>关键点：</p>
+<ul>
+<li><code>dd</code> 数据需要用 <code>DX:AX</code> 处理。</li>
+<li><code>div word ptr [...]</code> 可进行双字除以字，商在 <code>AX</code>，余数在 <code>DX</code>。</li>
+<li>固定记录大小适合用 <code>BX</code> 做行偏移。</li>
+</ul>
+<h4 id="db、dw、dd"><a href="#db、dw、dd" class="headerlink" title="db、dw、dd"></a>db、dw、dd</h4><p><code>db</code>、<code>dw</code>、<code>dd</code> 分别定义字节、字、双字数据：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">db：1 字节<br>dw：2 字节<br>dd：4 字节<br></code></pre></td></tr></table></figure>
+
+<h4 id="DX-AX-和下标推进"><a href="#DX-AX-和下标推进" class="headerlink" title="DX:AX 和下标推进"></a>DX:AX 和下标推进</h4><p>因为收入可能大于 65535，所以不能只用一个 16 位寄存器保存，需要用双字。8086 处理双字除以字时，被除数放在 <code>DX:AX</code> 中。</p>
+<p>这个实验里 <code>SI</code> 每次加 4，是因为年份和收入都按 4 字节推进；<code>DI</code> 每次加 2，是因为雇员数是字数据；<code>BX</code> 每次加 16，是因为目标表每条记录占 16 字节。</p>
+<h3 id="2、实验内容-5"><a href="#2、实验内容-5" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）设计目标表记录格式"><a href="#（1）设计目标表记录格式" class="headerlink" title="（1）设计目标表记录格式"></a>（1）设计目标表记录格式</h4><p>每条记录固定 16 字节，分别存放年份、收入、雇员数和人均收入。（固定长度记录便于用 <code>BX</code> 按行推进）</p>
+<h4 id="（2）设置源段和目标段"><a href="#（2）设置源段和目标段" class="headerlink" title="（2）设置源段和目标段"></a>（2）设置源段和目标段</h4><p>让 <code>DS</code> 指向原始数据段，让 <code>ES</code> 指向目标 <code>table</code> 段。（原始数据和目标表不在同一段）</p>
+<h4 id="（3）按-21-条记录循环生成表"><a href="#（3）按-21-条记录循环生成表" class="headerlink" title="（3）按 21 条记录循环生成表"></a>（3）按 21 条记录循环生成表</h4><p>循环 21 次，每次复制年份、收入、雇员数，再计算人均收入。（原始数据包含 1975 到 1995 年）</p>
+<h4 id="（4）用除法计算人均收入"><a href="#（4）用除法计算人均收入" class="headerlink" title="（4）用除法计算人均收入"></a>（4）用除法计算人均收入</h4><p>把收入放入 <code>DX:AX</code>，用雇员数作为除数，执行 <code>div</code>。（收入是 <code>dd</code> 双字，可能超过 16 位，需要用 <code>DX:AX</code> 表示）</p>
+<h3 id="3、实验代码-5"><a href="#3、实验代码-5" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p>这段代码用于：把年份、收入、雇员数整理成 21 条固定长度记录，并计算每年人均收入。<br>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:codesg<br><br>year_base equ 0<br>sum_base  equ 84<br>ne_base   equ 168<br><br>record_size equ 16<br>sum_off     equ 5<br>ne_off      equ 10<br>avg_off     equ 13<br><br>data segment<br>    db &#x27;1975&#x27;,&#x27;1976&#x27;,&#x27;1977&#x27;,&#x27;1978&#x27;,&#x27;1979&#x27;<br>    db &#x27;1980&#x27;,&#x27;1981&#x27;,&#x27;1982&#x27;,&#x27;1983&#x27;,&#x27;1984&#x27;<br>    db &#x27;1985&#x27;,&#x27;1986&#x27;,&#x27;1987&#x27;,&#x27;1988&#x27;,&#x27;1989&#x27;<br>    db &#x27;1990&#x27;,&#x27;1991&#x27;,&#x27;1992&#x27;,&#x27;1993&#x27;,&#x27;1994&#x27;,&#x27;1995&#x27;<br><br>    dd 16,22,382,1356,2390,8000,16000,24486,50065,97479,140417<br>    dd 197514,345980,590827,803530,1183000,1843000,2759000,3753000,4649000,5937000<br><br>    dw 3,7,9,13,28,38,130,220,476,778,1001<br>    dw 1442,2258,2793,4037,5635,8226,11542,14430,15257,17800<br>data ends<br><br>table segment<br>    db 21 dup (&#x27;year summ ne ?? &#x27;)<br>table ends<br><br>codesg segment<br>start:<br>    mov ax,data<br>    mov ds,ax<br>    mov ax,table<br>    mov es,ax<br>    mov bx,0<br>    mov si,0<br>    mov di,0<br>    mov cx,21<br><br>row_loop:<br>    mov ax,[year_base+si]<br>    mov es:[bx],ax<br>    mov ax,[year_base+si+2]<br>    mov es:[bx+2],ax<br><br>    mov ax,[sum_base+si]<br>    mov dx,[sum_base+si+2]<br>    mov es:[bx+sum_off],ax<br>    mov es:[bx+sum_off+2],dx<br><br>    mov ax,[ne_base+di]<br>    mov es:[bx+ne_off],ax<br><br>    mov ax,[sum_base+si]<br>    mov dx,[sum_base+si+2]<br>    div word ptr [ne_base+di]<br>    mov es:[bx+avg_off],ax<br><br>    add si,4<br>    add di,2<br>    add bx,record_size<br>    loop row_loop<br><br>    mov ax,4c00h<br>    int 21h<br>codesg ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-5"><a href="#4、实验结果-5" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p><code>table</code> 段生成 21 条记录。前几条为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">1975 16     3     5<br>1976 22     7     3<br>1977 382    9     42<br>...<br>1995 5937000 17800 333<br></code></pre></td></tr></table></figure>
+
+<p>以 1975 年为例，原始数据是收入 <code>16</code>、雇员数 <code>3</code>，所以人均收入为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">16 / 3 = 5 余 1<br></code></pre></td></tr></table></figure>
+
+<p>表中保存的是整数商 <code>5</code>。8086 的 <code>div</code> 指令会把商放入 <code>AX</code>，余数放入 <code>DX</code>，这个实验只把商写入人均收入字段。</p>
+<h2 id="实验-8-分析一个奇怪的程序"><a href="#实验-8-分析一个奇怪的程序" class="headerlink" title="实验 8  分析一个奇怪的程序"></a>实验 8  分析一个奇怪的程序</h2><h3 id="1、相关知识-6"><a href="#1、相关知识-6" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><h4 id="自修改代码"><a href="#自修改代码" class="headerlink" title="自修改代码"></a>自修改代码</h4><p>自修改代码的基础是：代码段在内存中也是字节序列，程序可以通过代码段地址读写自己的机器码。平时我们把代码和数据分开理解，是为了方便编程；但从内存角度看，它们都只是二进制数据。</p>
+<h4 id="nop"><a href="#nop" class="headerlink" title="nop"></a>nop</h4><p><code>nop</code> 是空操作指令，占 1 字节，执行后除了 <code>IP</code> 前进外不做实际工作。连续两个 <code>nop</code> 正好占 2 字节。</p>
+<h4 id="jmp-short"><a href="#jmp-short" class="headerlink" title="jmp short"></a>jmp short</h4><p><code>jmp short</code> 是短转移指令，通常占 2 字节：第 1 字节是操作码，第 2 字节是相对位移。程序把 <code>s2</code> 处的 <code>jmp short s1</code> 两个字节复制到 <code>s</code> 处，就能覆盖原来的两个 <code>nop</code>。</p>
+<h4 id="关键标号"><a href="#关键标号" class="headerlink" title="关键标号"></a>关键标号</h4><p>理解这个实验时，要关注三个地址：</p>
+<ul>
+<li><code>s</code>：第一次执行时是两个 <code>nop</code>，第二次执行时已经被改成跳转。</li>
+<li><code>s2</code>：保存一条现成的 <code>jmp short s1</code> 机器码。</li>
+<li><code>s1</code>：程序最终跳过去并返回的位置。</li>
+</ul>
+<h3 id="2、实验内容-6"><a href="#2、实验内容-6" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）预留可被覆盖的位置"><a href="#（1）预留可被覆盖的位置" class="headerlink" title="（1）预留可被覆盖的位置"></a>（1）预留可被覆盖的位置</h4><p>在标号 <code>s</code> 处放两条 <code>nop</code>。（两条 <code>nop</code> 正好占 2 字节）</p>
+<h4 id="（2）从代码段复制跳转指令"><a href="#（2）从代码段复制跳转指令" class="headerlink" title="（2）从代码段复制跳转指令"></a>（2）从代码段复制跳转指令</h4><p>让 <code>SI</code> 指向 <code>s2</code>，<code>DI</code> 指向 <code>s</code>，把 <code>cs:[si]</code> 的一个字复制到 <code>cs:[di]</code>。（<code>s2</code> 处已经放着一条现成的 <code>jmp short s1</code>）</p>
+<h4 id="（3）跳回-s-验证自修改结果"><a href="#（3）跳回-s-验证自修改结果" class="headerlink" title="（3）跳回 s 验证自修改结果"></a>（3）跳回 <code>s</code> 验证自修改结果</h4><p>第一次到 <code>s</code> 时执行的是 <code>nop</code>；复制完成后通过 <code>jmp short s</code> 回到 <code>s</code>，第二次到 <code>s</code> 时执行的已经是 <code>jmp short s1</code>。（必须第二次回到 <code>s</code>，才能验证前面覆盖 <code>nop</code> 是否生效）</p>
+<h3 id="3、实验代码-6"><a href="#3、实验代码-6" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p>这段代码用于：把代码段中的跳转指令机器码复制到前面的 <code>nop</code> 位置，观察自修改代码的执行效果。<br>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:codesg<br><br>codesg segment<br>    mov ax,4c00h<br>    int 21h<br><br>start:<br>    mov ax,0<br>s:<br>    nop<br>    nop<br>    mov di,offset s<br>    mov si,offset s2<br>    mov ax,cs:[si]<br>    mov cs:[di],ax<br>s0:<br>    jmp short s<br>s1:<br>    mov ax,0<br>    int 21h<br>    mov ax,0<br>s2:<br>    jmp short s1<br>    nop<br>codesg ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-6"><a href="#4、实验结果-6" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p>程序可以正确返回 DOS。原因是第二次到达 <code>s</code> 时已经执行被复制过来的 <code>jmp short s1</code>。</p>
+<p>这个实验的结果可以看出两件事：</p>
+<ol>
+<li>CPU 不会记住某个地址“原来是什么指令”，它每次都是从 <code>CS:IP</code> 指向的内存重新取机器码执行。</li>
+<li>只要代码段可写，程序就能修改后续将要执行的指令。这种技巧叫自修改代码，实际工程中应谨慎使用，但它非常适合理解“指令也是内存数据”。</li>
+</ol>
+<h2 id="实验-9-根据材料编程"><a href="#实验-9-根据材料编程" class="headerlink" title="实验 9  根据材料编程"></a>实验 9  根据材料编程</h2><h3 id="1、相关知识-7"><a href="#1、相关知识-7" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><h4 id="文本显存"><a href="#文本显存" class="headerlink" title="文本显存"></a>文本显存</h4><p>直接操作文本显存是 DOS 汇编中常见的屏幕输出方法。DOS 文本模式下，彩色显示缓冲区通常从 <code>B800:0000</code> 开始。屏幕每行 80 个字符，每个字符占 2 字节，所以一行占 160 字节。</p>
+<h4 id="字符和属性"><a href="#字符和属性" class="headerlink" title="字符和属性"></a>字符和属性</h4><p>每个显示字符的两个字节含义如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">低字节：ASCII 字符<br>高字节：颜色属性<br></code></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">41 1E<br></code></pre></td></tr></table></figure>
+
+<p>表示显示字符 <code>&#39;A&#39;</code>，属性为 <code>1EH</code>。</p>
+<h4 id="显存偏移"><a href="#显存偏移" class="headerlink" title="显存偏移"></a>显存偏移</h4><p>某行某列的显存偏移为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">offset = 行号 * 160 + 列号 * 2<br></code></pre></td></tr></table></figure>
+
+<h4 id="颜色属性"><a href="#颜色属性" class="headerlink" title="颜色属性"></a>颜色属性</h4><p>颜色属性字节中，低 4 位是前景色，高 4 位是背景色。例如 <code>02H</code> 表示黑底绿色字，<code>24H</code> 表示绿底红字，<code>71H</code> 表示白底蓝字。写显存时必须字符和属性成对写入，否则屏幕内容或颜色会错位。</p>
+<h3 id="2、实验内容-7"><a href="#2、实验内容-7" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）准备字符串和属性表"><a href="#（1）准备字符串和属性表" class="headerlink" title="（1）准备字符串和属性表"></a>（1）准备字符串和属性表</h4><p>定义 <code>welcome to masm!</code>，再定义三个属性字节 <code>02H</code>、<code>24H</code>、<code>71H</code>。（字符串内容三行相同，单独定义一次即可）</p>
+<h4 id="（2）计算显存位置并逐字符写入"><a href="#（2）计算显存位置并逐字符写入" class="headerlink" title="（2）计算显存位置并逐字符写入"></a>（2）计算显存位置并逐字符写入</h4><p>把 <code>ES</code> 设置为 <code>B800H</code>，用 <code>DI</code> 指向屏幕中间位置，循环写入字符和属性。（文本显存每个字符占 2 字节）</p>
+<h4 id="（3）换行显示三次"><a href="#（3）换行显示三次" class="headerlink" title="（3）换行显示三次"></a>（3）换行显示三次</h4><p>每显示完一行，<code>DI</code> 增加 <code>0A0H</code>，移动到下一行相同列。（<code>0A0H</code> 等于十进制 160）</p>
+<h3 id="3、实验代码-7"><a href="#3、实验代码-7" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p>这段代码用于：把 <code>welcome to masm!</code> 按三种颜色写到文本显存的屏幕中间位置。<br>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code, ds:code<br><br>code segment<br>msg   db &#x27;welcome to masm!&#x27;<br>msglen equ $-msg<br>attrs db 02h,24h,71h<br><br>start:<br>    push cs<br>    pop ds<br>    mov ax,0b800h<br>    mov es,ax<br><br>    mov bx,offset attrs<br>    mov di,0720h<br>    mov dx,3<br><br>row_loop:<br>    push dx<br>    push di<br>    mov si,offset msg<br>    mov ah,[bx]<br>    mov cx,msglen<br><br>char_loop:<br>    lodsb<br>    mov es:[di],al<br>    mov es:[di+1],ah<br>    add di,2<br>    loop char_loop<br><br>    pop di<br>    add di,0a0h<br>    inc bx<br>    pop dx<br>    dec dx<br>    jnz row_loop<br><br>    push ds<br>    mov ax,0b800h<br>    mov ds,ax<br>    xor ax,ax<br>    mov es,ax<br><br>    mov si,0720h<br>    mov di,0220h<br>    mov cx,16<br>    rep movsw<br><br>    mov si,07c0h<br>    mov di,0240h<br>    mov cx,16<br>    rep movsw<br><br>    mov si,0860h<br>    mov di,0260h<br>    mov cx,16<br>    rep movsw<br>    pop ds<br><br>    mov ax,4c00h<br>    int 21h<br>code ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-7"><a href="#4、实验结果-7" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p>三行属性分别为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">绿色字符：02H<br>绿底红字：24H<br>白底蓝字：71H<br></code></pre></td></tr></table></figure>
+
+<p>显存中可见字符和属性交替出现，例如第一行：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">77 02 65 02 6C 02 63 02 ... 21 02<br></code></pre></td></tr></table></figure>
+
+<p>这里 <code>77H</code> 是字符 <code>&#39;w&#39;</code> 的 ASCII 码，后面的 <code>02H</code> 是绿色属性；<code>65H</code> 是 <code>&#39;e&#39;</code>，后面的 <code>02H</code> 仍然是属性。显存结果按“字符、属性、字符、属性”交替出现，可以看出写入方式正确。</p>
+<h2 id="实验-10-编写子程序"><a href="#实验-10-编写子程序" class="headerlink" title="实验 10  编写子程序"></a>实验 10  编写子程序</h2><h3 id="1、相关知识-8"><a href="#1、相关知识-8" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><h4 id="call-和-ret"><a href="#call-和-ret" class="headerlink" title="call 和 ret"></a>call 和 ret</h4><p>子程序相当于汇编中的“函数”，用 <code>call</code> 调用，用 <code>ret</code> 返回。执行 <code>call</code> 时，CPU 会把返回地址压入栈，再跳到子程序；执行 <code>ret</code> 时，CPU 会从栈中弹出返回地址，回到调用点之后继续执行。所以，子程序是否能正确返回，依赖 <code>SS:SP</code> 指向正确的栈。</p>
+<h4 id="子程序调用约定"><a href="#子程序调用约定" class="headerlink" title="子程序调用约定"></a>子程序调用约定</h4><p>编写通用子程序时必须约定清楚三件事：</p>
+<ul>
+<li>入口参数：调用者通过哪些寄存器或内存传入数据。</li>
+<li>出口结果：子程序把结果放在哪里。</li>
+<li>现场保护：子程序会破坏哪些寄存器，哪些需要 <code>push</code> 保存并在返回前 <code>pop</code> 恢复。</li>
+</ul>
+<h4 id="参数传递方式"><a href="#参数传递方式" class="headerlink" title="参数传递方式"></a>参数传递方式</h4><p>子程序的参数可以通过寄存器传递，也可以通过内存或栈传递。寄存器传参速度快、代码短，适合参数数量较少的情况。内存或栈传参更灵活，适合较复杂的调用约定。</p>
+<h4 id="0-结尾字符串"><a href="#0-结尾字符串" class="headerlink" title="0 结尾字符串"></a>0 结尾字符串</h4><p>0 结尾字符串是一种常见字符串表示方法。字符串内容连续存放，最后用字节 <code>00H</code> 表示结束。处理这类字符串时，循环每次取一个字符，遇到 <code>0</code> 就停止。</p>
+<h4 id="divdw"><a href="#divdw" class="headerlink" title="divdw"></a>divdw</h4><p>8086 的 <code>div</code> 指令有固定限制：如果除数是 16 位，默认被除数是 <code>DX:AX</code>，商必须能放入 <code>AX</code>。如果商超过 <code>FFFFH</code>，就会触发除法溢出。所以，处理较大的 32 位数除以 16 位数时，需要设计更安全的分步除法。</p>
+<h4 id="dtoc"><a href="#dtoc" class="headerlink" title="dtoc"></a>dtoc</h4><p>二进制整数转换为十进制字符串的常用方法是反复除以 10。每次除法的余数就是当前最低位数字。因为先得到个位，再得到十位、百位，所以通常要把余数暂存起来，最后逆序输出。</p>
+<h3 id="2、实验内容-8"><a href="#2、实验内容-8" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）show-str：显示字符串"><a href="#（1）show-str：显示字符串" class="headerlink" title="（1）show_str：显示字符串"></a>（1）<code>show_str</code>：显示字符串</h4><p>入口参数为 <code>DH=行号</code>、<code>DL=列号</code>、<code>CL=颜色</code>、<code>DS:SI=字符串首地址</code>。（行号、列号、颜色都只需 1 字节）</p>
+<h4 id="（2）divdw：解决双字除以字"><a href="#（2）divdw：解决双字除以字" class="headerlink" title="（2）divdw：解决双字除以字"></a>（2）<code>divdw</code>：解决双字除以字</h4><p>入口参数为 <code>DX:AX=被除数</code>、<code>CX=除数</code>。（8086 约定 <code>DX:AX</code> 表示 32 位被除数）</p>
+<h4 id="（3）dtoc：数字转十进制字符串"><a href="#（3）dtoc：数字转十进制字符串" class="headerlink" title="（3）dtoc：数字转十进制字符串"></a>（3）<code>dtoc</code>：数字转十进制字符串</h4><p>入口参数为 <code>AX=待转换数</code>、<code>DS:SI=输出缓冲区</code>。（十进制显示必须把二进制数转换成 ASCII 字符）</p>
+<h3 id="3、实验代码-8"><a href="#3、实验代码-8" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p>文件 <code>SHOWSTR.ASM</code>：实现 <code>show_str</code> 子程序，通过行号、列号、颜色和 <code>DS:SI</code> 字符串地址，把 0 结尾字符串写入显存。</p>
+<p>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code, ds:code<br><br>code segment<br>msg db &#x27;Welcome to masm!&#x27;,0<br><br>start:<br>    push cs<br>    pop ds<br>    mov dh,8<br>    mov dl,3<br>    mov cl,2<br>    mov si,offset msg<br>    call show_str<br><br>    push ds<br>    mov ax,0b800h<br>    mov ds,ax<br>    xor ax,ax<br>    mov es,ax<br>    mov si,0506h<br>    mov di,0280h<br>    mov cx,16<br>    rep movsw<br>    pop ds<br><br>    mov ax,4c00h<br>    int 21h<br><br>show_str:<br>    push ax<br>    push bx<br>    push cx<br>    push dx<br>    push si<br>    push di<br>    push es<br><br>    mov ax,0b800h<br>    mov es,ax<br>    xor ax,ax<br>    mov al,dh<br>    mov bl,160<br>    mul bl<br>    mov di,ax<br>    xor ax,ax<br>    mov al,dl<br>    shl ax,1<br>    add di,ax<br><br>show_loop:<br>    mov al,[si]<br>    or al,al<br>    jz show_done<br>    mov es:[di],al<br>    mov es:[di+1],cl<br>    inc si<br>    add di,2<br>    jmp short show_loop<br><br>show_done:<br>    pop es<br>    pop di<br>    pop si<br>    pop dx<br>    pop cx<br>    pop bx<br>    pop ax<br>    ret<br>code ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<p>文件 <code>DIVDW.ASM</code>：实现并测试双字除以字的 <code>divdw</code> 子程序，返回商和余数，并把验证结果写入低地址内存。</p>
+<p>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code, ds:code<br><br>code segment<br>quo_lo dw 0<br>quo_hi dw 0<br>remv   dw 0<br><br>start:<br>    push cs<br>    pop ds<br>    mov ax,4240h<br>    mov dx,000fh<br>    mov cx,000ah<br>    call divdw<br>    mov quo_lo,ax<br>    mov quo_hi,dx<br>    mov remv,cx<br>    mov bx,ax<br>    mov si,dx<br>    mov di,cx<br>    xor ax,ax<br>    mov es,ax<br>    mov es:[0200h],bx<br>    mov es:[0202h],si<br>    mov es:[0204h],di<br>    mov ax,4c00h<br>    int 21h<br><br>divdw:<br>    push bx<br>    mov bx,ax<br>    mov ax,dx<br>    xor dx,dx<br>    div cx<br>    push ax<br>    mov ax,bx<br>    div cx<br>    mov cx,dx<br>    pop dx<br>    pop bx<br>    ret<br>code ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<p>文件 <code>DTOC.ASM</code>：实现并测试 <code>dtoc</code>，把二进制整数反复除以 10，转换成十进制 ASCII 字符串。</p>
+<p>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code, ds:code<br><br>code segment<br>buf db 10 dup (0)<br><br>start:<br>    push cs<br>    pop ds<br>    mov ax,12666<br>    mov si,offset buf<br>    call dtoc<br>    mov si,offset buf<br>    xor ax,ax<br>    mov es,ax<br>    mov di,0210h<br>    mov cx,10<br><br>copy_buf:<br>    mov al,[si]<br>    mov es:[di],al<br>    inc si<br>    inc di<br>    loop copy_buf<br><br>    mov ax,4c00h<br>    int 21h<br><br>dtoc:<br>    push ax<br>    push bx<br>    push cx<br>    push dx<br>    push si<br><br>    mov bx,0<br>    mov cx,10<br><br>dtoc_div:<br>    xor dx,dx<br>    div cx<br>    push dx<br>    inc bx<br>    or ax,ax<br>    jnz dtoc_div<br><br>dtoc_out:<br>    pop dx<br>    add dl,30h<br>    mov [si],dl<br>    inc si<br>    dec bx<br>    jnz dtoc_out<br><br>    mov byte ptr [si],0<br>    pop si<br>    pop dx<br>    pop cx<br>    pop bx<br>    pop ax<br>    ret<br>code ends<br><br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-8"><a href="#4、实验结果-8" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p><code>show_str</code> 成功显示 <code>Welcome to masm!</code>。<code>divdw</code> 对 <code>1000000 / 10</code> 得到商 <code>000186A0H</code>，余数 <code>0</code>。<code>dtoc</code> 将 <code>12666</code> 转换为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">31 32 36 36 36 00<br></code></pre></td></tr></table></figure>
+
+<p>对应字符串 <code>12666</code>。</p>
+<h2 id="实验-11-编写子程序"><a href="#实验-11-编写子程序" class="headerlink" title="实验 11  编写子程序"></a>实验 11  编写子程序</h2><h3 id="1、相关知识-9"><a href="#1、相关知识-9" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><h4 id="cmp-和条件判断"><a href="#cmp-和条件判断" class="headerlink" title="cmp 和条件判断"></a>cmp 和条件判断</h4><p>这个实验重点是标志寄存器、比较指令和条件转移。<code>cmp a,b</code> 的本质是执行一次不保存结果的减法 <code>a-b</code>，它不改变操作数，但会影响标志寄存器。后面的条件转移指令根据这些标志决定是否跳转。</p>
+<h4 id="常见标志"><a href="#常见标志" class="headerlink" title="常见标志"></a>常见标志</h4><p>常见标志含义：</p>
+<ul>
+<li><code>ZF</code>：零标志。比较结果为 0 时置 1，常用于判断相等。</li>
+<li><code>CF</code>：进位&#x2F;借位标志。无符号数比较时，若前者小于后者，通常会置 1。</li>
+<li><code>SF</code>：符号标志。结果最高位为 1 时置 1。</li>
+<li><code>OF</code>：溢出标志。有符号运算超出范围时置 1。</li>
+</ul>
+<h4 id="字符范围判断"><a href="#字符范围判断" class="headerlink" title="字符范围判断"></a>字符范围判断</h4><p>判断字符是否为小写字母，可以用两次比较：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asm">cmp al,&#x27;a&#x27;<br>jb  not_lower<br>cmp al,&#x27;z&#x27;<br>ja  not_lower<br></code></pre></td></tr></table></figure>
+
+<p><code>jb</code> 和 <code>ja</code> 是无符号条件转移，适合 ASCII 编码这种按数值大小排列的字符判断。如果字符在 <code>&#39;a&#39;</code> 到 <code>&#39;z&#39;</code> 范围内，减去 <code>20H</code> 就能转为大写。</p>
+<h4 id="0-结尾字符串-1"><a href="#0-结尾字符串-1" class="headerlink" title="0 结尾字符串"></a>0 结尾字符串</h4><p>这个实验的字符串以 <code>0</code> 结尾，这种字符串也叫 0 结尾字符串。循环每次读一个字节，遇到 <code>0</code> 表示字符串结束。</p>
+<h3 id="2、实验内容-9"><a href="#2、实验内容-9" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）用-DS-SI-指向字符串"><a href="#（1）用-DS-SI-指向字符串" class="headerlink" title="（1）用 DS:SI 指向字符串"></a>（1）用 <code>DS:SI</code> 指向字符串</h4><p>让 <code>SI</code> 保存当前字符偏移。（字符串是连续字节序列，<code>SI</code> 适合逐字符向后移动）</p>
+<h4 id="（2）判断是否到字符串结尾"><a href="#（2）判断是否到字符串结尾" class="headerlink" title="（2）判断是否到字符串结尾"></a>（2）判断是否到字符串结尾</h4><p>每次读取 <code>[si]</code>，如果字符为 <code>0</code> 就结束。（字符串以 0 结尾，没有单独保存长度）</p>
+<h4 id="（3）判断并转换小写字母"><a href="#（3）判断并转换小写字母" class="headerlink" title="（3）判断并转换小写字母"></a>（3）判断并转换小写字母</h4><p>用 <code>cmp</code> 判断字符是否在 <code>&#39;a&#39;</code> 到 <code>&#39;z&#39;</code> 之间，若在范围内就减 <code>20H</code>。（ASCII 中小写字母和大写字母相差 <code>20H</code>）</p>
+<h3 id="3、实验代码-9"><a href="#3、实验代码-9" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p>这段代码用于：实现 <code>letterc</code> 子程序，扫描 0 结尾字符串，把小写字母转换成大写字母。<br>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code, ds:data<br><br>data segment<br>msg  db &quot;Beginner&#x27;s All-purpose Symbolic Instruction Code.&quot;,0<br>crlf db 13,10<br>data ends<br><br>code segment<br>start:<br>    mov ax,data<br>    mov ds,ax<br><br>    mov si,offset msg<br>    call letterc<br><br>    mov dx,offset msg<br>    call strlen<br>    mov bx,1<br>    mov ah,40h<br>    int 21h<br><br>    mov dx,offset crlf<br>    mov cx,2<br>    mov bx,1<br>    mov ah,40h<br>    int 21h<br><br>    mov ax,4c00h<br>    int 21h<br><br>letterc:<br>    push ax<br>lc1:<br>    mov al,[si]<br>    or al,al<br>    jz lc_done<br>    cmp al,&#x27;a&#x27;<br>    jb lc_next<br>    cmp al,&#x27;z&#x27;<br>    ja lc_next<br>    sub byte ptr [si],20h<br>lc_next:<br>    inc si<br>    jmp short lc1<br>lc_done:<br>    pop ax<br>    ret<br><br>strlen:<br>    push ax<br>    push si<br>    mov si,dx<br>    xor cx,cx<br>sl1:<br>    mov al,[si]<br>    or al,al<br>    jz sl_done<br>    inc si<br>    inc cx<br>    jmp short sl1<br>sl_done:<br>    pop si<br>    pop ax<br>    ret<br><br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-9"><a href="#4、实验结果-9" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p>输入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">Beginner&#x27;s All-purpose Symbolic Instruction Code.<br></code></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">BEGINNER&#x27;S ALL-PURPOSE SYMBOLIC INSTRUCTION CODE.<br></code></pre></td></tr></table></figure>
+
+<h2 id="实验-12-编写-0-号中断的处理程序"><a href="#实验-12-编写-0-号中断的处理程序" class="headerlink" title="实验 12  编写 0 号中断的处理程序"></a>实验 12  编写 0 号中断的处理程序</h2><h3 id="1、相关知识-10"><a href="#1、相关知识-10" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><h4 id="中断和-0-号中断"><a href="#中断和-0-号中断" class="headerlink" title="中断和 0 号中断"></a>中断和 0 号中断</h4><p>这个实验进入中断机制。中断可以理解为 CPU 在正常执行流程之外，转去处理某个特殊事件。0 号中断是除法溢出中断，当执行除法指令时商放不进目标寄存器，就会自动触发 0 号中断。</p>
+<h4 id="中断向量表"><a href="#中断向量表" class="headerlink" title="中断向量表"></a>中断向量表</h4><p>中断向量表位于物理地址 <code>0000:0000</code>，每个中断向量占 4 字节：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">低 2 字节：中断例程 IP<br>高 2 字节：中断例程 CS<br></code></pre></td></tr></table></figure>
+
+<p>0 号中断向量位置为 <code>0000:0000</code>，7Ch 号中断向量位置为 <code>0000:01F0</code>，计算公式是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">中断向量地址 = 中断类型码 * 4<br></code></pre></td></tr></table></figure>
+
+<h4 id="CPU-响应中断的过程"><a href="#CPU-响应中断的过程" class="headerlink" title="CPU 响应中断的过程"></a>CPU 响应中断的过程</h4><p>CPU 响应中断时大致做这些事：</p>
+<ol>
+<li>标志寄存器入栈。</li>
+<li>清除 <code>TF</code>、<code>IF</code> 等控制位。</li>
+<li>当前 <code>CS</code>、<code>IP</code> 入栈。</li>
+<li>从中断向量表取新的 <code>CS:IP</code>。</li>
+<li>转去执行中断处理程序。</li>
+</ol>
+<h4 id="iret-返回"><a href="#iret-返回" class="headerlink" title="iret 返回"></a>iret 返回</h4><p>中断处理程序通常用 <code>iret</code> 返回，因为 <code>iret</code> 会同时恢复 <code>IP</code>、<code>CS</code> 和标志寄存器。若中断例程不打算回到原程序，也可以在例程中转去执行其他退出逻辑，但这属于具体程序设计。</p>
+<h4 id="cli-和-sti"><a href="#cli-和-sti" class="headerlink" title="cli 和 sti"></a>cli 和 sti</h4><p>安装中断例程时要关闭中断：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs asm">cli<br>修改中断向量<br>sti<br></code></pre></td></tr></table></figure>
+
+<h3 id="2、实验内容-10"><a href="#2、实验内容-10" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）复制中断例程到低地址内存"><a href="#（1）复制中断例程到低地址内存" class="headerlink" title="（1）复制中断例程到低地址内存"></a>（1）复制中断例程到低地址内存</h4><p>把自定义 0 号中断处理程序复制到 <code>0000:0200</code>。（中断向量只能保存一个 <code>CS:IP</code> 地址）</p>
+<h4 id="（2）修改-0-号中断向量"><a href="#（2）修改-0-号中断向量" class="headerlink" title="（2）修改 0 号中断向量"></a>（2）修改 0 号中断向量</h4><p>把中断向量表中 0 号中断入口改成 <code>0000:0200</code>。（0 号中断向量位于 <code>0000:0000</code>）</p>
+<h4 id="（3）制造除法溢出验证"><a href="#（3）制造除法溢出验证" class="headerlink" title="（3）制造除法溢出验证"></a>（3）制造除法溢出验证</h4><p>执行会产生溢出的除法，观察是否显示 <code>divide error!</code>。（除法溢出会自动触发 0 号中断）</p>
+<h3 id="3、实验代码-10"><a href="#3、实验代码-10" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p>这段代码用于：把自定义 0 号中断例程安装到低地址内存，触发除法溢出后显示 <code>divide error!</code>。<br>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code, ds:code<br><br>code segment<br>start:<br>    push cs<br>    pop ds<br><br>    xor ax,ax<br>    mov es,ax<br>    mov si,offset int0<br>    mov di,200h<br>    mov cx,offset int0end-offset int0<br>    cld<br>    rep movsb<br><br>    cli<br>    mov word ptr es:[0],200h<br>    mov word ptr es:[2],0<br>    sti<br><br>    mov ax,1000h<br>    mov bl,1<br>    div bl<br><br>    mov ax,4c00h<br>    int 21h<br><br>int0:<br>    jmp short int0start<br>msg db &#x27;divide error!&#x27;,13,10<br>msglen equ $-msg<br>int0start:<br>    push ax<br>    push bx<br>    push cx<br>    push dx<br>    push ds<br>    push cs<br>    pop ds<br><br>    mov dx,202h<br>    mov cx,msglen<br>    mov bx,1<br>    mov ah,40h<br>    int 21h<br><br>    mov ax,4c00h<br>    int 21h<br>int0end:<br>    nop<br><br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-10"><a href="#4、实验结果-10" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p>除法溢出触发后输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">divide error!<br></code></pre></td></tr></table></figure>
+
+<h2 id="实验-13-编写、应用中断例程"><a href="#实验-13-编写、应用中断例程" class="headerlink" title="实验 13  编写、应用中断例程"></a>实验 13  编写、应用中断例程</h2><h3 id="1、相关知识-11"><a href="#1、相关知识-11" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><h4 id="软件中断"><a href="#软件中断" class="headerlink" title="软件中断"></a>软件中断</h4><p><code>int n</code> 会主动触发 n 号中断，这叫软件中断。它和除法溢出这类自动触发的内中断使用同一套中断向量机制。CPU 执行 <code>int n</code> 时，会把标志寄存器、<code>CS</code>、<code>IP</code> 入栈，然后从中断向量表读取新的 <code>CS:IP</code>。</p>
+<h4 id="ret-和-iret"><a href="#ret-和-iret" class="headerlink" title="ret 和 iret"></a>ret 和 iret</h4><p>中断例程返回使用 <code>iret</code>，它比 <code>ret</code> 多恢复一个标志寄存器：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">ret  ：只弹出 IP<br>iret ：弹出 IP、CS、FLAGS<br></code></pre></td></tr></table></figure>
+
+<p>所以，普通子程序用 <code>ret</code>，中断例程用 <code>iret</code>。</p>
+<h4 id="自定义中断服务"><a href="#自定义中断服务" class="headerlink" title="自定义中断服务"></a>自定义中断服务</h4><p>自定义中断例程可以看作一种“系统服务”。调用者先按约定把参数放入寄存器或内存，再执行 <code>int n</code>。中断例程读取参数、完成工作，然后通过 <code>iret</code> 返回。</p>
+<h4 id="修改返回地址"><a href="#修改返回地址" class="headerlink" title="修改返回地址"></a>修改返回地址</h4><p>中断发生时，返回地址已经被压入栈中。理论上，中断例程可以修改栈中的返回 <code>IP</code> 或 <code>CS</code>，让 <code>iret</code> 返回到不同位置。这种做法可以改变程序控制流，但必须非常谨慎。</p>
+<h3 id="2、实验内容-11"><a href="#2、实验内容-11" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）安装显示字符串的-int-7Ch"><a href="#（1）安装显示字符串的-int-7Ch" class="headerlink" title="（1）安装显示字符串的 int 7Ch"></a>（1）安装显示字符串的 <code>int 7Ch</code></h4><p>约定调用者传入 <code>DH=行号</code>、<code>DL=列号</code>、<code>CL=颜色</code>、<code>DS:SI=字符串首地址</code>。（这些参数和实验 10 的 <code>show_str</code> 子程序类似）</p>
+<h4 id="（2）用-int-7Ch-模拟-loop"><a href="#（2）用-int-7Ch-模拟-loop" class="headerlink" title="（2）用 int 7Ch 模拟 loop"></a>（2）用 <code>int 7Ch</code> 模拟 <code>loop</code></h4><p>中断例程让 <code>CX</code> 减 1，并在需要继续循环时修改栈中的返回地址。（中断发生时返回地址已经压入栈中）</p>
+<h4 id="（3）应用中断例程显示英文诗"><a href="#（3）应用中断例程显示英文诗" class="headerlink" title="（3）应用中断例程显示英文诗"></a>（3）应用中断例程显示英文诗</h4><p>用前面安装的显示服务多次输出不同字符串到指定行。（可以验证中断例程不只适用于一个字符串）</p>
+<h3 id="3、实验代码-11"><a href="#3、实验代码-11" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p>文件 <code>SHOW7C.ASM</code>：把显示字符串例程复制到 <code>0000:0200</code>，修改 7Ch 中断向量，然后用 <code>int 7Ch</code> 显示字符串并导出显存验证结果。</p>
+<p>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code, ds:data<br><br>data segment<br>msg db &#x27;welcome to masm!&#x27;,0<br>outbuf db 16 dup (0),13,10<br>data ends<br><br>code segment<br>start:<br>    mov ax,data<br>    mov ds,ax<br><br>    push cs<br>    pop ds<br>    mov si,offset show7c<br>    xor ax,ax<br>    mov es,ax<br>    mov di,200h<br>    mov cx,offset show7cend-offset show7c<br>    cld<br>    rep movsb<br><br>    cli<br>    mov word ptr es:[7ch*4],200h<br>    mov word ptr es:[7ch*4+2],0<br>    sti<br><br>    mov dh,10<br>    mov dl,10<br>    mov cl,2<br>    mov ax,data<br>    mov ds,ax<br>    mov si,offset msg<br>    int 7ch<br><br>    mov ax,0b800h<br>    mov ds,ax<br>    mov si,10*160+10*2<br>    mov ax,data<br>    mov es,ax<br>    mov di,offset outbuf<br>    mov cx,16<br>copy_show:<br>    lodsb<br>    mov es:[di],al<br>    inc di<br>    lodsb<br>    loop copy_show<br><br>    mov ax,data<br>    mov ds,ax<br>    mov dx,offset outbuf<br>    mov cx,18<br>    mov bx,1<br>    mov ah,40h<br>    int 21h<br><br>    mov ax,4c00h<br>    int 21h<br><br>show7c:<br>    jmp short show7cstart<br>show7cstart:<br>    push ax<br>    push bx<br>    push cx<br>    push dx<br>    push si<br>    push di<br>    push es<br><br>    mov al,dh<br>    xor ah,ah<br>    mov bl,160<br>    mul bl<br>    mov di,ax<br><br>    mov al,dl<br>    xor ah,ah<br>    shl ax,1<br>    add di,ax<br><br>    mov ax,0b800h<br>    mov es,ax<br>showlp:<br>    lodsb<br>    or al,al<br>    jz showdone<br>    mov es:[di],al<br>    mov es:[di+1],cl<br>    add di,2<br>    jmp short showlp<br>showdone:<br>    pop es<br>    pop di<br>    pop si<br>    pop dx<br>    pop cx<br>    pop bx<br>    pop ax<br>    iret<br>show7cend:<br>    nop<br><br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+<p>文件 <code>LOOP7C.ASM</code>：安装修改返回地址的 7Ch 中断例程，通过改变栈中返回 IP 来模拟 <code>loop</code> 的跳转效果。</p>
+<p>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code<br><br>code segment<br>start:<br>    push cs<br>    pop ds<br><br>    mov si,offset loop7c<br>    xor ax,ax<br>    mov es,ax<br>    mov di,200h<br>    mov cx,offset loop7cend-offset loop7c<br>    cld<br>    rep movsb<br><br>    cli<br>    mov word ptr es:[7ch*4],200h<br>    mov word ptr es:[7ch*4+2],0<br>    sti<br><br>    mov ax,0b800h<br>    mov es,ax<br>    mov di,160*12<br>    mov bx,offset s-offset se<br>    mov cx,80<br>s:<br>    mov byte ptr es:[di],&#x27;!&#x27;<br>    add di,2<br>    int 7ch<br>se:<br>    nop<br>    mov ax,0b800h<br>    mov ds,ax<br>    mov si,160*12<br>    push cs<br>    pop es<br>    mov di,offset outbuf<br>    mov cx,80<br>copy_loop:<br>    lodsb<br>    stosb<br>    lodsb<br>    loop copy_loop<br><br>    push cs<br>    pop ds<br>    mov dx,offset outbuf<br>    mov cx,82<br>    mov bx,1<br>    mov ah,40h<br>    int 21h<br><br>    mov ax,4c00h<br>    int 21h<br><br>loop7c:<br>    push bp<br>    mov bp,sp<br>    dec cx<br>    jcxz loopret<br>    add [bp+2],bx<br>loopret:<br>    pop bp<br>    iret<br>loop7cend:<br>    nop<br>outbuf db 80 dup (0),13,10<br><br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+<p>文件 <code>POEM.ASM</code>：用 BIOS 设置光标、DOS 显示字符串，在不同行输出英文诗，作为中断调用和屏幕输出的应用程序。</p>
+<p>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code<br><br>code segment<br>s1  db &#x27;Good,better,best,&#x27;,&#x27;$&#x27;<br>s2  db &#x27;Never let it rest,&#x27;,&#x27;$&#x27;<br>s3  db &#x27;Till good is better,&#x27;,&#x27;$&#x27;<br>s4  db &#x27;And better,best.&#x27;,&#x27;$&#x27;<br>s   dw offset s1,offset s2,offset s3,offset s4<br>row db 2,4,6,8<br><br>start:<br>    mov ax,cs<br>    mov ds,ax<br>    mov bx,offset s<br>    mov si,offset row<br>    mov cx,4<br>ok:<br>    mov bh,0<br>    mov dh,[si]<br>    mov dl,0<br>    mov ah,2<br>    int 10h<br><br>    mov dx,[bx]<br>    mov ah,9<br>    int 21h<br><br>    inc si<br>    add bx,2<br>    loop ok<br><br>    mov ax,4c00h<br>    int 21h<br><br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-11"><a href="#4、实验结果-11" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p>显示字符串结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">welcome to masm!<br></code></pre></td></tr></table></figure>
+
+<p>模拟 <code>loop</code> 后在屏幕中间显示 80 个 <code>!</code>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!<br></code></pre></td></tr></table></figure>
+
+<h2 id="实验-14-访问-CMOS-RAM"><a href="#实验-14-访问-CMOS-RAM" class="headerlink" title="实验 14  访问 CMOS RAM"></a>实验 14  访问 CMOS RAM</h2><h3 id="1、相关知识-12"><a href="#1、相关知识-12" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><h4 id="端口-I-O"><a href="#端口-I-O" class="headerlink" title="端口 I&#x2F;O"></a>端口 I&#x2F;O</h4><p>端口 I&#x2F;O 是 CPU 访问外设的重要方式。8086 不只访问内存，也可以通过端口访问外设。端口访问使用 <code>in</code> 和 <code>out</code> 指令。<code>out 70h,al</code> 表示把 <code>AL</code> 写到端口 <code>70H</code>，<code>in al,71h</code> 表示从端口 <code>71H</code> 读入一个字节到 <code>AL</code>。</p>
+<h4 id="CMOS-访问步骤"><a href="#CMOS-访问步骤" class="headerlink" title="CMOS 访问步骤"></a>CMOS 访问步骤</h4><p>CMOS RAM 中保存系统日期和时间。访问 CMOS 通常分两步：</p>
+<ol>
+<li>向端口 <code>70H</code> 写入要访问的 CMOS 单元号。</li>
+<li>从端口 <code>71H</code> 读出该单元的数据，或向 <code>71H</code> 写入数据。</li>
+</ol>
+<h4 id="时间单元号"><a href="#时间单元号" class="headerlink" title="时间单元号"></a>时间单元号</h4><p>常用时间单元号：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">0：秒<br>2：分<br>4：时<br>7：日<br>8：月<br>9：年<br></code></pre></td></tr></table></figure>
+
+<h4 id="BCD-码"><a href="#BCD-码" class="headerlink" title="BCD 码"></a>BCD 码</h4><p>时间数据通常是 BCD 码，例如 <code>26H</code> 表示十进制 26，而不是十六进制的 38。BCD 的高 4 位表示十位，低 4 位表示个位。</p>
+<h4 id="BCD-转-ASCII"><a href="#BCD-转-ASCII" class="headerlink" title="BCD 转 ASCII"></a>BCD 转 ASCII</h4><p>BCD 转 ASCII 方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asm">高位 = (BCD &gt;&gt; 4) + &#x27;0&#x27;<br>低位 = (BCD &amp; 0FH) + &#x27;0&#x27;<br></code></pre></td></tr></table></figure>
+
+<h4 id="读取一致性"><a href="#读取一致性" class="headerlink" title="读取一致性"></a>读取一致性</h4><p>读 CMOS 时要注意，硬件时间可能正在更新。严谨程序会检查更新状态，避免读到一半更新前、一半更新后的不一致时间。</p>
+<h3 id="2、实验内容-12"><a href="#2、实验内容-12" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）准备显示缓冲区"><a href="#（1）准备显示缓冲区" class="headerlink" title="（1）准备显示缓冲区"></a>（1）准备显示缓冲区</h4><p>先定义形如 <code>00/00/00 00:00:00</code> 的字符串。（日期时间格式中的 <code>/</code>、空格、<code>:</code> 是固定字符）</p>
+<h4 id="（2）依次读取-CMOS-时间单元"><a href="#（2）依次读取-CMOS-时间单元" class="headerlink" title="（2）依次读取 CMOS 时间单元"></a>（2）依次读取 CMOS 时间单元</h4><p>读取年、月、日、时、分、秒，对应 CMOS 单元号为 <code>9</code>、<code>8</code>、<code>7</code>、<code>4</code>、<code>2</code>、<code>0</code>。（CMOS 中各时间字段分散在固定单元号）</p>
+<h4 id="（3）BCD-转-ASCII-并显示"><a href="#（3）BCD-转-ASCII-并显示" class="headerlink" title="（3）BCD 转 ASCII 并显示"></a>（3）BCD 转 ASCII 并显示</h4><p>把 BCD 的高 4 位和低 4 位分别转成 ASCII 数字，写入缓冲区。（一个 BCD 字节正好包含两位十进制数字）</p>
+<h3 id="3、实验代码-12"><a href="#3、实验代码-12" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p>这段代码用于：读取 CMOS 中的年、月、日、时、分、秒，转换成 ASCII 日期时间字符串并输出验证。<br>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code, ds:data<br><br>data segment<br>buf db &#x27;00/00/00 00:00:00&#x27;,13,10<br>data ends<br><br>code segment<br>start:<br>    mov ax,data<br>    mov ds,ax<br><br>    mov bx,offset buf<br>    mov al,9<br>    call read2<br><br>    mov bx,offset buf+3<br>    mov al,8<br>    call read2<br><br>    mov bx,offset buf+6<br>    mov al,7<br>    call read2<br><br>    mov bx,offset buf+9<br>    mov al,4<br>    call read2<br><br>    mov bx,offset buf+12<br>    mov al,2<br>    call read2<br><br>    mov bx,offset buf+15<br>    mov al,0<br>    call read2<br><br>    mov dx,offset buf<br>    mov cx,19<br>    mov bx,1<br>    mov ah,40h<br>    int 21h<br><br>    mov ax,4c00h<br>    int 21h<br><br>read2:<br>    push ax<br>    push cx<br>    out 70h,al<br>    in al,71h<br>    mov ah,al<br>    mov cl,4<br>    shr ah,cl<br>    and al,0fh<br>    add ah,&#x27;0&#x27;<br>    add al,&#x27;0&#x27;<br>    mov [bx],ah<br>    mov [bx+1],al<br>    pop cx<br>    pop ax<br>    ret<br><br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-12"><a href="#4、实验结果-12" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p>一次运行结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">26/04/23 15:55:15<br></code></pre></td></tr></table></figure>
+
+<h2 id="实验-15-安装新的-int-9-中断例程"><a href="#实验-15-安装新的-int-9-中断例程" class="headerlink" title="实验 15  安装新的 int 9 中断例程"></a>实验 15  安装新的 int 9 中断例程</h2><h3 id="1、相关知识-13"><a href="#1、相关知识-13" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><h4 id="外中断和-int-9"><a href="#外中断和-int-9" class="headerlink" title="外中断和 int 9"></a>外中断和 int 9</h4><p>外中断是由 CPU 外部设备触发的中断。键盘输入由硬件触发，会引发 9 号中断。BIOS 的 <code>int 9</code> 中断例程会从端口 <code>60H</code> 读取键盘扫描码，然后根据 Shift、Ctrl 等状态把扫描码转换为 ASCII 码或状态信息，写入 BIOS 键盘缓冲区。</p>
+<h4 id="键盘扫描码"><a href="#键盘扫描码" class="headerlink" title="键盘扫描码"></a>键盘扫描码</h4><p>键盘扫描码分为通码和断码：</p>
+<ul>
+<li>按下按键产生通码。</li>
+<li>松开按键产生断码。</li>
+<li>多数断码 &#x3D; 通码 + <code>80H</code>。</li>
+</ul>
+<p>例如 <code>A</code> 键通码为 <code>1EH</code>，断码为 <code>9EH</code>。</p>
+<h4 id="保存原中断入口"><a href="#保存原中断入口" class="headerlink" title="保存原中断入口"></a>保存原中断入口</h4><p>改写硬件中断时一般要保存原中断入口，在新例程中先调用原例程，再执行自己的附加逻辑。</p>
+<h4 id="代码位置"><a href="#代码位置" class="headerlink" title="代码位置"></a>代码位置</h4><p>驻留类中断例程还要注意代码位置。程序结束后，若中断向量仍指向已经释放或可能被覆盖的代码区域，系统会出错。所以常见做法是把中断例程复制到相对稳定的低地址内存，或编写真正的驻留程序。</p>
+<h3 id="2、实验内容-13"><a href="#2、实验内容-13" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）保存原-int-9-中断向量"><a href="#（1）保存原-int-9-中断向量" class="headerlink" title="（1）保存原 int 9 中断向量"></a>（1）保存原 <code>int 9</code> 中断向量</h4><p>把原来的 <code>int 9</code> 入口地址保存到低内存备用。（新例程不应该完全替代 BIOS 键盘处理）</p>
+<h4 id="（2）安装新的-int-9-例程"><a href="#（2）安装新的-int-9-例程" class="headerlink" title="（2）安装新的 int 9 例程"></a>（2）安装新的 <code>int 9</code> 例程</h4><p>把新例程复制到低地址内存，并修改 9 号中断向量。（程序结束后原代码段可能被覆盖）</p>
+<h4 id="（3）读取扫描码并调用原例程"><a href="#（3）读取扫描码并调用原例程" class="headerlink" title="（3）读取扫描码并调用原例程"></a>（3）读取扫描码并调用原例程</h4><p>新例程从端口 <code>60H</code> 读扫描码，然后调用保存的原 <code>int 9</code>。（读端口 <code>60H</code> 才能知道是哪一个按键事件）</p>
+<h4 id="（4）检测-A-键断码并改显存"><a href="#（4）检测-A-键断码并改显存" class="headerlink" title="（4）检测 A 键断码并改显存"></a>（4）检测 <code>A</code> 键断码并改显存</h4><p>如果扫描码是 <code>9EH</code>，就把屏幕字符区写满 <code>A</code>。（<code>A</code> 键通码是 <code>1EH</code>）</p>
+<h3 id="3、实验代码-13"><a href="#3、实验代码-13" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p>文件 <code>AINT9.ASM</code>：保存原 <code>int 9</code> 向量，安装新键盘中断例程；检测 A 键断码后，把屏幕字符区写满 <code>A</code>。</p>
+<p>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code<br><br>stack segment<br>db 128 dup (0)<br>stack ends<br><br>code segment<br>start:<br>    mov ax,stack<br>    mov ss,ax<br>    mov sp,128<br><br>    push cs<br>    pop ds<br><br>    xor ax,ax<br>    mov es,ax<br><br>    mov si,offset int9<br>    mov di,204h<br>    mov cx,offset int9end-offset int9<br>    cld<br>    rep movsb<br><br>    push es:[9*4]<br>    pop es:[200h]<br>    push es:[9*4+2]<br>    pop es:[202h]<br><br>    cli<br>    mov word ptr es:[9*4],204h<br>    mov word ptr es:[9*4+2],0<br>    sti<br><br>    mov ax,4c00h<br>    int 21h<br><br>int9:<br>    push ax<br>    push bx<br>    push cx<br>    push es<br><br>    in al,60h<br><br>    pushf<br>    call dword ptr cs:[200h]<br><br>    cmp al,9eh<br>    jne int9ret<br><br>    mov ax,0b800h<br>    mov es,ax<br>    xor bx,bx<br>    mov cx,2000<br>fillscr:<br>    mov byte ptr es:[bx],&#x27;A&#x27;<br>    add bx,2<br>    loop fillscr<br><br>int9ret:<br>    pop es<br>    pop cx<br>    pop bx<br>    pop ax<br>    iret<br><br>int9end:<br>    nop<br><br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+<p>文件 <code>WAITA.ASM</code>：等待一段时间后扫描文本显存，统计屏幕上字符 <code>A</code> 的数量，用来验证新键盘中断是否生效。</p>
+<p>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code, ds:data<br><br>data segment<br>msg1 db &#x27;COUNT=&#x27;,0<br>buf  db 6 dup (0)<br>crlf db 13,10<br>data ends<br><br>code segment<br>start:<br>    mov ax,data<br>    mov ds,ax<br><br>    mov ax,0b800h<br>    mov es,ax<br>    xor di,di<br>    mov ax,0720h<br>    mov cx,2000<br>clearlp:<br>    stosw<br>    loop clearlp<br><br>    mov ah,0<br>    int 1ah<br>    add dx,91<br>    adc cx,0<br>    mov si,cx<br>    mov di,dx<br><br>waitlp:<br>    mov ah,0<br>    int 1ah<br>    cmp cx,si<br>    jb waitlp<br>    ja waitok<br>    cmp dx,di<br>    jb waitlp<br>waitok:<br>    mov ax,0b800h<br>    mov es,ax<br>    xor di,di<br>    mov cx,2000<br>    xor bx,bx<br>cntlp:<br>    cmp byte ptr es:[di],&#x27;A&#x27;<br>    jne cntnext<br>    inc bx<br>cntnext:<br>    add di,2<br>    loop cntlp<br><br>    mov ax,bx<br>    mov di,offset buf<br>    call utoa<br><br>    mov dx,offset msg1<br>    call strlen<br>    mov bx,1<br>    mov ah,40h<br>    int 21h<br><br>    mov dx,offset buf<br>    call strlen<br>    mov bx,1<br>    mov ah,40h<br>    int 21h<br><br>    mov dx,offset crlf<br>    mov cx,2<br>    mov bx,1<br>    mov ah,40h<br>    int 21h<br><br>    mov ax,4c00h<br>    int 21h<br><br>utoa:<br>    push ax<br>    push bx<br>    push cx<br>    push dx<br>    xor cx,cx<br>    mov bx,10<br>ut1:<br>    xor dx,dx<br>    div bx<br>    push dx<br>    inc cx<br>    or ax,ax<br>    jnz ut1<br>ut2:<br>    pop dx<br>    add dl,&#x27;0&#x27;<br>    mov [di],dl<br>    inc di<br>    loop ut2<br>    mov byte ptr [di],0<br>    pop dx<br>    pop cx<br>    pop bx<br>    pop ax<br>    ret<br><br>strlen:<br>    push ax<br>    push si<br>    mov si,dx<br>    xor cx,cx<br>sl1:<br>    mov al,[si]<br>    or al,al<br>    jz sl2<br>    inc si<br>    inc cx<br>    jmp short sl1<br>sl2:<br>    pop si<br>    pop ax<br>    ret<br><br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-13"><a href="#4、实验结果-13" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p>自动测试环境没有模拟真实按键，结果为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">COUNT=0<br></code></pre></td></tr></table></figure>
+
+<p>在真实 DOSBox 前台环境中按下并松开 <code>A</code> 键，可触发满屏 <code>A</code>。</p>
+<h2 id="实验-16-编写包含多个功能子程序的中断例程"><a href="#实验-16-编写包含多个功能子程序的中断例程" class="headerlink" title="实验 16  编写包含多个功能子程序的中断例程"></a>实验 16  编写包含多个功能子程序的中断例程</h2><h3 id="1、相关知识-14"><a href="#1、相关知识-14" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><h4 id="多功能中断服务"><a href="#多功能中断服务" class="headerlink" title="多功能中断服务"></a>多功能中断服务</h4><p>多功能中断例程类似 DOS 和 BIOS 中断服务：同一个中断号下面可以有多个功能，通过 <code>AH</code> 或其他寄存器区分具体功能。</p>
+<h4 id="功能分发"><a href="#功能分发" class="headerlink" title="功能分发"></a>功能分发</h4><p>常见功能分发方式有两种：</p>
+<ul>
+<li>连续比较功能号，然后跳转到对应子程序。</li>
+<li>建立地址表，根据功能号查表调用对应子程序。</li>
+</ul>
+<h4 id="地址表"><a href="#地址表" class="headerlink" title="地址表"></a>地址表</h4><p>多个功能的分发可以用地址表实现，比连续 <code>cmp/jmp</code> 更清晰。地址表本质上是一组子程序入口偏移，功能号乘以 2 后就能找到对应入口。</p>
+<h4 id="文本显存功能"><a href="#文本显存功能" class="headerlink" title="文本显存功能"></a>文本显存功能</h4><p>屏幕操作仍然基于文本显存 <code>B800:0000</code>：</p>
+<ul>
+<li>清屏：把屏幕字符单元写成空格和默认属性。</li>
+<li>设置前景色：修改属性字节中的前景色位。</li>
+<li>设置背景色：修改属性字节中的背景色位。</li>
+<li>上卷一行：把后面的行整体复制到前一行，最后一行清空。</li>
+</ul>
+<h4 id="保护现场"><a href="#保护现场" class="headerlink" title="保护现场"></a>保护现场</h4><p>实现这些功能时要注意保护寄存器和段寄存器，尤其是 <code>DS</code>、<code>ES</code>，因为调用者可能依赖它们继续执行。</p>
+<h3 id="2、实验内容-14"><a href="#2、实验内容-14" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）约定功能号"><a href="#（1）约定功能号" class="headerlink" title="（1）约定功能号"></a>（1）约定功能号</h4><p>使用 <code>AH</code> 传递功能号（DOS&#x2F;BIOS 中断服务常用 <code>AH</code> 传功能号）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">AH=0 清屏<br>AH=1 设置前景色<br>AH=2 设置背景色<br>AH=3 向上滚动一行<br></code></pre></td></tr></table></figure>
+
+<h4 id="（2）建立地址表"><a href="#（2）建立地址表" class="headerlink" title="（2）建立地址表"></a>（2）建立地址表</h4><p>把 4 个功能子程序入口放入表中，根据 <code>AH</code> 查表调用。（地址表比连续比较更容易扩展）</p>
+<h4 id="（3）实现显存操作"><a href="#（3）实现显存操作" class="headerlink" title="（3）实现显存操作"></a>（3）实现显存操作</h4><p>清屏和改色直接操作 <code>B800</code> 显存，上卷一行用 <code>rep movsw</code> 把第 2 行到第 25 行搬到上一行。（文本屏幕共有 <code>80*25=2000</code> 个字符单元）</p>
+<h4 id="（4）编写测试输出"><a href="#（4）编写测试输出" class="headerlink" title="（4）编写测试输出"></a>（4）编写测试输出</h4><p>分别调用 4 个功能，再读取显存关键位置输出验证值。（直接看屏幕效果不方便自动记录）</p>
+<h3 id="3、实验代码-14"><a href="#3、实验代码-14" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p>这段代码用于：安装多功能 <code>int 7Ch</code>，通过 <code>AH</code> 选择清屏、设置前景色、设置背景色、上卷一行，并输出验证结果。<br>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code<br><br>code segment<br>start:<br>    push cs<br>    pop ds<br><br>    mov si,offset int7c<br>    xor ax,ax<br>    mov es,ax<br>    mov di,200h<br>    mov cx,offset int7cend-offset int7c<br>    cld<br>    rep movsb<br><br>    cli<br>    mov word ptr es:[7ch*4],200h<br>    mov word ptr es:[7ch*4+2],0<br>    sti<br><br>    call testclr<br>    call testfg<br>    call testbg<br>    call testup<br><br>    mov ax,4c00h<br>    int 21h<br><br>putc:<br>    push ax<br>    mov ah,2<br>    int 21h<br>    pop ax<br>    ret<br><br>puts:<br>    push ax<br>    push si<br>ps1:<br>    lodsb<br>    or al,al<br>    jz ps2<br>    mov dl,al<br>    call putc<br>    jmp short ps1<br>ps2:<br>    pop si<br>    pop ax<br>    ret<br><br>hexnib:<br>    and al,0fh<br>    cmp al,9<br>    jbe hexdec<br>    add al,7<br>hexdec:<br>    add al,&#x27;0&#x27;<br>    ret<br><br>puthex:<br>    push ax<br>    mov ah,al<br>    mov al,ah<br>    shr al,1<br>    shr al,1<br>    shr al,1<br>    shr al,1<br>    call hexnib<br>    mov dl,al<br>    call putc<br>    mov al,ah<br>    call hexnib<br>    mov dl,al<br>    call putc<br>    pop ax<br>    ret<br><br>crlf:<br>    mov dl,13<br>    call putc<br>    mov dl,10<br>    call putc<br>    ret<br><br>fillscr:<br>    push ax<br>    push bx<br>    push cx<br>    push es<br>    mov ax,0b800h<br>    mov es,ax<br>    xor bx,bx<br>    mov cx,2000<br>fs1:<br>    mov es:[bx],dl<br>    mov es:[bx+1],dh<br>    add bx,2<br>    loop fs1<br>    pop es<br>    pop cx<br>    pop bx<br>    pop ax<br>    ret<br><br>testclr:<br>    mov dl,&#x27;X&#x27;<br>    mov dh,1eh<br>    call fillscr<br>    mov ah,0<br>    int 7ch<br>    mov si,offset txtclr<br>    call puts<br>    mov ax,0b800h<br>    mov es,ax<br>    mov al,es:[0]<br>    call puthex<br>    mov dl,&#x27; &#x27;<br>    call putc<br>    mov al,es:[1]<br>    call puthex<br>    call crlf<br>    ret<br><br>testfg:<br>    mov ax,0b800h<br>    mov es,ax<br>    mov byte ptr es:[0],&#x27;A&#x27;<br>    mov byte ptr es:[1],07h<br>    mov ah,1<br>    mov al,2<br>    int 7ch<br>    mov si,offset txtfg<br>    call puts<br>    mov al,es:[1]<br>    call puthex<br>    call crlf<br>    ret<br><br>testbg:<br>    mov ax,0b800h<br>    mov es,ax<br>    mov byte ptr es:[0],&#x27;A&#x27;<br>    mov byte ptr es:[1],07h<br>    mov ah,2<br>    mov al,4<br>    int 7ch<br>    mov si,offset txtbg<br>    call puts<br>    mov al,es:[1]<br>    call puthex<br>    call crlf<br>    ret<br><br>testup:<br>    mov dl,&#x27;1&#x27;<br>    mov dh,07h<br>    call fillscr<br>    mov ax,0b800h<br>    mov es,ax<br>    mov byte ptr es:[0],&#x27;A&#x27;<br>    mov byte ptr es:[160],&#x27;B&#x27;<br>    mov ah,3<br>    int 7ch<br>    mov si,offset txtup<br>    call puts<br>    mov al,es:[0]<br>    call puthex<br>    mov dl,&#x27; &#x27;<br>    call putc<br>    mov al,es:[24*160]<br>    call puthex<br>    call crlf<br>    ret<br><br>txtclr db &#x27;CLR=&#x27;,0<br>txtfg  db &#x27;FG=&#x27;,0<br>txtbg  db &#x27;BG=&#x27;,0<br>txtup  db &#x27;UP=&#x27;,0<br><br>int7c:<br>    jmp short setstart<br>table dw do0-int7c+200h,do1-int7c+200h,do2-int7c+200h,do3-int7c+200h<br>setstart:<br>    push bx<br>    cmp ah,3<br>    ja setret<br>    mov bl,ah<br>    xor bh,bh<br>    shl bx,1<br>    call word ptr cs:[bx+202h]<br>setret:<br>    pop bx<br>    iret<br><br>do0:<br>    push ax<br>    push bx<br>    push cx<br>    push es<br>    mov ax,0b800h<br>    mov es,ax<br>    xor bx,bx<br>    mov ax,0720h<br>    mov cx,2000<br>do0lp:<br>    mov es:[bx],ax<br>    add bx,2<br>    loop do0lp<br>    pop es<br>    pop cx<br>    pop bx<br>    pop ax<br>    ret<br><br>do1:<br>    push ax<br>    push bx<br>    push cx<br>    push dx<br>    push es<br>    mov dl,al<br>    mov ax,0b800h<br>    mov es,ax<br>    mov bx,1<br>    mov cx,2000<br>do1lp:<br>    and byte ptr es:[bx],0f8h<br>    or  byte ptr es:[bx],dl<br>    add bx,2<br>    loop do1lp<br>    pop es<br>    pop dx<br>    pop cx<br>    pop bx<br>    pop ax<br>    ret<br><br>do2:<br>    push ax<br>    push bx<br>    push cx<br>    push dx<br>    push es<br>    mov dl,al<br>    shl dl,1<br>    shl dl,1<br>    shl dl,1<br>    shl dl,1<br>    mov ax,0b800h<br>    mov es,ax<br>    mov bx,1<br>    mov cx,2000<br>do2lp:<br>    and byte ptr es:[bx],8fh<br>    or  byte ptr es:[bx],dl<br>    add bx,2<br>    loop do2lp<br>    pop es<br>    pop dx<br>    pop cx<br>    pop bx<br>    pop ax<br>    ret<br><br>do3:<br>    push ax<br>    push bx<br>    push cx<br>    push si<br>    push di<br>    push ds<br>    push es<br>    mov ax,0b800h<br>    mov ds,ax<br>    mov es,ax<br>    mov si,160<br>    xor di,di<br>    mov cx,24*80<br>    cld<br>    rep movsw<br>    mov ax,0720h<br>    mov cx,80<br>do3lp:<br>    stosw<br>    loop do3lp<br>    pop es<br>    pop ds<br>    pop di<br>    pop si<br>    pop cx<br>    pop bx<br>    pop ax<br>    ret<br><br>int7cend:<br>    nop<br><br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-14"><a href="#4、实验结果-14" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p>验证输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">CLR=20 07<br>FG=02<br>BG=47<br>UP=42 20<br></code></pre></td></tr></table></figure>
+
+<p>可以看出清屏、前景色、背景色、上卷功能均成功。</p>
+<h2 id="实验-17-编写包含多个功能子程序的中断例程"><a href="#实验-17-编写包含多个功能子程序的中断例程" class="headerlink" title="实验 17  编写包含多个功能子程序的中断例程"></a>实验 17  编写包含多个功能子程序的中断例程</h2><h3 id="1、相关知识-15"><a href="#1、相关知识-15" class="headerlink" title="1、相关知识"></a>1、相关知识</h3><h4 id="BIOS-int-13h"><a href="#BIOS-int-13h" class="headerlink" title="BIOS int 13h"></a>BIOS int 13h</h4><p>BIOS <code>int 13h</code> 用于磁盘读写。磁盘传统访问方式使用 CHS 编号，即柱面&#x2F;磁道、磁头、扇区。对 1.44MB 软盘来说，通常有 2 面、80 磁道、每磁道 18 扇区，共 2880 个扇区。</p>
+<h4 id="CHS-参数"><a href="#CHS-参数" class="headerlink" title="CHS 参数"></a>CHS 参数</h4><p>BIOS 读写扇区时常用参数：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs text">AH = 02H 读扇区<br>AH = 03H 写扇区<br>AL = 扇区数量<br>CH = 磁道号<br>CL = 扇区号，从 1 开始<br>DH = 磁头号/面号<br>DL = 驱动器号，软盘 A 通常是 0<br>ES:BX = 数据缓冲区<br></code></pre></td></tr></table></figure>
+
+<h4 id="逻辑扇区号"><a href="#逻辑扇区号" class="headerlink" title="逻辑扇区号"></a>逻辑扇区号</h4><p>直接使用 CHS 不方便，所以可以把所有扇区统一编号为逻辑扇区号。逻辑扇区号从 0 到 2879。逻辑扇区号和物理编号转换：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">面号   = 逻辑扇区号 / 1440<br>磁道号 = (逻辑扇区号 % 1440) / 18<br>扇区号 = (逻辑扇区号 % 18) + 1<br></code></pre></td></tr></table></figure>
+
+<h4 id="写磁盘风险"><a href="#写磁盘风险" class="headerlink" title="写磁盘风险"></a>写磁盘风险</h4><p>注意扇区号从 1 开始，而逻辑扇区号从 0 开始，所以最后要 <code>+1</code>。磁盘写入有破坏性，实验应使用测试软盘镜像，不要随意写真实硬盘。</p>
+<h3 id="2、实验内容-15"><a href="#2、实验内容-15" class="headerlink" title="2、实验内容"></a>2、实验内容</h3><h4 id="（1）设计-int-7Ch-磁盘服务接口"><a href="#（1）设计-int-7Ch-磁盘服务接口" class="headerlink" title="（1）设计 int 7Ch 磁盘服务接口"></a>（1）设计 <code>int 7Ch</code> 磁盘服务接口</h4><p>用 <code>AH=0</code> 表示读扇区，<code>AH=1</code> 表示写扇区，<code>DX</code> 传逻辑扇区号，<code>ES:BX</code> 指向数据缓冲区。（<code>AH</code> 传功能号符合中断服务习惯）</p>
+<h4 id="（2）逻辑扇区号转换为-CHS"><a href="#（2）逻辑扇区号转换为-CHS" class="headerlink" title="（2）逻辑扇区号转换为 CHS"></a>（2）逻辑扇区号转换为 CHS</h4><p>先用 <code>DX / 1440</code> 得到面号，再用余数除以 18 得到磁道号和扇区偏移。（1.44MB 软盘每面有 <code>80*18=1440</code> 个扇区）</p>
+<h4 id="（3）调用-BIOS-int-13h"><a href="#（3）调用-BIOS-int-13h" class="headerlink" title="（3）调用 BIOS int 13h"></a>（3）调用 BIOS <code>int 13h</code></h4><p>把自定义功能号转换成 BIOS 功能号：读为 <code>AH=02H</code>，写为 <code>AH=03H</code>。（实际磁盘读写仍由 BIOS 完成）</p>
+<h4 id="（4）写入后读回验证"><a href="#（4）写入后读回验证" class="headerlink" title="（4）写入后读回验证"></a>（4）写入后读回验证</h4><p>先向逻辑扇区 <code>2879</code> 写入字符串，再读回比较。（<code>2879</code> 是 1.44MB 软盘最后一个逻辑扇区）</p>
+<h3 id="3、实验代码-15"><a href="#3、实验代码-15" class="headerlink" title="3、实验代码"></a>3、实验代码</h3><p>这段代码用于：安装磁盘扇区读写服务，把逻辑扇区号转换为 BIOS CHS 参数，再调用 <code>int 13h</code> 读写软盘扇区。<br>完整代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br></pre></td><td class="code"><pre><code class="hljs asm">assume cs:code, ds:data<br><br>data segment<br>wbuf db &#x27;LOGICAL SECTOR TEST&#x27;,0,493 dup (0)<br>rbuf db 512 dup (0)<br>okm  db &#x27;OK &#x27;,0<br>erm  db &#x27;ERR&#x27;,13,10,0<br>crlf db 13,10,0<br>data ends<br><br>code segment<br>start:<br>    mov ax,data<br>    mov ds,ax<br><br>    push cs<br>    pop ds<br>    mov si,offset int7c<br>    xor ax,ax<br>    mov es,ax<br>    mov di,200h<br>    mov cx,offset int7cend-offset int7c<br>    cld<br>    rep movsb<br><br>    cli<br>    mov word ptr es:[7ch*4],200h<br>    mov word ptr es:[7ch*4+2],0<br>    sti<br><br>    mov ax,data<br>    mov ds,ax<br>    mov es,ax<br>    mov bx,offset wbuf<br>    mov dx,2879<br>    mov ah,1<br>    int 7ch<br><br>    mov di,offset rbuf<br>    mov cx,64<br>    xor ax,ax<br>clrr:<br>    stosb<br>    loop clrr<br><br>    mov ax,data<br>    mov es,ax<br>    mov bx,offset rbuf<br>    mov dx,2879<br>    mov ah,0<br>    int 7ch<br><br>    mov si,offset wbuf<br>    mov di,offset rbuf<br>cmplp:<br>    mov al,[si]<br>    cmp al,[di]<br>    jne bad<br>    or al,al<br>    jz good<br>    inc si<br>    inc di<br>    jmp short cmplp<br><br>good:<br>    mov si,offset okm<br>    call puts<br>    mov si,offset rbuf<br>    call puts<br>    mov si,offset crlf<br>    call puts<br>    jmp short finish<br><br>bad:<br>    mov si,offset erm<br>    call puts<br><br>finish:<br>    mov ax,4c00h<br>    int 21h<br><br>puts:<br>    push ax<br>ps1:<br>    lodsb<br>    or al,al<br>    jz ps2<br>    mov dl,al<br>    mov ah,2<br>    int 21h<br>    jmp short ps1<br>ps2:<br>    pop ax<br>    ret<br><br>int7c:<br>    push ax<br>    push bx<br>    push cx<br>    push dx<br>    push si<br>    push di<br>    push bp<br><br>    push ax<br>    mov ax,dx<br>    xor dx,dx<br>    mov cx,1440<br>    div cx<br>    mov di,ax<br><br>    mov ax,dx<br>    xor dx,dx<br>    mov cx,18<br>    div cx<br><br>    mov ch,al<br>    mov cl,dl<br>    inc cl<br>    mov dx,di<br>    mov dh,dl<br>    xor dl,dl<br>    mov al,1<br>    mov ah,2<br>    pop si<br>    and si,0ff00h<br>    cmp si,0<br>    je doio<br>    inc ah<br>doio:<br>    int 13h<br><br>    pop bp<br>    pop di<br>    pop si<br>    pop dx<br>    pop cx<br>    pop bx<br>    pop ax<br>    iret<br>int7cend:<br>    nop<br><br>code ends<br>end start<br></code></pre></td></tr></table></figure>
+
+<h3 id="4、实验结果-15"><a href="#4、实验结果-15" class="headerlink" title="4、实验结果"></a>4、实验结果</h3><p>测试逻辑扇区 <code>2879</code>，先写入再读回比较：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">OK LOGICAL SECTOR TEST<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>汇编语言与接口设计实验</div>
+      <div>http://example.com/2026/05/01/汇编语言与接口设计实验/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>oxygen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年5月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/01/01/vibe-py-word/" title="vibe-py-word">
+                        <span class="hidden-mobile">vibe-py-word</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
